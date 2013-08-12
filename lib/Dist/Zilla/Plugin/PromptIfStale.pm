@@ -116,6 +116,7 @@ In your F<dist.ini>:
     module = Dist::Zilla::PluginBundle::Author::ME
 
 or:
+
     [PromptIfStale]
     check_all = 1
 
