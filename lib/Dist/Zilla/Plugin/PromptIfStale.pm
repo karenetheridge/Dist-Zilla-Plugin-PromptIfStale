@@ -19,7 +19,10 @@ use JSON;
 use namespace::autoclean;
 
 sub mvp_multivalue_args { 'modules' }
-sub mvp_aliases { { module => 'modules' } }
+sub mvp_aliases { {
+    module => 'modules',
+    check_all => 'check_all_plugins',
+} }
 
 has phase => (
     is => 'ro',
@@ -35,7 +38,7 @@ has modules => (
     default => sub { [] },
 );
 
-has check_all => (
+has check_all_plugins => (
     is => 'ro', isa => Bool,
     default => 0,
 );
@@ -56,7 +59,7 @@ sub check_modules
 {
     my $self = shift;
 
-    my @modules = $self->check_all
+    my @modules = $self->check_all_plugins
         ? uniq map { blessed $_ } @{ $self->zilla->plugins }
         : $self->modules;
 
@@ -118,7 +121,7 @@ In your F<dist.ini>:
 or:
 
     [PromptIfStale]
-    check_all = 1
+    check_all_plugins = 1
 
 =head1 DESCRIPTION
 
