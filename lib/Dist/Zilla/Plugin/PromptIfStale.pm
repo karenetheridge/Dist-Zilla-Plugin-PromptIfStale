@@ -4,8 +4,10 @@ package Dist::Zilla::Plugin::PromptIfStale;
 # ABSTRACT: Check at build time if modules are out of date
 
 use Moose;
-with 'Dist::Zilla::Role::BeforeBuild';
+with 'Dist::Zilla::Role::BeforeBuild',
+    'Dist::Zilla::Role::BeforeRelease';
 
+use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw(ArrayRef Bool);
 use MooseX::Types::LoadableClass 'LoadableClass';
 use List::MoreUtils 'uniq';
@@ -18,6 +20,12 @@ use namespace::autoclean;
 
 sub mvp_multivalue_args { 'modules' }
 sub mvp_aliases { { module => 'modules' } }
+
+has phase => (
+    is => 'ro',
+    isa => enum([qw(build release)]),
+    default => 'release',
+);
 
 has modules => (
     isa => ArrayRef[LoadableClass],
@@ -33,6 +41,18 @@ has check_all => (
 );
 
 sub before_build
+{
+    my $self = shift;
+    $self->check_modules if $self->phase eq 'build';
+}
+
+sub before_release
+{
+    my $self = shift;
+    $self->check_modules if $self->phase eq 'release';
+}
+
+sub check_modules
 {
     my $self = shift;
 
@@ -91,6 +111,7 @@ __END__
 In your F<dist.ini>:
 
     [PromptIfStale]
+    phase = build
     module = Dist::Zilla
     module = Dist::Zilla::PluginBundle::Author::ME
 
@@ -100,7 +121,7 @@ or:
 
 =head1 DESCRIPTION
 
-C<[PromptIfStale]> is a C<BeforeBuild> plugin that compares the
+C<[PromptIfStale]> is a C<BeforeBuild> or C<BeforeRelease> plugin that compares the
 locally-installed version of a module(s) with the latest indexed version,
 prompting to abort the build process if a discrepancy is found.
 
@@ -110,6 +131,11 @@ build time.
 =head1 OPTIONS
 
 =over 4
+
+=item * C<phase>
+
+Indicates whether the checks are performed at I<build> or I<release> time
+(defaults to I<release>).
 
 =item * C<module>
 
@@ -122,7 +148,7 @@ build this distribution should be checked.
 
 =back
 
-=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build
+=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build before_release check_modules
 
 =head1 SUPPORT
 
