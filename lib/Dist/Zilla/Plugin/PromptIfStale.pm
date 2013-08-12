@@ -14,6 +14,7 @@ use version;
 use HTTP::Tiny;
 use Encode;
 use JSON;
+use namespace::autoclean;
 
 sub mvp_multivalue_args { 'modules' }
 sub mvp_aliases { { module => 'modules' } }
@@ -120,6 +121,8 @@ A boolean, defaulting to false, indicating that all plugins being used to
 build this distribution should be checked.
 
 =back
+
+=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build
 
 =head1 SUPPORT
 
