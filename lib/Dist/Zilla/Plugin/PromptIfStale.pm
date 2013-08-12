@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Dist::Zilla::Plugin::PromptIfStale;
-# ABSTRACT: ...
+# ABSTRACT: Check at build time if modules are out of date
 
 use Moose;
 with 'Dist::Zilla::Role::BeforeBuild';
@@ -87,21 +87,37 @@ __END__
 
 =head1 SYNOPSIS
 
-    use Dist::Zilla::Plugin::PromptIfStale;
+In your F<dist.ini>:
 
-    ...
+    [PromptIfStale]
+    module = Dist::Zilla
+    module = Dist::Zilla::PluginBundle::Author::ME
+
+or:
+    [PromptIfStale]
+    check_all = 1
 
 =head1 DESCRIPTION
 
-...
+C<[PromptIfStale]> is a C<BeforeBuild> plugin that compares the
+locally-installed version of a module(s) with the latest indexed version,
+prompting to abort the build process if a discrepancy is found.
 
-=head1 FUNCTIONS/METHODS
+Note that there is no effect on the built dist -- all actions are taken at
+build time.
+
+=head1 OPTIONS
 
 =over 4
 
-=item * C<foo>
+=item * C<module>
 
-...
+The name of a module to check for. Can be provided more than once.
+
+=item * C<check_all_plugins>
+
+A boolean, defaulting to false, indicating that all plugins being used to
+build this distribution should be checked.
 
 =back
 
@@ -113,15 +129,11 @@ Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Di
 (or L<bug-Dist-Zilla-Plugin-PromptIfStale@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-PromptIfStale@rt.cpan.org>).
 I am also usually active on irc, as 'ether' at C<irc.perl.org>.
 
-=head1 ACKNOWLEDGEMENTS
-
-...
-
 =head1 SEE ALSO
 
 =begin :list
 
-* L<foo>
+* L<Dist::Zilla::Plugin::Prereqs::MatchInstalled>, L<Dist::Zilla::Plugin::Prereqs::MatchInstalled::All>
 
 =end :list
 
