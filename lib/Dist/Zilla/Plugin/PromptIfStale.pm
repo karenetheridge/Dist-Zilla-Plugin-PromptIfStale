@@ -74,14 +74,14 @@ sub check_modules
             and defined $local_version
             and $local_version < $indexed_version)
         {
-            my $abort = $self->zilla->chrome->prompt_yn(
+            my $continue = $self->zilla->chrome->prompt_yn(
                 'Indexed version of ' . $module . ' is ' . $indexed_version
                     . ' but you only have ' . $local_version
-                    . ' installed. Abort the build?',
-                { default => 1 },
+                    . ' installed. Continue anyway?',
+                { default => 0 },
             );
 
-            $self->log_fatal('Aborting build') if $abort;
+            $self->log_fatal('Aborting build') if not $continue;
         }
     }
 }
