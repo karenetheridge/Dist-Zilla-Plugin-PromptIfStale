@@ -4,6 +4,8 @@ Revision history for {{$dist->name}}
           - fix documentation that referred to an option by the wrong name
           - inverted prompt, from "abort build?" to "continue anyway?" (with
             the default remaining as aborting the build/not continuing)
+          - version checks are bypassed for modules provided by the dist being
+            built
 
 0.001     2013-08-11 21:20:18 PDT-0700 (Karen Etheridge)
           - Initial release.

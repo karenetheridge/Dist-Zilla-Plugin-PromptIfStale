@@ -13,6 +13,8 @@ use MooseX::Types::LoadableClass 'LoadableClass';
 use List::MoreUtils 'uniq';
 use Module::Runtime 'use_module';
 use version;
+use Path::Tiny;
+use Cwd;
 use HTTP::Tiny;
 use Encode;
 use JSON;
@@ -65,10 +67,16 @@ sub check_modules
 
     foreach my $module (@modules)
     {
-        my $indexed_version = $self->_indexed_version($module);
-        my $local_version = version->parse(use_module($module)->VERSION);
+        # ignore modules in the dist currently being built
+        (my $file = $module) =~ s{::}{/}g;
+        $file .= '.pm';
+        $self->log_debug($module . ' provided locally; skipping version check'), next
+            unless path($INC{$file})->relative(getcwd) =~ m/^\.\./;
 
         $self->log_debug('comparing indexed vs. local version for ' . $module);
+
+        my $indexed_version = $self->_indexed_version($module);
+        my $local_version = version->parse(use_module($module)->VERSION);
 
         if (defined $indexed_version
             and defined $local_version
