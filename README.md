@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build time if modules are out of d
 
 # VERSION
 
-version 0.001
+version 0.002
 
 # SYNOPSIS
 
@@ -16,8 +16,9 @@ In your `dist.ini`:
     module = Dist::Zilla::PluginBundle::Author::ME
 
 or:
-    \[PromptIfStale\]
-    check\_all = 1
+
+    [PromptIfStale]
+    check_all_plugins = 1
 
 # DESCRIPTION
 

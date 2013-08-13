@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.002     2013-08-12 18:04:29 PDT-0700 (Karen Etheridge)
           - fix documentation that referred to an option by the wrong name
           - inverted prompt, from "abort build?" to "continue anyway?" (with
             the default remaining as aborting the build/not continuing)
