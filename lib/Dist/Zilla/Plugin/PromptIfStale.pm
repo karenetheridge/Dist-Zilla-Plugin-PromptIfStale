@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Dist::Zilla::Plugin::PromptIfStale;
-# ABSTRACT: Check at build time if modules are out of date
+# ABSTRACT: Check at build/release time if modules are out of date
 
 use Moose;
 with 'Dist::Zilla::Role::BeforeBuild',
