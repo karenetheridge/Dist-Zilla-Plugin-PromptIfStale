@@ -99,7 +99,7 @@ sub _indexed_version
     my $json_octets = Encode::encode_utf8($res->{content});
     my $payload = JSON::->new->decode($json_octets);
 
-    $self->log_debug('invalid payload returned?'), return undef unless \@$payload;
+    $self->log_debug('invalid payload returned?'), return undef unless $payload;
     $self->log_debug($module . ' not indexed'), return undef if not defined $payload->[0]{mod_vers};
     version->parse($payload->[0]{mod_vers});
 }
