@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - gracefully handle checking for a module that is not installed
 
 0.002     2013-08-12 18:04:29 PDT-0700 (Karen Etheridge)
           - fix documentation that referred to an option by the wrong name

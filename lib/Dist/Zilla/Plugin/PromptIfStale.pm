@@ -8,10 +8,10 @@ with 'Dist::Zilla::Role::BeforeBuild',
     'Dist::Zilla::Role::BeforeRelease';
 
 use Moose::Util::TypeConstraints;
-use MooseX::Types::Moose qw(ArrayRef Bool);
-use MooseX::Types::LoadableClass 'LoadableClass';
+use MooseX::Types::Moose qw(ArrayRef Bool Str);
 use List::MoreUtils 'uniq';
 use Module::Runtime 'module_notional_filename';
+use Class::Load 'try_load_class';
 use version;
 use Path::Tiny;
 use Cwd;
@@ -33,7 +33,7 @@ has phase => (
 );
 
 has modules => (
-    isa => ArrayRef[LoadableClass],
+    isa => ArrayRef[Str],
     traits => [ 'Array' ],
     handles => { modules => 'elements' },
     lazy => 1,
@@ -67,6 +67,17 @@ sub check_modules
 
     foreach my $module (@modules)
     {
+        if (not try_load_class($module))
+        {
+            my $continue = $self->zilla->chrome->prompt_yn(
+                $module . ' is not installed. Continue anyway?',
+                { default => 0 },
+            );
+
+            $self->log_fatal('Aborting build') if not $continue;
+            next;
+        }
+
         # ignore modules in the dist currently being built
         $self->log_debug($module . ' provided locally; skipping version check'), next
             unless path($INC{module_notional_filename($module)})->relative(getcwd) =~ m/^\.\./;
