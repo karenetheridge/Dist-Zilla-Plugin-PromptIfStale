@@ -11,7 +11,7 @@ use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw(ArrayRef Bool);
 use MooseX::Types::LoadableClass 'LoadableClass';
 use List::MoreUtils 'uniq';
-use Module::Runtime 'use_module';
+use Module::Runtime qw(use_module module_notional_filename);
 use version;
 use Path::Tiny;
 use Cwd;
@@ -68,10 +68,8 @@ sub check_modules
     foreach my $module (@modules)
     {
         # ignore modules in the dist currently being built
-        (my $file = $module) =~ s{::}{/}g;
-        $file .= '.pm';
         $self->log_debug($module . ' provided locally; skipping version check'), next
-            unless path($INC{$file})->relative(getcwd) =~ m/^\.\./;
+            unless path($INC{module_notional_filename($module)})->relative(getcwd) =~ m/^\.\./;
 
         $self->log_debug('comparing indexed vs. local version for ' . $module);
 
