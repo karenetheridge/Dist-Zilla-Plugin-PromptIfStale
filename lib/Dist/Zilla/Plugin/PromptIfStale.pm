@@ -89,8 +89,18 @@ sub check_modules
             . ': indexed=' . ($indexed_version // 'undef')
             . '; local version=' . ($local_version // 'undef'));
 
-        if (defined $indexed_version
-            and defined $local_version
+        if (not defined $indexed_version)
+        {
+            my $continue = $self->zilla->chrome->prompt_yn(
+                $module . ' is not indexed. Continue anyway?',
+                { default => 0 },
+            );
+
+            $self->log_fatal('Aborting build') if not $continue;
+            next;
+        }
+
+        if (defined $local_version
             and $local_version < $indexed_version)
         {
             my $continue = $self->zilla->chrome->prompt_yn(
