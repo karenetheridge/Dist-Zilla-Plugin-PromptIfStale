@@ -61,9 +61,12 @@ sub check_modules
 {
     my $self = shift;
 
-    my @modules = $self->check_all_plugins
-        ? uniq map { blessed $_ } @{ $self->zilla->plugins }
-        : $self->modules;
+    my @modules = (
+        $self->modules,
+        $self->check_all_plugins
+            ? uniq map { blessed $_ } @{ $self->zilla->plugins }
+            : (),
+    );
 
     foreach my $module (@modules)
     {
