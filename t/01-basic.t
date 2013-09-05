@@ -5,7 +5,9 @@ use Test::More;
 use Test::Warnings;
 use Test::DZil;
 use Test::Fatal;
+use Test::Deep;
 use Path::Tiny;
+use Moose::Util 'find_meta';
 
 SKIP: {
     skip('this test can always be expected to work only for the author', 1)
@@ -34,5 +36,70 @@ SKIP: {
         'no prompts when checking for a module that is not stale',
     );
 }
+
+
+# now let's craft a situation where we know our module is stale, and confirm
+# we prompt properly about it.
+# This also saves us from having to do a real HTTP hit.
+
+use Dist::Zilla::Plugin::PromptIfStale; # make sure we are loaded!!
+
+{
+    my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
+    $meta->make_mutable;
+    $meta->add_around_method_modifier(_indexed_version => sub {
+        my $orig = shift;
+        my $self = shift;
+        my ($module) = @_;
+
+        return version->parse('200.0') if $module eq 'strict';
+        return $self->$orig(@_);
+    });
+}
+
+my @prompts;
+{
+    my $meta = find_meta('Dist::Zilla::Chrome::Test');
+    $meta->make_mutable;
+    $meta->add_before_method_modifier(prompt_str => sub {
+        my ($self, $prompt, $arg) = @_;
+        push @prompts, $prompt;
+    });
+}
+
+my $tzil = Builder->from_config(
+    { dist_root => 't/does-not-exist' },
+    {
+        add_files => {
+            'source/dist.ini' => simple_ini(
+                [ GatherDir => ],
+                [ 'PromptIfStale' => { modules => [ 'strict' ], phase => 'build' } ],
+            ),
+            path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
+        },
+    },
+);
+
+my $prompt = 'Indexed version of strict is 200.0 but you only have ' . strict->VERSION
+    . ' installed. Continue anyway?';
+$tzil->chrome->set_response_for($prompt, 'y');
+
+$tzil->chrome->logger->set_debug(1);
+
+$tzil->build;
+
+is($prompts[0], $prompt, 'we were indeed prompted');
+
+my $build_dir = $tzil->tempdir->subdir('build');
+
+cmp_deeply(
+    $tzil->log_messages,
+    supersetof(
+        '[PromptIfStale] comparing indexed vs. local version for strict: indexed=200.0; local version=' . strict->VERSION,
+        '[DZ] writing DZT-Sample in ' . $build_dir,
+    ),
+    'build completed successfully',
+);
+
 
 done_testing;
