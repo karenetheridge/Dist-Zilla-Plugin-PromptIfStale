@@ -71,10 +71,12 @@ sub check_modules
         $self->log_debug($module . ' provided locally; skipping version check'), next
             unless path($INC{module_notional_filename($module)})->relative(getcwd) =~ m/^\.\./;
 
-        $self->log_debug('comparing indexed vs. local version for ' . $module);
-
         my $indexed_version = $self->_indexed_version($module);
         my $local_version = version->parse($module->VERSION);
+
+        $self->log_debug('comparing indexed vs. local version for ' . $module
+            . ': indexed=' . ($indexed_version // 'undef')
+            . '; local version=' . ($local_version // 'undef'));
 
         if (defined $indexed_version
             and defined $local_version
