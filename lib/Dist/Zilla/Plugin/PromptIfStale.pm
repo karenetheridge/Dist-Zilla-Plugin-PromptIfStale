@@ -149,6 +149,9 @@ build time.
 Indicates whether the checks are performed at I<build> or I<release> time
 (defaults to I<release>).
 
+(Remember that you can use different settings for different phases by employing
+this plugin twice, with different names.)
+
 =item * C<module>
 
 The name of a module to check for. Can be provided more than once.
