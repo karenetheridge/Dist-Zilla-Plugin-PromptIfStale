@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.003     2013-09-05 07:45:52Z (Karen Etheridge)
           - gracefully handle checking for a module that is not installed
           - support setting both the check_all_plugins and module configs at
             once

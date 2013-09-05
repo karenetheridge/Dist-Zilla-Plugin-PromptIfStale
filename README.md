@@ -1,10 +1,10 @@
 # NAME
 
-Dist::Zilla::Plugin::PromptIfStale - Check at build time if modules are out of date
+Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are out of date
 
 # VERSION
 
-version 0.002
+version 0.003
 
 # SYNOPSIS
 
@@ -35,6 +35,9 @@ build time.
 
     Indicates whether the checks are performed at _build_ or _release_ time
     (defaults to _release_).
+
+    (Remember that you can use different settings for different phases by employing
+    this plugin twice, with different names.)
 
 - `module`
 
