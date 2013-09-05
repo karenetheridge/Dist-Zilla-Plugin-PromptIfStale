@@ -11,7 +11,7 @@ use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw(ArrayRef Bool);
 use MooseX::Types::LoadableClass 'LoadableClass';
 use List::MoreUtils 'uniq';
-use Module::Runtime qw(use_module module_notional_filename);
+use Module::Runtime 'module_notional_filename';
 use version;
 use Path::Tiny;
 use Cwd;
@@ -74,7 +74,7 @@ sub check_modules
         $self->log_debug('comparing indexed vs. local version for ' . $module);
 
         my $indexed_version = $self->_indexed_version($module);
-        my $local_version = version->parse(use_module($module)->VERSION);
+        my $local_version = version->parse($module->VERSION);
 
         if (defined $indexed_version
             and defined $local_version
