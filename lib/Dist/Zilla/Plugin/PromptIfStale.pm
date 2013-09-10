@@ -49,7 +49,7 @@ sub before_build
 {
     my $self = shift;
 
-    $self->check_modules(
+    $self->_check_modules(
         $self->modules,
         $self->check_all_plugins
             ? uniq map { blessed $_ } @{ $self->zilla->plugins }
@@ -61,7 +61,7 @@ sub before_release
 {
     my $self = shift;
 
-    $self->check_modules(
+    $self->_check_modules(
         $self->modules,
         $self->check_all_plugins
             ? uniq map { blessed $_ } @{ $self->zilla->plugins }
@@ -69,7 +69,7 @@ sub before_release
     ) if $self->phase eq 'release';
 }
 
-sub check_modules
+sub _check_modules
 {
     my ($self, @modules) = @_;
 
@@ -192,7 +192,7 @@ build this distribution should be checked.
 
 =back
 
-=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build before_release check_modules
+=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build before_release
 
 =head1 SUPPORT
 
