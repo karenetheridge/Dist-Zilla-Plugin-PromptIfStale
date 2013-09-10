@@ -71,6 +71,7 @@ sub after_build
         # get what we already prompted about in before_build
         my @prompted_modules = $self->_modules_before_build;
 
+        # and subtract them off, so we don't prompt for them twice
         my @modules = grep {
             my $module = $_;
             none { $module eq $_ } @prompted_modules;
@@ -142,30 +143,39 @@ sub _check_modules
     }
 }
 
-sub _modules_before_build
-{
-    my $self = shift;
-    return (
-        $self->modules,
-        $self->check_all_plugins
-            ? uniq map { blessed $_ } @{ $self->zilla->plugins }
-            : (),
-    );
-}
+has _modules_before_build => (
+    isa => 'ArrayRef[Str]',
+    traits => ['Array'],
+    handles => { _modules_before_build => 'elements' },
+    lazy => 1,
+    default => sub {
+        my $self = shift;
+        return [
+            $self->modules,
+            $self->check_all_plugins
+                ? uniq map { blessed $_ } @{ $self->zilla->plugins }
+                : (),
+        ];
+    },
+);
 
-sub _modules_prereq
-{
-    my $self = shift;
-    my $prereqs = $self->zilla->prereqs->as_string_hash;
-
-    my @modules =
-        map { keys %$_ }
-        grep { defined }
-        map { @{$_}{qw(requires recommends suggests)} }
-        grep { defined }
-        @{$prereqs}{qw(runtime test develop)};
-}
-
+has _modules_prereq => (
+    isa => 'ArrayRef[Str]',
+    traits => ['Array'],
+    handles => { _modules_prereq => 'elements' },
+    lazy => 1,
+    default => sub {
+        my $self = shift;
+        my $prereqs = $self->zilla->prereqs->as_string_hash;
+        [
+            map { keys %$_ }
+            grep { defined }
+            map { @{$_}{qw(requires recommends suggests)} }
+            grep { defined }
+            @{$prereqs}{qw(runtime test develop)}
+        ];
+    },
+);
 
 # I bet this is available somewhere as a module?
 sub _indexed_version
