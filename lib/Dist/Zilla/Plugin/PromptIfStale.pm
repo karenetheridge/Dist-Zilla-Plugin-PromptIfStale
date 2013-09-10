@@ -62,30 +62,6 @@ sub before_build
     }
 }
 
-sub _modules_before_build
-{
-    my $self = shift;
-    return (
-        $self->modules,
-        $self->check_all_plugins
-            ? uniq map { blessed $_ } @{ $self->zilla->plugins }
-            : (),
-    );
-}
-
-sub _modules_prereq
-{
-    my $self = shift;
-    my $prereqs = $self->zilla->prereqs->as_string_hash;
-
-    my @modules =
-        map { keys %$_ }
-        grep { defined }
-        map { @{$_}{qw(requires recommends suggests)} }
-        grep { defined }
-        @{$prereqs}{qw(runtime test develop)};
-}
-
 sub after_build
 {
     my $self = shift;
@@ -165,6 +141,31 @@ sub _check_modules
         }
     }
 }
+
+sub _modules_before_build
+{
+    my $self = shift;
+    return (
+        $self->modules,
+        $self->check_all_plugins
+            ? uniq map { blessed $_ } @{ $self->zilla->plugins }
+            : (),
+    );
+}
+
+sub _modules_prereq
+{
+    my $self = shift;
+    my $prereqs = $self->zilla->prereqs->as_string_hash;
+
+    my @modules =
+        map { keys %$_ }
+        grep { defined }
+        map { @{$_}{qw(requires recommends suggests)} }
+        grep { defined }
+        @{$prereqs}{qw(runtime test develop)};
+}
+
 
 # I bet this is available somewhere as a module?
 sub _indexed_version
