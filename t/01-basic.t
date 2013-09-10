@@ -53,6 +53,7 @@ use Dist::Zilla::Plugin::PromptIfStale; # make sure we are loaded!!
         my ($module) = @_;
 
         return version->parse('200.0') if $module eq 'strict';
+        die 'should not be checking for ' . $module;
         return $self->$orig(@_);
     });
 }
@@ -88,7 +89,7 @@ $tzil->chrome->logger->set_debug(1);
 
 $tzil->build;
 
-is($prompts[0], $prompt, 'we were indeed prompted');
+cmp_deeply(\@prompts, [ $prompt ], 'we were indeed prompted');
 
 my $build_dir = $tzil->tempdir->subdir('build');
 

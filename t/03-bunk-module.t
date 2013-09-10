@@ -20,6 +20,7 @@ use Moose::Util 'find_meta';
         my ($module) = @_;
 
         return undef if $module eq 'Unindexed';
+        die 'should not be checking for ' . $module;
         return $self->$orig(@_);
     });
 }
@@ -65,7 +66,11 @@ like(
     'build aborted',
 );
 
-is($prompts[0], $prompt, 'we were indeed prompted');
+cmp_deeply(
+    \@prompts,
+    [ $prompt ],
+    'we were indeed prompted',
+);
 
 cmp_deeply(
     $tzil->log_messages,

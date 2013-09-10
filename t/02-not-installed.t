@@ -22,6 +22,7 @@ use Dist::Zilla::Plugin::PromptIfStale; # make sure we are loaded!!
         my ($module) = @_;
 
         return version->parse('200.0') if $module eq 'Indexed::But::Not::Installed';
+        die 'should not be checking for ' . $module;
         return $self->$orig(@_);
     });
 }
@@ -58,7 +59,11 @@ like(
     'build aborted',
 );
 
-is($prompts[0], $prompt, 'we were indeed prompted');
+cmp_deeply(
+    \@prompts,
+    [ $prompt ],
+    'we were indeed prompted',
+);
 
 cmp_deeply(
     $tzil->log_messages,
