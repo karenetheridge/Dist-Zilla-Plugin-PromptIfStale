@@ -48,25 +48,30 @@ has check_all_plugins => (
 sub before_build
 {
     my $self = shift;
-    $self->check_modules if $self->phase eq 'build';
+
+    $self->check_modules(
+        $self->modules,
+        $self->check_all_plugins
+            ? uniq map { blessed $_ } @{ $self->zilla->plugins }
+            : (),
+    ) if $self->phase eq 'build';
 }
 
 sub before_release
 {
     my $self = shift;
-    $self->check_modules if $self->phase eq 'release';
-}
 
-sub check_modules
-{
-    my $self = shift;
-
-    my @modules = (
+    $self->check_modules(
         $self->modules,
         $self->check_all_plugins
             ? uniq map { blessed $_ } @{ $self->zilla->plugins }
             : (),
-    );
+    ) if $self->phase eq 'release';
+}
+
+sub check_modules
+{
+    my ($self, @modules) = @_;
 
     foreach my $module (@modules)
     {
