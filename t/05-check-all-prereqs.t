@@ -9,23 +9,7 @@ use Path::Tiny;
 use Moose::Util 'find_meta';
 use List::Util 'first';
 
-
 use Dist::Zilla::Plugin::PromptIfStale; # make sure we are loaded!!
-
-{
-    my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
-    $meta->make_mutable;
-    $meta->add_around_method_modifier(_indexed_version => sub {
-        my $orig = shift;
-        my $self = shift;
-        my ($module) = @_;
-
-        return undef if first { $module eq 'Foo' . $_ } ('0' .. '8');
-        die 'should not be checking for ' . $module;
-        return $self->$orig(@_);
-    });
-}
-
 
 my @prompts;
 {
@@ -52,24 +36,29 @@ my $tzil = Builder->from_config(
                         } qw(Requires Recommends Suggests)
                     } qw(Runtime Test Develop);
                 },
-                [ 'PromptIfStale' => { check_all_prereqs => 1, phase => 'build' } ],
+                [ 'PromptIfStale' => {
+                        check_all_prereqs => 1,
+                        # some of these are duplicated with prereqs
+                        module => [ 'Bar', map { 'Foo' . $_ } 0 .. 2 ], phase => 'build'
+                    },
+                ],
             ),
             path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
         },
     },
 );
 
-my @expected_prompts = map { 'Foo' . $_ . ' is not installed. Continue anyway?' } ('0' .. '8');
+my @expected_prompts = (
+    map { $_ . ' is not installed. Continue anyway?' } 'Bar', map { 'Foo' . $_ } ('0' .. '8'),
+);
 $tzil->chrome->set_response_for($_, 'y') foreach @expected_prompts;
-
-$tzil->chrome->logger->set_debug(1);
 
 $tzil->build;
 
 cmp_deeply(
     \@prompts,
     bag(@expected_prompts),
-    'we were indeed prompted, for exactly all the right phases and types'
+    'we were indeed prompted, for exactly all the right phases and types, and not twice for the duplicates',
 );
 
 done_testing;

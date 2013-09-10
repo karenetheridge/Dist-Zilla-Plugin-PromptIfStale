@@ -92,7 +92,13 @@ sub after_build
 
     if ($self->phase eq 'build' and $self->check_all_prereqs)
     {
-        my @modules = $self->_modules_prereq;
+        # get what we already prompted about in before_build
+        my @prompted_modules = $self->_modules_before_build;
+
+        my @modules = grep {
+            my $module = $_;
+            none { $module eq $_ } @prompted_modules;
+        } $self->_modules_prereq;
         $self->_check_modules(@modules) if @modules;
     }
 }
