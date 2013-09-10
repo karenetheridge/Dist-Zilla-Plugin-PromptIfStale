@@ -5,11 +5,12 @@ package Dist::Zilla::Plugin::PromptIfStale;
 
 use Moose;
 with 'Dist::Zilla::Role::BeforeBuild',
+    'Dist::Zilla::Role::AfterBuild',
     'Dist::Zilla::Role::BeforeRelease';
 
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw(ArrayRef Bool Str);
-use List::MoreUtils 'uniq';
+use List::MoreUtils qw(uniq none);
 use Module::Runtime 'module_notional_filename';
 use Class::Load 'try_load_class';
 use version;
@@ -45,16 +46,55 @@ has check_all_plugins => (
     default => 0,
 );
 
+has check_all_prereqs => (
+    is => 'ro', isa => Bool,
+    default => 0,
+);
+
 sub before_build
 {
     my $self = shift;
 
-    $self->_check_modules(
+    if ($self->phase eq 'build')
+    {
+        my @modules = $self->_modules_before_build;
+        $self->_check_modules(@modules) if @modules;
+    }
+}
+
+sub _modules_before_build
+{
+    my $self = shift;
+    return (
         $self->modules,
         $self->check_all_plugins
             ? uniq map { blessed $_ } @{ $self->zilla->plugins }
             : (),
-    ) if $self->phase eq 'build';
+    );
+}
+
+sub _modules_prereq
+{
+    my $self = shift;
+    my $prereqs = $self->zilla->prereqs->as_string_hash;
+
+    my @modules =
+        map { keys %$_ }
+        grep { defined }
+        map { @{$_}{qw(requires recommends suggests)} }
+        grep { defined }
+        @{$prereqs}{qw(runtime test develop)};
+}
+
+sub after_build
+{
+    my $self = shift;
+
+    if ($self->phase eq 'build' and $self->check_all_prereqs)
+    {
+        my @modules = $self->_modules_prereq;
+        $self->_check_modules(@modules) if @modules;
+    }
 }
 
 sub before_release
@@ -62,10 +102,7 @@ sub before_release
     my $self = shift;
 
     $self->_check_modules(
-        $self->modules,
-        $self->check_all_plugins
-            ? uniq map { blessed $_ } @{ $self->zilla->plugins }
-            : (),
+        uniq $self->_modules_before_build, $self->_modules_prereq
     ) if $self->phase eq 'release';
 }
 
@@ -190,9 +227,16 @@ The name of a module to check for. Can be provided more than once.
 A boolean, defaulting to false, indicating that all plugins being used to
 build this distribution should be checked.
 
+=item * C<check_all_prereqs>
+
+A boolean, defaulting to false, indicating that all prereqs in the
+distribution metadata should be checked. The modules are a merged list taken
+from the C<runtime>, C<test> and C<develop> phases, and the C<runtime>,
+C<recommends> and C<suggests> types.
+
 =back
 
-=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build before_release
+=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release
 
 =head1 SUPPORT
 
