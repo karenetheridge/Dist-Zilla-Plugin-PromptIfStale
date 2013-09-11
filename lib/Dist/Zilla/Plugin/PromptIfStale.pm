@@ -95,6 +95,7 @@ sub _check_modules
 
     foreach my $module (@modules)
     {
+        next if $module eq 'perl';
         if (not try_load_class($module))
         {
             my $continue = $self->zilla->chrome->prompt_yn(
