@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are 
 
 # VERSION
 
-version 0.003
+version 0.004
 
 # SYNOPSIS
 
@@ -47,6 +47,13 @@ build time.
 
     A boolean, defaulting to false, indicating that all plugins being used to
     build this distribution should be checked.
+
+- `check_all_prereqs`
+
+    A boolean, defaulting to false, indicating that all prereqs in the
+    distribution metadata should be checked. The modules are a merged list taken
+    from the `runtime`, `test` and `develop` phases, and the `runtime`,
+    `recommends` and `suggests` types.
 
 # SUPPORT
 
