@@ -2,6 +2,7 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
           - New "check_all_prereqs" option
+          - warnings tests bypassed during installation
 
 0.003     2013-09-05 07:45:52Z (Karen Etheridge)
           - gracefully handle checking for a module that is not installed
