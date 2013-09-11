@@ -151,9 +151,9 @@ has _modules_before_build => (
     default => sub {
         my $self = shift;
         return [
-            $self->modules,
+            uniq $self->modules,
             $self->check_all_plugins
-                ? uniq map { blessed $_ } @{ $self->zilla->plugins }
+                ? map { blessed $_ } @{ $self->zilla->plugins }
                 : (),
         ];
     },
