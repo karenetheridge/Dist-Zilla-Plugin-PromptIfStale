@@ -57,7 +57,7 @@ $tzil->build;
 
 cmp_deeply(
     \@prompts,
-    bag(@expected_prompts),
+    \@expected_prompts,
     'we were indeed prompted, for exactly all the right phases and types, and not twice for the duplicates',
 );
 

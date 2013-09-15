@@ -92,7 +92,7 @@ sub _check_modules
 {
     my ($self, @modules) = @_;
 
-    foreach my $module (@modules)
+    foreach my $module (sort { $a cmp $b } @modules)
     {
         next if $module eq 'perl';
         if (not eval { use_module($module); 1 })
