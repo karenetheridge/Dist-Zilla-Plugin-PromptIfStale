@@ -88,6 +88,11 @@ sub before_release
     ) if $self->phase eq 'release';
 }
 
+# a package-scoped singleton variable that tracks the module names that have
+# already been checked for, so other instances of this plugin do not duplicate
+# the check.
+my %already_checked;
+
 sub _check_modules
 {
     my ($self, @modules) = @_;
@@ -96,8 +101,11 @@ sub _check_modules
     foreach my $module (sort { $a cmp $b } @modules)
     {
         next if $module eq 'perl';
+        next if $already_checked{$module};
+
         if (not eval { use_module($module); 1 })
         {
+            $already_checked{$module}++;
             push @prompts, $module . ' is not installed.';
             next;
         }
@@ -115,6 +123,7 @@ sub _check_modules
 
         if (not defined $indexed_version)
         {
+            $already_checked{$module}++;
             push @prompts, $module . ' is not indexed.';
             next;
         }
@@ -122,6 +131,7 @@ sub _check_modules
         if (defined $local_version
             and $local_version < $indexed_version)
         {
+            $already_checked{$module}++;
             push @prompts, 'Indexed version of ' . $module . ' is ' . $indexed_version
                     . ' but you only have ' . $local_version
                     . ' installed.';

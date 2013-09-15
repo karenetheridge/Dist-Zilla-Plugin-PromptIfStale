@@ -2,6 +2,8 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
           - now only prompting once (per phase) for all discrepancies found
+          - no longer prompting for the same module twice, if there are
+            multiple instances of the plugin running
 
 0.004     2013-09-11 01:39:02Z (Karen Etheridge)
           - New "check_all_prereqs" option
