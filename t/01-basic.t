@@ -8,6 +8,7 @@ use Test::Fatal;
 use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
+use version;
 
 BEGIN {
     use Dist::Zilla::Plugin::PromptIfStale;
