@@ -11,8 +11,7 @@ with 'Dist::Zilla::Role::BeforeBuild',
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw(ArrayRef Bool Str);
 use List::MoreUtils qw(uniq none);
-use Module::Runtime 'module_notional_filename';
-use Class::Load 'try_load_class';
+use Module::Runtime qw(module_notional_filename use_module);
 use version;
 use Path::Tiny;
 use Cwd;
@@ -96,7 +95,7 @@ sub _check_modules
     foreach my $module (@modules)
     {
         next if $module eq 'perl';
-        if (not try_load_class($module))
+        if (not eval { use_module($module); 1 })
         {
             my $continue = $self->zilla->chrome->prompt_yn(
                 $module . ' is not installed. Continue anyway?',
