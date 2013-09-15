@@ -48,9 +48,17 @@ my $tzil = Builder->from_config(
     },
 );
 
-my @expected_prompts = (
-    map { $_ . ' is not installed. Continue anyway?' } 'Bar', map { 'Foo' . $_ } ('0' .. '8'),
+my %expected_prompts = (
+    before_build => [
+        map { '    ' . $_ . ' is not installed.' } 'Bar', map { 'Foo' . $_ } ('0' .. '2') ],
+    after_build => [
+        map { '    ' . $_ . ' is not installed.' } map { 'Foo' . $_ } ('3' .. '8') ],
 );
+
+my @expected_prompts = map {
+    "Issues found:\n" . join("\n", @{$expected_prompts{$_}}, 'Continue anyway?')
+} qw(before_build after_build);
+
 $tzil->chrome->set_response_for($_, 'y') foreach @expected_prompts;
 
 $tzil->build;

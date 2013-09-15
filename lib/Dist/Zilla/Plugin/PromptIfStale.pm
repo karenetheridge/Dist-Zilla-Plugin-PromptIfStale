@@ -92,17 +92,13 @@ sub _check_modules
 {
     my ($self, @modules) = @_;
 
+    my @prompts;
     foreach my $module (sort { $a cmp $b } @modules)
     {
         next if $module eq 'perl';
         if (not eval { use_module($module); 1 })
         {
-            my $continue = $self->zilla->chrome->prompt_yn(
-                $module . ' is not installed. Continue anyway?',
-                { default => 0 },
-            );
-
-            $self->log_fatal('Aborting build') if not $continue;
+            push @prompts, $module . ' is not installed.';
             next;
         }
 
@@ -119,28 +115,29 @@ sub _check_modules
 
         if (not defined $indexed_version)
         {
-            my $continue = $self->zilla->chrome->prompt_yn(
-                $module . ' is not indexed. Continue anyway?',
-                { default => 0 },
-            );
-
-            $self->log_fatal('Aborting build') if not $continue;
+            push @prompts, $module . ' is not indexed.';
             next;
         }
 
         if (defined $local_version
             and $local_version < $indexed_version)
         {
-            my $continue = $self->zilla->chrome->prompt_yn(
-                'Indexed version of ' . $module . ' is ' . $indexed_version
+            push @prompts, 'Indexed version of ' . $module . ' is ' . $indexed_version
                     . ' but you only have ' . $local_version
-                    . ' installed. Continue anyway?',
-                { default => 0 },
-            );
-
-            $self->log_fatal('Aborting build') if not $continue;
+                    . ' installed.';
+            next;
         }
     }
+
+    return if not @prompts;
+
+    my $prompt = @prompts > 1
+        ? (join("\n    ", 'Issues found:', @prompts) . "\n")
+        : ($prompts[0] . ' ');
+    $prompt .= 'Continue anyway?';
+
+    my $continue = $self->zilla->chrome->prompt_yn($prompt, { default => 0 });
+    $self->log_fatal('Aborting build') if not $continue;
 }
 
 has _modules_before_build => (
