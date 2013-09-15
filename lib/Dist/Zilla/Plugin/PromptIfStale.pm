@@ -10,7 +10,7 @@ with 'Dist::Zilla::Role::BeforeBuild',
 
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw(ArrayRef Bool Str);
-use List::MoreUtils qw(uniq none);
+use List::MoreUtils 'uniq';
 use Module::Runtime qw(module_notional_filename use_module);
 use version;
 use Path::Tiny;
@@ -67,14 +67,7 @@ sub after_build
 
     if ($self->phase eq 'build' and $self->check_all_prereqs)
     {
-        # get what we already prompted about in before_build
-        my @prompted_modules = $self->_modules_before_build;
-
-        # and subtract them off, so we don't prompt for them twice
-        my @modules = grep {
-            my $module = $_;
-            none { $module eq $_ } @prompted_modules;
-        } $self->_modules_prereq;
+        my @modules = $self->_modules_prereq;
         $self->_check_modules(@modules) if @modules;
     }
 }
@@ -157,8 +150,8 @@ has _modules_before_build => (
     lazy => 1,
     default => sub {
         my $self = shift;
-        return [
-            uniq $self->modules,
+        return [ uniq
+            $self->modules,
             $self->check_all_plugins
                 ? map { blessed $_ } @{ $self->zilla->plugins }
                 : (),
