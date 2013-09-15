@@ -9,12 +9,15 @@ use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
 
+BEGIN {
+    use Dist::Zilla::Plugin::PromptIfStale;
+    $Dist::Zilla::Plugin::PromptIfStale::VERSION = 9999
+        unless $Dist::Zilla::Plugin::PromptIfStale::VERSION;
+}
+
 SKIP: {
     skip('this test can always be expected to work only for the author', 1)
         unless $ENV{AUTHOR_TESTING};
-
-    skip('this test can only be run from a dzil build dir (plugin needs a version)', 1)
-        if -d '.git';
 
     my $tzil = Builder->from_config(
         { dist_root => 't/does-not-exist' },
