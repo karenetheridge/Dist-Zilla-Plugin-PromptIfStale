@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.005     2013-09-16 00:05:07Z (Karen Etheridge)
           - now only prompting once (per phase) for all discrepancies found
           - no longer prompting for the same module twice, if there are
             multiple instances of the plugin running
