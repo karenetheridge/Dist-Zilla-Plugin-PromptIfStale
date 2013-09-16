@@ -9,8 +9,6 @@ use Path::Tiny;
 use Moose::Util 'find_meta';
 use List::Util 'first';
 
-use Dist::Zilla::Plugin::PromptIfStale; # make sure we are loaded!!
-
 my @prompts;
 {
     my $meta = find_meta('Dist::Zilla::Chrome::Test');
