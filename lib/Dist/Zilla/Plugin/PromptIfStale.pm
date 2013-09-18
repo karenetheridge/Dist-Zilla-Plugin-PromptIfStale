@@ -140,7 +140,7 @@ sub _check_modules
     $prompt .= 'Continue anyway?';
 
     my $continue = $self->zilla->chrome->prompt_yn($prompt, { default => 0 });
-    $self->log_fatal('Aborting build') if not $continue;
+    $self->log_fatal('Aborting ' . $self->phase) if not $continue;
 }
 
 has _modules_before_build => (
