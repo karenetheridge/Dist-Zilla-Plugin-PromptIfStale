@@ -90,6 +90,8 @@ sub _check_modules
 {
     my ($self, @modules) = @_;
 
+    $self->log('checking for stale modules...');
+
     my @prompts;
     foreach my $module (sort { $a cmp $b } @modules)
     {

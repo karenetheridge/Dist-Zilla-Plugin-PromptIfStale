@@ -1,6 +1,10 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - diagnostic message added before checks begin, so the user isn't
+            wondering why the build/release appears to hang (querying the
+            index can take a little bit of time if there are a lot of modules
+            to check)
 
 0.005     2013-09-16 00:05:07Z (Karen Etheridge)
           - now only prompting once (per phase) for all discrepancies found
