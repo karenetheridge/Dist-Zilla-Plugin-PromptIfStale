@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.006     2013-09-24 04:36:43Z (Karen Etheridge)
           - diagnostic message added before checks begin, so the user isn't
             wondering why the build/release appears to hang (querying the
             index can take a little bit of time if there are a lot of modules
