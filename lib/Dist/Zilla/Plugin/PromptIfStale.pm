@@ -92,7 +92,7 @@ sub _check_modules
 
     $self->log('checking for stale modules...');
 
-    my @prompts;
+    my (@bad_modules, @prompts);
     foreach my $module (sort { $a cmp $b } @modules)
     {
         next if $module eq 'perl';
@@ -101,6 +101,7 @@ sub _check_modules
         if (not eval { use_module($module); 1 })
         {
             $already_checked{$module}++;
+            push @bad_modules, $module;
             push @prompts, $module . ' is not installed.';
             next;
         }
@@ -119,6 +120,7 @@ sub _check_modules
         if (not defined $indexed_version)
         {
             $already_checked{$module}++;
+            push @bad_modules, $module;
             push @prompts, $module . ' is not indexed.';
             next;
         }
@@ -127,6 +129,7 @@ sub _check_modules
             and $local_version < $indexed_version)
         {
             $already_checked{$module}++;
+            push @bad_modules, $module;
             push @prompts, 'Indexed version of ' . $module . ' is ' . $indexed_version
                     . ' but you only have ' . $local_version
                     . ' installed.';
@@ -142,7 +145,8 @@ sub _check_modules
     $prompt .= 'Continue anyway?';
 
     my $continue = $self->zilla->chrome->prompt_yn($prompt, { default => 0 });
-    $self->log_fatal('Aborting ' . $self->phase) if not $continue;
+    $self->log_fatal('Aborting ' . $self->phase . "\n"
+        . 'To remedy, do: cpanm ' . join(' ', @bad_modules)) if not $continue;
 }
 
 has _modules_before_build => (

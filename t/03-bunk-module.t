@@ -76,9 +76,9 @@ cmp_deeply(
     $tzil->log_messages,
     supersetof(
        '[PromptIfStale] comparing indexed vs. local version for Unindexed: indexed=undef; local version=2.0',
-        '[PromptIfStale] Aborting build',
+        "[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Unindexed",
     ),
-    'build was aborted',
-);
+    'build was aborted, with remedy instructions',
+) or diag 'got: ', explain $tzil->log_messages;
 
 done_testing;
