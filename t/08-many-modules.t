@@ -31,7 +31,7 @@ my @checked_via_02packages;
         my ($module) = @_;
 
         $self->_get_packages;   # force this to be initialized in the class
-        push(@checked_via_02packages, $module), return undef if $module =~ /^Unindexed[0-5]$/;
+        push(@checked_via_02packages, $module), return undef if $module =~ /^Unindexed[0-6]$/;
         die 'should not be checking for ' . $module;
     });
     my $packages;
@@ -60,8 +60,8 @@ my @prompts;
 {
     package Unindexed;
     our $VERSION = '2.0';
-    @INC{ ( map { 'Unindexed' . $_ . '.pm' } (0..5) ) } =
-       ( qw(/tmp/bogusfile) x 6 );    # cannot be in our local dir or we will abort
+    @INC{ ( map { 'Unindexed' . $_ . '.pm' } (0..6) ) } =
+       ( qw(/tmp/bogusfile) x 7 );    # cannot be in our local dir or we will abort
 }
 
 my $tzil = Builder->from_config(
@@ -70,7 +70,12 @@ my $tzil = Builder->from_config(
         add_files => {
             'source/dist.ini' => simple_ini(
                 [ GatherDir => ],
-                [ 'PromptIfStale' => { modules => [ map { 'Unindexed' . $_ } 0..5 ], phase => 'build' } ],
+                [ PromptIfStale => {
+                    modules => [ map { 'Unindexed' . $_ } 0..5 ],
+                    check_all_prereqs => 1,
+                    phase => 'build',
+                  } ],
+                [ Prereqs => RuntimeRequires => { 'Unindexed6' => 0 } ],
             ),
             path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
         },
@@ -78,10 +83,13 @@ my $tzil = Builder->from_config(
 );
 
 # no need to test all combinations - we sort the module list
-my $full_prompt = "Issues found:\n"
+my $prompt0 = "Issues found:\n"
     . join("\n", map { '    Unindexed' . $_ . ' is not indexed.' } 0..5)
     . "\nContinue anyway?";
-$tzil->chrome->set_response_for($full_prompt, 'n');
+$tzil->chrome->set_response_for($prompt0, 'y');
+
+my $prompt1 = 'Unindexed6 is not indexed. Continue anyway?';
+$tzil->chrome->set_response_for($prompt1, 'n');
 
 like(
     exception { $tzil->build },
@@ -91,19 +99,19 @@ like(
 
 cmp_deeply(
     \@prompts,
-    [ $full_prompt ],
+    [ $prompt0, $prompt1 ],
     'we were indeed prompted',
 );
 
 cmp_deeply(
     \@checked_via_02packages,
-    [ map { 'Unindexed' . $_ } 0..5 ],
+    [ map { 'Unindexed' . $_ } 0..6 ],
     'all modules checked using 02packages',
 );
 
 cmp_deeply(
     $tzil->log_messages,
-    supersetof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm " . join(' ', map { 'Unindexed' . $_ } (0..5))),
+    supersetof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Unindexed6"),
     'build was aborted, with remedy instructions',
 ) or diag 'got: ', explain $tzil->log_messages;
 

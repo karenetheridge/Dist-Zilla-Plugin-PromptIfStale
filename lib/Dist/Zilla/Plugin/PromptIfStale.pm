@@ -188,7 +188,7 @@ sub _indexed_version
 {
     my ($self, $module, $combined) = @_;
 
-    return $combined
+    return $combined || $packages
         ? $self->_indexed_version_via_02packages($module)
         : $self->_indexed_version_via_query($module);
 }
