@@ -110,7 +110,7 @@ sub _check_modules
         $self->log_debug($module . ' provided locally; skipping version check'), next
             unless path($INC{module_notional_filename($module)})->relative(getcwd) =~ m/^\.\./;
 
-        my $indexed_version = $self->_indexed_version($module);
+        my $indexed_version = $self->_indexed_version($module, !!(@modules > 5));
         my $local_version = version->parse($module->VERSION);
 
         $self->log_debug('comparing indexed vs. local version for ' . $module
@@ -183,8 +183,18 @@ has _modules_prereq => (
     },
 );
 
-# I bet this is available somewhere as a module?
+my $packages;
 sub _indexed_version
+{
+    my ($self, $module, $combined) = @_;
+
+    return $combined
+        ? $self->_indexed_version_via_02packages($module)
+        : $self->_indexed_version_via_query($module);
+}
+
+# I bet this is available somewhere as a module?
+sub _indexed_version_via_query
 {
     my ($self, $module) = @_;
 
@@ -199,6 +209,35 @@ sub _indexed_version
     $self->log_debug('invalid payload returned?'), return undef unless $payload;
     $self->log_debug($module . ' not indexed'), return undef if not defined $payload->[0]{mod_vers};
     version->parse($payload->[0]{mod_vers});
+}
+
+# TODO: it would be AWESOME to provide this to multiple plugins via a role
+# even better would be to save the file somewhere semi-permanent and
+# keep it refreshed with a Last-Modified header - or share cpanm's copy?
+sub _get_packages
+{
+    my $self = shift;
+    return $packages if $packages;
+
+    require File::Temp;
+    my $tempdir = File::Temp::tempdir(CLEANUP => 1);
+    my $filename = '02packages.details.txt.gz';
+    my $path = path($tempdir, $filename);
+
+    my $response = HTTP::Tiny->new->mirror('http://www.cpan.org/modules/' . $filename, $path);
+    $self->log_debug('could not fetch the index?'), return undef if not $response->{success};
+
+    require Parse::CPAN::Packages::Fast;
+    $packages = Parse::CPAN::Packages::Fast->new($path);
+}
+
+sub _indexed_version_via_02packages
+{
+    my ($self, $module) = @_;
+
+    my $package = $self->_get_packages->package($module);
+    return undef if not $package;
+    version->parse($package->version);
 }
 
 __PACKAGE__->meta->make_immutable;

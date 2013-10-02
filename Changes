@@ -3,6 +3,8 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
           - when killing a build after being prompted, include a line that can
             be copy-pasted to install all the missing modules via cpanm
+          - speed up index querying when checking for 6 or more modules at
+            once by pulling down a copy of 02packages.details.txt.gz
 
 0.006     2013-09-24 04:36:43Z (Karen Etheridge)
           - diagnostic message added before checks begin, so the user isn't
