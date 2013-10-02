@@ -58,7 +58,6 @@ use Dist::Zilla::Plugin::PromptIfStale; # make sure we are loaded!!
 
         return version->parse('200.0') if $module eq 'strict';
         die 'should not be checking for ' . $module;
-        return $self->$orig(@_);
     });
 }
 
@@ -105,6 +104,5 @@ cmp_deeply(
     ),
     'build completed successfully',
 );
-
 
 done_testing;

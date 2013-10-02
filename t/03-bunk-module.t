@@ -21,7 +21,6 @@ use Moose::Util 'find_meta';
 
         return undef if $module eq 'Unindexed';
         die 'should not be checking for ' . $module;
-        return $self->$orig(@_);
     });
 }
 

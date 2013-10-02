@@ -8,6 +8,7 @@ use Test::Fatal;
 use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
+use version;
 
 # simulate a response from the PAUSE index, without having to do a real HTTP hit
 
@@ -23,7 +24,6 @@ use Dist::Zilla::Plugin::PromptIfStale; # make sure we are loaded!!
 
         return version->parse('200.0') if $module eq 'Indexed::But::Not::Installed';
         die 'should not be checking for ' . $module;
-        return $self->$orig(@_);
     });
 }
 
