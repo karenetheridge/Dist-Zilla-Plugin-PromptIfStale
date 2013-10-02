@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.007     2013-10-02 03:58:16Z (Karen Etheridge)
           - when killing a build after being prompted, include a line that can
             be copy-pasted to install all the missing modules via cpanm
           - speed up index querying when checking for 6 or more modules at
