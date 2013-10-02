@@ -228,7 +228,7 @@ sub _get_packages
     $self->log_debug('could not fetch the index?'), return undef if not $response->{success};
 
     require Parse::CPAN::Packages::Fast;
-    $packages = Parse::CPAN::Packages::Fast->new($path);
+    $packages = Parse::CPAN::Packages::Fast->new($path->stringify);
 }
 
 sub _indexed_version_via_02packages
