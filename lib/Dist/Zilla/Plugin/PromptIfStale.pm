@@ -293,7 +293,7 @@ build this distribution should be checked.
 
 A boolean, defaulting to false, indicating that all prereqs in the
 distribution metadata should be checked. The modules are a merged list taken
-from the C<runtime>, C<test> and C<develop> phases, and the C<runtime>,
+from the C<runtime>, C<test> and C<develop> phases, and the C<requires>,
 C<recommends> and C<suggests> types.
 
 =back
