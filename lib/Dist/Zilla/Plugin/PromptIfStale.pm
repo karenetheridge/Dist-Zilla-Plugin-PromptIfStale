@@ -178,7 +178,7 @@ has _modules_prereq => (
             grep { defined }
             map { @{$_}{qw(requires recommends suggests)} }
             grep { defined }
-            @{$prereqs}{qw(runtime test develop)}
+            @{$prereqs}{qw(configure build runtime test develop)}
         ];
     },
 );
@@ -291,10 +291,10 @@ build this distribution should be checked.
 
 =item * C<check_all_prereqs>
 
-A boolean, defaulting to false, indicating that all prereqs in the
+A boolean, defaulting to false, indicating that all prerequisites in the
 distribution metadata should be checked. The modules are a merged list taken
-from the C<runtime>, C<test> and C<develop> phases, and the C<requires>,
-C<recommends> and C<suggests> types.
+from the C<configure>, C<build>, C<runtime>, C<test> and C<develop> phases,
+and the C<requires>, C<recommends> and C<suggests> types.
 
 =back
 

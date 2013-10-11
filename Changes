@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - now also checks the configure and build prerequisites
 
 0.007     2013-10-02 03:58:16Z (Karen Etheridge)
           - when killing a build after being prompted, include a line that can
