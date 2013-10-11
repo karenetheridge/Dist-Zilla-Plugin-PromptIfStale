@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.008     2013-10-11 01:47:09Z (Karen Etheridge)
           - now also checks the configure and build prerequisites
 
 0.007     2013-10-02 03:58:16Z (Karen Etheridge)
