@@ -53,11 +53,10 @@ sub do_tests
         });
     }
 
+    foreach my $module (map { 'Unindexed' . $_ . '.pm' } (0..6))
     {
-        package Unindexed;
-        our $VERSION = '2.0';
-        @INC{ ( map { 'Unindexed' . $_ . '.pm' } (0..6) ) } =
-           ( qw(/tmp/bogusfile) x 7 );    # cannot be in our local dir or we will abort
+        $INC{$module} = '/tmp/bogusfile';
+        ${$module::VERSION} = '2.0';
     }
 
     my $tzil = Builder->from_config(
