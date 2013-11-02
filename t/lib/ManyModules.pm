@@ -57,6 +57,7 @@ sub do_tests
     foreach my $module (map { 'Unindexed' . $_ } (0..6))
     {
         $INC{$module . '.pm'} =  File::Spec->devnull;   # cannot be in our build dir!
+        no strict 'refs';
         ${$module . '::VERSION'} = '2.0'
     }
 
