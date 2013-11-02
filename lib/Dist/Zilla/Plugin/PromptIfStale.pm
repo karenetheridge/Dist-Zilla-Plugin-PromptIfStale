@@ -111,7 +111,7 @@ sub _check_modules
             unless path($INC{module_notional_filename($module)})->relative(getcwd) =~ m/^\.\./;
 
         my $indexed_version = $self->_indexed_version($module, !!(@modules > 5));
-        my $local_version = version->parse($module->VERSION);
+        my $local_version = version->parse($module->VERSION) || 0;
 
         $self->log_debug('comparing indexed vs. local version for ' . $module
             . ': indexed=' . ($indexed_version // 'undef')
