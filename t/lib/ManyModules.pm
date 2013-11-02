@@ -7,6 +7,7 @@ use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 use Test::DZil;
 use Test::Fatal;
 use Test::Deep;
+use File::Spec;
 use Path::Tiny;
 use Moose::Util 'find_meta';
 
@@ -55,7 +56,7 @@ sub do_tests
 
     foreach my $module (map { 'Unindexed' . $_ } (0..6))
     {
-        $INC{$module . '.pm'} = '/tmp/bogusfile';
+        $INC{$module . '.pm'} =  File::Spec->devnull;   # cannot be in our build dir!
         ${$module . '::VERSION'} = '2.0'
     }
 
