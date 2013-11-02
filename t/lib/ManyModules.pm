@@ -53,10 +53,11 @@ sub do_tests
         });
     }
 
-    foreach my $module (map { 'Unindexed' . $_ . '.pm' } (0..6))
+    foreach my $module (map { 'Unindexed' . $_ } (0..6))
     {
-        $INC{$module} = '/tmp/bogusfile';
-        ${$module::VERSION} = '2.0';
+        $INC{$module . '.pm'} = '/tmp/bogusfile';
+        no strict 'refs';
+        ${$module . '::VERSION'} = '2.0';
     }
 
     my $tzil = Builder->from_config(
