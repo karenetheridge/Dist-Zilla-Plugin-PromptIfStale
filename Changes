@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - work around issues with EUMM-bundled version.pm by properly
+            fudging a VERSION during testing (affected perls before 5.13.9)
 
 0.008     2013-10-11 01:47:09Z (Karen Etheridge)
           - now also checks the configure and build prerequisites
