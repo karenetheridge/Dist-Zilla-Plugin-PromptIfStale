@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - more diagnostics printed in failing tests
 
 0.009     2013-11-02 21:15:16Z
           - work around issues with EUMM-bundled version.pm by properly

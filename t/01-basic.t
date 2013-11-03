@@ -103,6 +103,6 @@ cmp_deeply(
         '[DZ] writing DZT-Sample in ' . $build_dir,
     ),
     'build completed successfully',
-);
+) or diag 'got: ', explain $tzil->log_messages;
 
 done_testing;

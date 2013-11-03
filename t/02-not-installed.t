@@ -53,6 +53,8 @@ my $tzil = Builder->from_config(
 my $prompt = 'Indexed::But::Not::Installed is not installed. Continue anyway?';
 $tzil->chrome->set_response_for($prompt, 'n');
 
+$tzil->chrome->logger->set_debug(1);
+
 like(
     exception { $tzil->build },
     qr/\Q[PromptIfStale] Aborting build\E/,

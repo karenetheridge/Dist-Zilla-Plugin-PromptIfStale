@@ -88,6 +88,8 @@ sub do_tests
     my $prompt1 = 'Unindexed6 is not indexed. Continue anyway?';
     $tzil->chrome->set_response_for($prompt1, 'n');
 
+    $tzil->chrome->logger->set_debug(1);
+
     like(
         exception { $tzil->build },
         qr/\Q[PromptIfStale] Aborting build\E/,

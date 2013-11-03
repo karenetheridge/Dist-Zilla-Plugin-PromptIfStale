@@ -67,6 +67,8 @@ my $full_prompt = "Issues found:
 Continue anyway?";
 $tzil->chrome->set_response_for($full_prompt, 'n');
 
+$tzil->chrome->logger->set_debug(1);
+
 like(
     exception { $tzil->build },
     qr/\Q[PromptIfStale] Aborting build\E/,
