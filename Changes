@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.010     2013-11-03 20:22:01Z (TRIAL RELEASE)
           - more diagnostics printed in failing tests
 
 0.009     2013-11-02 21:15:16Z
