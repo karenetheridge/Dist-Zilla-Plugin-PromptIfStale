@@ -89,6 +89,8 @@ sub before_release
 # the check.
 my %already_checked;
 
+sub __clear_already_checked{ %already_checked = () } # for testing
+
 sub _check_modules
 {
     my ($self, @modules) = @_;
