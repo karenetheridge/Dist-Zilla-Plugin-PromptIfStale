@@ -75,10 +75,11 @@ sub after_build
 sub before_release
 {
     my $self = shift;
-
-    $self->_check_modules(
-        uniq $self->_modules_before_build, $self->_modules_prereq
-    ) if $self->phase eq 'release';
+    my @check = $self->_modules_before_build;
+    push @check, $self->_modules_prereq
+        if $self->check_all_prereqs;
+    $self->_check_modules( uniq @check )
+        if $self->phase eq 'release';
 }
 
 # a package-scoped singleton variable that tracks the module names that have
