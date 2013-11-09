@@ -75,16 +75,21 @@ sub after_build
 sub before_release
 {
     my $self = shift;
-
-    $self->_check_modules(
-        uniq $self->_modules_before_build, $self->_modules_prereq
-    ) if $self->phase eq 'release';
+    if ($self->phase eq 'release')
+    {
+        my @modules = $self->_modules_before_build;
+        push @modules, $self->_modules_prereq
+            if $self->check_all_prereqs;
+        $self->_check_modules( uniq @modules ) if @modules;
+    }
 }
 
 # a package-scoped singleton variable that tracks the module names that have
 # already been checked for, so other instances of this plugin do not duplicate
 # the check.
 my %already_checked;
+
+sub __clear_already_checked{ %already_checked = () } # for testing
 
 sub _check_modules
 {
