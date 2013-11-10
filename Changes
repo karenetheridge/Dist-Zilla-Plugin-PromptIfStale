@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - honour check_all_prereqs setting at release time (previously
+            behaviour was always as if it was on); thanks David Golden!
 
 0.010     2013-11-03 20:22:01Z (TRIAL RELEASE)
           - more diagnostics printed in failing tests
