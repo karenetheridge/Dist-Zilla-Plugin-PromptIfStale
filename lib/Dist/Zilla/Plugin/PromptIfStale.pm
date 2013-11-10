@@ -114,8 +114,10 @@ sub _check_modules
         }
 
         # ignore modules in the dist currently being built
-        $self->log_debug($module . ' provided locally; skipping version check'), next
-            unless path($path)->relative(getcwd) =~ m/^\.\./;
+        my $relative_path = path($path)->relative(getcwd);
+        $self->log_debug($module . ' provided locally (at ' . $relative_path
+                . '); skipping version check'), next
+            unless $relative_path =~ m/^\.\./;
 
         $query_index{$module} = $path;
     }
