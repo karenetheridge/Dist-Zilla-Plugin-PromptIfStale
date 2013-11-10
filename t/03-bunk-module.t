@@ -34,12 +34,6 @@ my @prompts;
     });
 }
 
-{
-    package Unindexed;
-    our $VERSION = '2.0';
-    $INC{'Unindexed.pm'} = '/tmp/bogusfile';    # cannot be in our local dir or we will abort
-}
-
 
 my $tzil = Builder->from_config(
     { dist_root => 't/does-not-exist' },
@@ -51,6 +45,7 @@ my $tzil = Builder->from_config(
             ),
             path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
         },
+        also_copy => { 't/lib' => 't/lib' },
     },
 );
 
@@ -58,6 +53,8 @@ my $prompt = 'Unindexed is not indexed. Continue anyway?';
 $tzil->chrome->set_response_for($prompt, 'n');
 
 $tzil->chrome->logger->set_debug(1);
+
+unshift @INC, File::Spec->catdir($tzil->tempdir, qw(t lib));
 
 like(
     exception { $tzil->build },

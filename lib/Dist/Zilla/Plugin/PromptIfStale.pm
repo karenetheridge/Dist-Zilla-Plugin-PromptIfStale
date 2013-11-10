@@ -11,13 +11,14 @@ with 'Dist::Zilla::Role::BeforeBuild',
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw(ArrayRef Bool Str);
 use List::MoreUtils 'uniq';
-use Module::Runtime qw(module_notional_filename use_module);
 use version;
 use Path::Tiny;
 use Cwd;
 use HTTP::Tiny;
 use Encode;
 use JSON;
+use Module::Path 'module_path';
+use Module::Metadata;
 use namespace::autoclean;
 
 sub mvp_multivalue_args { 'modules' }
@@ -103,7 +104,8 @@ sub _check_modules
         next if $module eq 'perl';
         next if $already_checked{$module};
 
-        if (not eval { use_module($module); 1 })
+        my $path = module_path($module);
+        if (not $path)
         {
             $already_checked{$module}++;
             push @bad_modules, $module;
@@ -113,10 +115,10 @@ sub _check_modules
 
         # ignore modules in the dist currently being built
         $self->log_debug($module . ' provided locally; skipping version check'), next
-            unless path($INC{module_notional_filename($module)})->relative(getcwd) =~ m/^\.\./;
+            unless path($path)->relative(getcwd) =~ m/^\.\./;
 
         my $indexed_version = $self->_indexed_version($module, !!(@modules > 5));
-        my $local_version = version->parse($module->VERSION);
+        my $local_version = Module::Metadata->new_from_file($path)->version;
 
         $self->log_debug('comparing indexed vs. local version for ' . $module
             . ': indexed=' . ($indexed_version // 'undef')

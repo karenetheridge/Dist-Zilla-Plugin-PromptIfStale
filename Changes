@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - no longer loading each module being checked in order to get its
+            $VERSION
 
 0.011     2013-11-10 01:54:55Z
           - honour check_all_prereqs setting at release time (previously

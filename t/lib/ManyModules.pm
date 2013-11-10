@@ -54,13 +54,6 @@ sub do_tests
         });
     }
 
-    foreach my $module (map { 'Unindexed' . $_ } (0..6))
-    {
-        $INC{$module . '.pm'} = File::Spec->devnull;   # cannot be in our build dir!
-        no strict 'refs';
-        ${$module . '::VERSION'} = '2.0';
-    }
-
     my $tzil = Builder->from_config(
         { dist_root => 't/does-not-exist' },
         {
@@ -76,6 +69,7 @@ sub do_tests
                 ),
                 path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
             },
+            also_copy => { 't/lib' => 't/lib' },
         },
     );
 
@@ -89,6 +83,8 @@ sub do_tests
     $tzil->chrome->set_response_for($prompt1, 'n');
 
     $tzil->chrome->logger->set_debug(1);
+
+    unshift @INC, File::Spec->catdir($tzil->tempdir, qw(t lib));
 
     like(
         exception { $tzil->build },

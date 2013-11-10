@@ -56,6 +56,7 @@ my $tzil = Builder->from_config(
             ),
             path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
         },
+        also_copy => { 't/lib' => 't/lib' },
     },
 );
 
@@ -68,6 +69,8 @@ Continue anyway?";
 $tzil->chrome->set_response_for($full_prompt, 'n');
 
 $tzil->chrome->logger->set_debug(1);
+
+unshift @INC, File::Spec->catdir($tzil->tempdir, qw(t lib));
 
 like(
     exception { $tzil->build },
