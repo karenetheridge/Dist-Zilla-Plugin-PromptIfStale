@@ -3,6 +3,9 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
           - no longer loading each module being checked in order to get its
             $VERSION
+          - fix logic for choosing when to pull down a copy of
+            02packages.details.txt (now only doing so when otherwise we would
+            make six or more HTTP hits to PAUSE)
 
 0.011     2013-11-10 01:54:55Z
           - honour check_all_prereqs setting at release time (previously
