@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.012     2013-11-10 19:27:11Z (TRIAL RELEASE)
           - no longer loading each module being checked in order to get its
             $VERSION
           - fix logic for choosing when to pull down a copy of
