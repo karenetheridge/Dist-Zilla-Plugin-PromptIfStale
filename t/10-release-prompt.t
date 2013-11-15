@@ -4,24 +4,25 @@ use warnings FATAL => 'all';
 use Test::More;
 use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 use Test::DZil;
+use Test::Fatal;
 use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
 use List::Util 'first';
 
+my @prompts;
+{
+    my $meta = find_meta('Dist::Zilla::Chrome::Test');
+    $meta->make_mutable;
+    $meta->add_before_method_modifier(prompt_str => sub {
+        my ($self, $prompt, $arg) = @_;
+        push @prompts, $prompt;
+    });
+}
+
 for my $case ( 0, 1 ) {
 
     subtest "check_all_prereqs => $case" => sub {
-
-        my @prompts;
-        {
-            my $meta = find_meta('Dist::Zilla::Chrome::Test');
-            $meta->make_mutable;
-            $meta->add_before_method_modifier(prompt_str => sub {
-                my ($self, $prompt, $arg) = @_;
-                push @prompts, $prompt;
-            });
-        }
 
         my $tzil = Builder->from_config(
             { dist_root => 't/does-not-exist' },
@@ -76,6 +77,7 @@ for my $case ( 0, 1 ) {
         );
 
         Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+        @prompts = ();
     }
 }
 
