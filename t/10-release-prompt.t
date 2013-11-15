@@ -70,7 +70,11 @@ for my $case ( 0, 1 ) {
 
         $tzil->chrome->set_response_for($_, 'y') foreach @expected_prompts;
 
-        eval { $tzil->release }; # because aborting is log_fatal
+        like(
+            exception { $tzil->release },
+            qr/\Q[PromptIfStale] Aborting release\E/,
+            'release aborted',
+        );
 
         cmp_deeply(
             \@prompts,
