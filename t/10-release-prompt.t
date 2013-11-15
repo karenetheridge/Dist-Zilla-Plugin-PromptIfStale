@@ -68,8 +68,6 @@ for my $case ( 0, 1 ) {
 
         $tzil->chrome->logger->set_debug(1);
 
-        $tzil->chrome->set_response_for($_, 'y') foreach @expected_prompts;
-
         like(
             exception { $tzil->release },
             qr/\Q[PromptIfStale] Aborting release\E/,
