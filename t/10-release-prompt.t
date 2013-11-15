@@ -66,6 +66,8 @@ for my $case ( 0, 1 ) {
             "Issues found:\n" . join("\n", @{$expected_prompts{$_}}, 'Continue anyway?')
         } qw(before_release);
 
+        $tzil->chrome->logger->set_debug(1);
+
         $tzil->chrome->set_response_for($_, 'y') foreach @expected_prompts;
 
         eval { $tzil->release }; # because aborting is log_fatal
@@ -73,8 +75,8 @@ for my $case ( 0, 1 ) {
         cmp_deeply(
             \@prompts,
             \@expected_prompts,
-            'we were indeed prompted, for exactly all the right phases and types, and not twice for the duplicates',
-        );
+            "check_all_prereqs = $case: we were indeed prompted, for exactly all the right phases and types, and not twice for the duplicates",
+        ) or diag 'got: ', explain \@prompts;
 
         Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
         @prompts = ();
