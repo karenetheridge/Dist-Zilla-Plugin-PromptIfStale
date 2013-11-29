@@ -50,7 +50,7 @@ Once installed, here are some dzil commands you might try:
   $ dzil test --release
   $ dzil xtest
   $ dzil listdeps --json
-  $ dzil build --not
+  $ dzil build --notgz
 
 You can learn more about Dist::Zilla at http://dzil.org/.
 
@@ -67,8 +67,10 @@ If you have found a bug, but do not have an accompanying patch to fix it, you
 can submit an issue report here:
 https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-PromptIfStale
 or via bug-Dist-Zilla-Plugin-PromptIfStale@rt.cpan.org.
-This is also a good place to send your questions about the usage of this distribution.
+
+There is also a mailing list available for users of this distribution, at
+http://dzil.org/#mailing-list.
 
 
 This file was generated via Dist::Zilla::Plugin::GenerateFile::ShareDir 0.002 from a
-template file originating in Dist-Zilla-PluginBundle-Author-ETHER-0.040.
+template file originating in Dist-Zilla-PluginBundle-Author-ETHER-0.041.

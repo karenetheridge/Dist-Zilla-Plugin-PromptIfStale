@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are 
 
 # VERSION
 
-version 0.013
+version 0.014
 
 # SYNOPSIS
 
@@ -55,6 +55,10 @@ build time.
     from the `configure`, `build`, `runtime`, `test` and `develop` phases,
     and the `requires`, `recommends` and `suggests` types.
 
+- `skip`
+
+    The name of a module to exempt from checking. Can be provided more than once.
+
 # SUPPORT
 
 Bugs may be submitted through [the RT bug tracker](https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-PromptIfStale)
@@ -63,7 +67,7 @@ I am also usually active on irc, as 'ether' at `irc.perl.org`.
 
 # SEE ALSO
 
-- [Dist::Zilla::Plugin::Prereqs::MatchInstalled](http://search.cpan.org/perldoc?Dist::Zilla::Plugin::Prereqs::MatchInstalled), [Dist::Zilla::Plugin::Prereqs::MatchInstalled::All](http://search.cpan.org/perldoc?Dist::Zilla::Plugin::Prereqs::MatchInstalled::All)
+- [Dist::Zilla::Plugin::Prereqs::MatchInstalled](https://metacpan.org/pod/Dist::Zilla::Plugin::Prereqs::MatchInstalled), [Dist::Zilla::Plugin::Prereqs::MatchInstalled::All](https://metacpan.org/pod/Dist::Zilla::Plugin::Prereqs::MatchInstalled::All)
 
 # AUTHOR
 
