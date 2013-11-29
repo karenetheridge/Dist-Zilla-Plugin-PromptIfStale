@@ -59,6 +59,19 @@ has skip => (
     default => sub { [] },
 );
 
+around dump_config => sub
+{
+    my ($orig, $self) = @_;
+    my $config = $self->$orig;
+
+    $config->{'' . __PACKAGE__} = {
+        (map { $_ => ($self->$_ || 0) } qw(phase check_all_plugins check_all_prereqs)),
+        (map { $_ => [ $self->$_ ] } qw(modules skip)),
+    };
+
+    return $config;
+};
+
 sub before_build
 {
     my $self = shift;
