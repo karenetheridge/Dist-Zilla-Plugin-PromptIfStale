@@ -49,7 +49,7 @@ is(
 my $build_dir = $tzil->tempdir->subdir('build');
 cmp_deeply(
     $tzil->log_messages,
-    supersetof(
+    superbagof(
         (map { re(qr/^\Q[PromptIfStale] comparing indexed vs. local version for Dist::Zilla::Plugin::$_: indexed=0; local version=\E/) } qw(GatherDir PromptIfStale)),
         '[DZ] writing DZT-Sample in ' . $build_dir,
     ),
@@ -58,7 +58,7 @@ cmp_deeply(
 
 cmp_deeply(
     \@modules_queried,
-    superbagof('strict', map { 'Dist::Zilla::Plugin::' . $_ } qw(GatherDir PromptIfStale)),
+    bag('strict', map { 'Dist::Zilla::Plugin::' . $_ } qw(GatherDir PromptIfStale FinderCode)),
     'all modules, from both configs, are checked',
 );
 

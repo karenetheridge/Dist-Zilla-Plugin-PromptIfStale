@@ -49,7 +49,7 @@ is(
 
 cmp_deeply(
     $tzil->log_messages,
-    supersetof(
+    superbagof(
         '[PromptIfStale] Unindexed provided locally (at t/lib/Unindexed.pm); skipping version check',
         '[DZ] writing DZT-Sample in ' . $tzil->tempdir->subdir('build'),
     ),

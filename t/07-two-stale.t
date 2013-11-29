@@ -86,7 +86,7 @@ cmp_deeply(
 
 cmp_deeply(
     $tzil->log_messages,
-    supersetof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Indexed::But::Not::Installed Unindexed"),
+    superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Indexed::But::Not::Installed Unindexed"),
     'build was aborted, with remedy instructions',
 ) or diag 'got: ', explain $tzil->log_messages;
 

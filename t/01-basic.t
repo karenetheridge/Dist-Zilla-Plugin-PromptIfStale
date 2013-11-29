@@ -98,7 +98,7 @@ my $build_dir = $tzil->tempdir->subdir('build');
 
 cmp_deeply(
     $tzil->log_messages,
-    supersetof(
+    superbagof(
         '[PromptIfStale] comparing indexed vs. local version for strict: indexed=200.0; local version=' . strict->VERSION,
         '[DZ] writing DZT-Sample in ' . $build_dir,
     ),
