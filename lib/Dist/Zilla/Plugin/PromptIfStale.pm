@@ -10,7 +10,7 @@ with 'Dist::Zilla::Role::BeforeBuild',
 
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw(ArrayRef Bool Str);
-use List::MoreUtils 'uniq';
+use List::MoreUtils qw(uniq none);
 use version;
 use Path::Tiny;
 use Cwd;
@@ -21,7 +21,7 @@ use Module::Path 'module_path';
 use Module::Metadata;
 use namespace::autoclean;
 
-sub mvp_multivalue_args { 'modules' }
+sub mvp_multivalue_args { qw(modules skip) }
 sub mvp_aliases { {
     module => 'modules',
     check_all => 'check_all_plugins',
@@ -49,6 +49,14 @@ has check_all_plugins => (
 has check_all_prereqs => (
     is => 'ro', isa => Bool,
     default => 0,
+);
+
+has skip => (
+    isa => ArrayRef[Str],
+    traits => [ 'Array' ],
+    handles => { skip => 'elements' },
+    lazy => 1,
+    default => sub { [] },
 );
 
 sub before_build
@@ -170,11 +178,14 @@ has _modules_before_build => (
     lazy => 1,
     default => sub {
         my $self = shift;
-        return [ uniq
-            $self->modules,
-            $self->check_all_plugins
-                ? map { blessed $_ } @{ $self->zilla->plugins }
-                : (),
+        my @skip = $self->skip;
+        return [
+            grep { my $module = $_; none { $module eq $_ } @skip }
+            uniq
+                $self->modules,
+                $self->check_all_plugins
+                    ? map { blessed $_ } @{ $self->zilla->plugins }
+                    : ()
         ];
     },
 );
@@ -187,7 +198,9 @@ has _modules_prereq => (
     default => sub {
         my $self = shift;
         my $prereqs = $self->zilla->prereqs->as_string_hash;
+        my @skip = $self->skip;
         [
+            grep { my $module = $_; none { $module eq $_ } @skip }
             map { keys %$_ }
             grep { defined }
             map { @{$_}{qw(requires recommends suggests)} }
@@ -309,6 +322,10 @@ A boolean, defaulting to false, indicating that all prerequisites in the
 distribution metadata should be checked. The modules are a merged list taken
 from the C<configure>, C<build>, C<runtime>, C<test> and C<develop> phases,
 and the C<requires>, C<recommends> and C<suggests> types.
+
+=item * C<skip>
+
+The name of a module to exempt from checking. Can be provided more than once.
 
 =back
 
