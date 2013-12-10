@@ -6,6 +6,7 @@ use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 use Test::DZil;
 use Test::Fatal;
 use Test::Deep;
+use File::Spec;
 use Path::Tiny;
 use Moose::Util 'find_meta';
 use version;
@@ -57,6 +58,9 @@ SKIP: {
 # now let's craft a situation where we know our module is stale, and confirm
 # we prompt properly about it.
 # This also saves us from having to do a real HTTP hit.
+
+unshift @INC, File::Spec->catdir(qw(t lib));
+require NoNetworkHits;
 
 {
     my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');

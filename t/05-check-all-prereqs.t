@@ -9,6 +9,9 @@ use Path::Tiny;
 use Moose::Util 'find_meta';
 use List::Util 'first';
 
+use lib 't/lib';
+use NoNetworkHits;
+
 my @prompts;
 {
     my $meta = find_meta('Dist::Zilla::Chrome::Test');

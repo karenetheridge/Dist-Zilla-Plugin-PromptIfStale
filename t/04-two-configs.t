@@ -10,6 +10,9 @@ use Test::Deep;
 use Moose::Util 'find_meta';
 use version;
 
+use lib 't/lib';
+use NoNetworkHits;
+
 my $tzil = Builder->from_config(
     { dist_root => 't/does-not-exist' },
     {

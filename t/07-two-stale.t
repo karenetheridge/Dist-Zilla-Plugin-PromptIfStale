@@ -11,6 +11,9 @@ use Path::Tiny;
 use Moose::Util 'find_meta';
 use version;
 
+use lib 't/lib';
+use NoNetworkHits;
+
 BEGIN {
     use Dist::Zilla::Plugin::PromptIfStale;
     $Dist::Zilla::Plugin::PromptIfStale::VERSION = 9999

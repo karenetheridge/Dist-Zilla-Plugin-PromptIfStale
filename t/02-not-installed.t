@@ -10,6 +10,9 @@ use Path::Tiny;
 use Moose::Util 'find_meta';
 use version;
 
+use lib 't/lib';
+use NoNetworkHits;
+
 # simulate a response from the PAUSE index, without having to do a real HTTP hit
 
 use Dist::Zilla::Plugin::PromptIfStale; # make sure we are loaded!!

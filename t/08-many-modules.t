@@ -10,6 +10,9 @@ use File::Spec;
 use Path::Tiny;
 use Moose::Util 'find_meta';
 
+use lib 't/lib';
+use NoNetworkHits;
+
 BEGIN {
     use Dist::Zilla::Plugin::PromptIfStale;
     $Dist::Zilla::Plugin::PromptIfStale::VERSION = 9999
@@ -63,19 +66,19 @@ SKIP: {
 # ensure we don't actually make network hits
 {
     use HTTP::Tiny;
-    my $meta = find_meta('HTTP::Tiny')
-        || Class::MOP::Class->initialize('HTTP::Tiny');
-    $meta->add_around_method_modifier(mirror => sub { +{ success => 1 } });
+    package HTTP::Tiny;
+    no warnings 'redefine';
+    sub mirror { +{ success => 1 } }
 }
 {
     use Parse::CPAN::Packages::Fast;
-    my $meta = find_meta('Parse::CPAN::Packages::Fast')
-        || Class::MOP::Class->initialize('Parse::CPAN::Packages::Fast');
+    package Parse::CPAN::Packages::Fast;
     my $initialized;
-    $meta->add_around_method_modifier(new => sub {
+    no warnings 'redefine';
+    sub new {
         die if $initialized;
         'fake packages object ' . $initialized++;
-    });
+    }
 }
 
 subtest 'testing against a faked index...' => \&do_tests;
