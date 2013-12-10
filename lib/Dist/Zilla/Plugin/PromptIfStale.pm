@@ -119,7 +119,7 @@ sub _check_modules
 
     $self->log('checking for stale modules...');
 
-    my (@bad_modules, @prompts, %query_index);
+    my (@bad_modules, @prompts, %module_to_filename);
     foreach my $module (sort { $a cmp $b } @modules)
     {
         next if $module eq 'perl';
@@ -140,13 +140,13 @@ sub _check_modules
                 . '); skipping version check'), next
             unless $relative_path =~ m/^\.\./;
 
-        $query_index{$module} = $path;
+        $module_to_filename{$module} = $path;
     }
 
-    foreach my $module (sort { $a cmp $b } keys %query_index)
+    foreach my $module (sort { $a cmp $b } keys %module_to_filename)
     {
-        my $indexed_version = $self->_indexed_version($module, !!(keys %query_index > 5));
-        my $local_version = Module::Metadata->new_from_file($query_index{$module})->version;
+        my $indexed_version = $self->_indexed_version($module, !!(keys %module_to_filename > 5));
+        my $local_version = Module::Metadata->new_from_file($module_to_filename{$module})->version;
 
         $self->log_debug('comparing indexed vs. local version for ' . $module
             . ': indexed=' . ($indexed_version // 'undef')
