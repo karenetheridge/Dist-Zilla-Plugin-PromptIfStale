@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
-{{$NEXT}}, a.k.a. "The Getty Release"
+{{$NEXT}}
+
+0.015     2013-12-10 23:38:52Z, a.k.a. "The Getty Release"
           - new 'fatal' option, to avoid prompting
           - new 'index_base_url' option, for using different CPAN indexes
 

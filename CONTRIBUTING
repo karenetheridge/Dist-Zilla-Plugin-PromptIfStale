@@ -30,8 +30,8 @@ author-specific plugins.  If you would like to use it for contributing,
 install it from CPAN, then run one of the following commands, depending on
 your CPAN client:
 
-  $ cpan `dzil authordeps --missing`
-  $ dzil authordeps --missing | cpanm
+  $ cpan `dzil authordeps --missing | grep -v ^inc::`
+  $ dzil authordeps --missing | grep -v ^inc:: | cpanm
 
 You should then also install any additional requirements not needed by the
 dzil build but may be needed by tests or other development:
@@ -70,7 +70,9 @@ or via bug-Dist-Zilla-Plugin-PromptIfStale@rt.cpan.org.
 
 There is also a mailing list available for users of this distribution, at
 http://dzil.org/#mailing-list.
+There is also an irc channel available for users of this distribution, at
+irc://irc.perl.org/#distzilla.
 
 
-This file was generated via Dist::Zilla::Plugin::GenerateFile::ShareDir 0.002 from a
-template file originating in Dist-Zilla-PluginBundle-Author-ETHER-0.041.
+This file was generated via Dist::Zilla::Plugin::GenerateFile::ShareDir 0.003 from a
+template file originating in Dist-Zilla-PluginBundle-Author-ETHER-0.042.

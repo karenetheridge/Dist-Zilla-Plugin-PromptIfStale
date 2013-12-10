@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are 
 
 # VERSION
 
-version 0.014
+version 0.015
 
 # SYNOPSIS
 
@@ -52,12 +52,23 @@ build time.
 
     A boolean, defaulting to false, indicating that all prerequisites in the
     distribution metadata should be checked. The modules are a merged list taken
-    from the `configure`, `build`, `runtime`, `test` and `develop` phases,
+    from all phases (`configure`, `build`, `runtime`, `test` and `develop`) ,
     and the `requires`, `recommends` and `suggests` types.
 
 - `skip`
 
     The name of a module to exempt from checking. Can be provided more than once.
+
+- `fatal`
+
+    A boolean, defaulting to false, indicating that missing prereqs will result in
+    an immediate abort of the build/release process, without prompting.
+
+- `index_base_url`
+
+    When provided, uses this base URL to fetch `02packages.details.txt.gz`
+    instead of the default `http://www.cpan.org`.  Use this when your
+    distribution uses prerequisites found only in your darkpan-like server.
 
 # SUPPORT
 
