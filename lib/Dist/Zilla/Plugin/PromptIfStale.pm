@@ -64,6 +64,10 @@ has fatal => (
     default => 0,
 );
 
+has index_base_url => (
+    is => 'ro', isa => Str,
+);
+
 around dump_config => sub
 {
     my ($orig, $self) = @_;
@@ -238,7 +242,10 @@ sub _indexed_version
 {
     my ($self, $module, $combined) = @_;
 
-    return $combined || $packages
+    # we download 02packages if we have several modules to query at once, or
+    # if we were given a different URL to use -- otherwise, we perform an API
+    # hit for just this one module's data
+    return $combined || $packages || $self->index_base_url
         ? $self->_indexed_version_via_02packages($module)
         : $self->_indexed_version_via_query($module);
 }
@@ -247,6 +254,8 @@ sub _indexed_version
 sub _indexed_version_via_query
 {
     my ($self, $module) = @_;
+
+    die 'should not be here - get 02packages instead' if $self->index_base_url;
 
     my $res = HTTP::Tiny->new->get("http://cpanidx.org/cpanidx/json/mod/$module");
     $self->log_debug('could not query the index?'), return undef if not $res->{success};
@@ -274,7 +283,9 @@ sub _get_packages
     my $filename = '02packages.details.txt.gz';
     my $path = path($tempdir, $filename);
 
-    my $response = HTTP::Tiny->new->mirror('http://www.cpan.org/modules/' . $filename, $path);
+    my $base = $self->index_base_url || 'http://www.cpan.org';
+
+    my $response = HTTP::Tiny->new->mirror($base . '/modules/' . $filename, $path);
     $self->log_debug('could not fetch the index?'), return undef if not $response->{success};
 
     require Parse::CPAN::Packages::Fast;
@@ -354,6 +365,14 @@ The name of a module to exempt from checking. Can be provided more than once.
 
 A boolean, defaulting to false, indicating that missing prereqs will result in
 an immediate abort of the build/release process, without prompting.
+
+=item * C<index_base_url>
+
+=for stopwords darkpan
+
+When provided, uses this base URL to fetch F<02packages.details.txt.gz>
+instead of the default C<http://www.cpan.org>.  Use this when your
+distribution uses prerequisites found only in your darkpan-like server.
 
 =back
 

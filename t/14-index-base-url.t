@@ -41,28 +41,6 @@ my @checked_via_02packages;
     my $packages;
 }
 
-# for non-author tests, we also patch HTTP::Tiny and
-# Parse::CPAN::Packages::Fast so we don't actually make network hits
-
-my @prompts;
-{
-#    use Dist::Zilla::Chrome::Test;
-    my $meta = find_meta('Dist::Zilla::Chrome::Test');
-    $meta->make_mutable;
-    $meta->add_before_method_modifier(prompt_str => sub {
-        my ($self, $prompt, $arg) = @_;
-        push @prompts, $prompt;
-    });
-}
-
-
-SKIP: {
-    skip('this test downloads a large file from the CPAN and should only be run for authors', 1)
-        unless $ENV{AUTHOR_TESTING} or -d '.git';
-
-    subtest 'testing against real index on the network...' => \&do_tests;
-}
-
 # ensure we don't actually make network hits
 my $http_url;
 {
@@ -82,15 +60,7 @@ my $http_url;
     }
 }
 
-subtest 'testing against a faked index...' => \&do_tests;
-
-done_testing;
-
-sub do_tests
 {
-    @checked_via_02packages = @prompts = ();
-    Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
-
     my $tzil = Builder->from_config(
         { dist_root => 't/does-not-exist' },
         {
@@ -99,25 +69,16 @@ sub do_tests
                     [ GatherDir => ],
                     [ PromptIfStale => {
                         modules => [ map { 'Unindexed' . $_ } 0..5 ],
-                        check_all_prereqs => 1,
                         phase => 'build',
+                        index_base_url => 'http://gettysworld.org',
+                        fatal => 1,
                       } ],
-                    [ Prereqs => RuntimeRequires => { 'Unindexed6' => 0 } ],
                 ),
                 path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
             },
             also_copy => { 't/lib' => 't/lib' },
         },
     );
-
-    # no need to test all combinations - we sort the module list
-    my $prompt0 = "Issues found:\n"
-        . join("\n", map { '    Unindexed' . $_ . ' is not indexed.' } 0..5)
-        . "\nContinue anyway?";
-    $tzil->chrome->set_response_for($prompt0, 'y');
-
-    my $prompt1 = 'Unindexed6 is not indexed. Continue anyway?';
-    $tzil->chrome->set_response_for($prompt1, 'n');
 
     $tzil->chrome->logger->set_debug(1);
 
@@ -131,22 +92,18 @@ sub do_tests
     );
 
     cmp_deeply(
-        \@prompts,
-        [ $prompt0, $prompt1 ],
-        'we were indeed prompted',
-    );
-
-    cmp_deeply(
         \@checked_via_02packages,
-        [ map { 'Unindexed' . $_ } 0..6 ],
+        [ map { 'Unindexed' . $_ } 0..5 ],
         'all modules checked using 02packages',
     );
 
-    like($http_url, qr{^http://www.cpan.org/}, 'regular CPAN index URL used');
+    like($http_url, qr{^http://gettysworld.org/}, 'overridden index URL used');
 
     cmp_deeply(
         $tzil->log_messages,
-        superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Unindexed6"),
+        superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm " . join(' ', map { 'Unindexed' . $_ } 0..5)),
         'build was aborted, with remedy instructions',
     ) or diag 'got: ', explain $tzil->log_messages;
 }
+
+done_testing;
