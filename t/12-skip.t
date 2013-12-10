@@ -66,11 +66,7 @@ is(
     'build was not halted - there were no prompts',
 );
 
-cmp_deeply(
-    \@prompts,
-    [],
-    'there were no prompts',
-) or diag 'got: ', explain \@prompts;
+is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@prompts;
 
 my $build_dir = $tzil->tempdir->subdir('build');
 

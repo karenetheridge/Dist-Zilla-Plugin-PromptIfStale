@@ -23,6 +23,16 @@ my $tzil = Builder->from_config(
     },
 );
 
+my @prompts;
+{
+    my $meta = find_meta('Dist::Zilla::Chrome::Test');
+    $meta->make_mutable;
+    $meta->add_before_method_modifier(prompt_str => sub {
+        my ($self, $prompt, $arg) = @_;
+        push @prompts, $prompt;
+    });
+}
+
 my @modules_queried;
 {
     my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
@@ -43,8 +53,10 @@ $tzil->chrome->logger->set_debug(1);
 is(
     exception { $tzil->build },
     undef,
-    'no prompts when checking for a module that is not stale',
+    'build succeeded when checking for a module that is not stale',
 );
+
+is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@prompts;
 
 my $build_dir = $tzil->tempdir->subdir('build');
 cmp_deeply(
