@@ -1,6 +1,6 @@
 Revision history for {{$dist->name}}
 
-{{$NEXT}}
+{{$NEXT}}, a.k.a. "The Getty Release"
           - new 'fatal' option, to avoid prompting
           - new 'index_base_url' option, for using different CPAN indexes
 
