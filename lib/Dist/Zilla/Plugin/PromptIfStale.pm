@@ -218,7 +218,7 @@ has _modules_prereq => (
             grep { defined }
             map { @{$_}{qw(requires recommends suggests)} }
             grep { defined }
-            @{$prereqs}{qw(configure build runtime test develop)}
+            values %$prereqs
         ];
     },
 );
@@ -333,7 +333,7 @@ build this distribution should be checked.
 
 A boolean, defaulting to false, indicating that all prerequisites in the
 distribution metadata should be checked. The modules are a merged list taken
-from the C<configure>, C<build>, C<runtime>, C<test> and C<develop> phases,
+from all phases (C<configure>, C<build>, C<runtime>, C<test> and C<develop>) ,
 and the C<requires>, C<recommends> and C<suggests> types.
 
 =item * C<skip>
