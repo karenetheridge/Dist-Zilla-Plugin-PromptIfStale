@@ -59,6 +59,11 @@ has skip => (
     default => sub { [] },
 );
 
+has fatal => (
+    is => 'ro', isa => Bool,
+    default => 0,
+);
+
 around dump_config => sub
 {
     my ($orig, $self) = @_;
@@ -177,9 +182,14 @@ sub _check_modules
     my $prompt = @prompts > 1
         ? (join("\n    ", 'Issues found:', @prompts) . "\n")
         : ($prompts[0] . ' ');
-    $prompt .= 'Continue anyway?';
 
-    my $continue = $self->zilla->chrome->prompt_yn($prompt, { default => 0 });
+    my $continue;
+    if (not $self->fatal)
+    {
+        $prompt .= 'Continue anyway?';
+        $continue = $self->zilla->chrome->prompt_yn($prompt, { default => 0 });
+    }
+
     $self->log_fatal('Aborting ' . $self->phase . "\n"
         . 'To remedy, do: cpanm ' . join(' ', @bad_modules)) if not $continue;
 }
@@ -339,6 +349,11 @@ and the C<requires>, C<recommends> and C<suggests> types.
 =item * C<skip>
 
 The name of a module to exempt from checking. Can be provided more than once.
+
+=item * C<fatal>
+
+A boolean, defaulting to false, indicating that missing prereqs will result in
+an immediate abort of the build/release process, without prompting.
 
 =back
 
