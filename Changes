@@ -31,42 +31,42 @@ Revision history for {{$dist->name}}
           - work around issues with EUMM-bundled version.pm by properly
             fudging a VERSION during testing (affected perls before 5.13.9)
 
-0.008     2013-10-11 01:47:09Z (Karen Etheridge)
+0.008     2013-10-11 01:47:09Z
           - now also checks the configure and build prerequisites
 
-0.007     2013-10-02 03:58:16Z (Karen Etheridge)
+0.007     2013-10-02 03:58:16Z
           - when killing a build after being prompted, include a line that can
             be copy-pasted to install all the missing modules via cpanm
           - speed up index querying when checking for 6 or more modules at
             once by pulling down a copy of 02packages.details.txt.gz
 
-0.006     2013-09-24 04:36:43Z (Karen Etheridge)
+0.006     2013-09-24 04:36:43Z
           - diagnostic message added before checks begin, so the user isn't
             wondering why the build/release appears to hang (querying the
             index can take a little bit of time if there are a lot of modules
             to check)
 
-0.005     2013-09-16 00:05:07Z (Karen Etheridge)
+0.005     2013-09-16 00:05:07Z
           - now only prompting once (per phase) for all discrepancies found
           - no longer prompting for the same module twice, if there are
             multiple instances of the plugin running
 
-0.004     2013-09-11 01:39:02Z (Karen Etheridge)
+0.004     2013-09-11 01:39:02Z
           - New "check_all_prereqs" option
           - warnings tests bypassed during installation
 
-0.003     2013-09-05 07:45:52Z (Karen Etheridge)
+0.003     2013-09-05 07:45:52Z
           - gracefully handle checking for a module that is not installed
           - support setting both the check_all_plugins and module configs at
             once
 
-0.002     2013-08-12 18:04:29 PDT-0700 (Karen Etheridge)
+0.002     2013-08-13 01:04:29Z
           - fix documentation that referred to an option by the wrong name
           - inverted prompt, from "abort build?" to "continue anyway?" (with
             the default remaining as aborting the build/not continuing)
           - version checks are bypassed for modules provided by the dist being
             built
 
-0.001     2013-08-11 21:20:18 PDT-0700 (Karen Etheridge)
+0.001     2013-08-12 04:20:18Z
           - Initial release.
 
