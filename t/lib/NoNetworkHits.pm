@@ -5,8 +5,7 @@ use warnings FATAL => 'all';
 # testing.
 {
     use HTTP::Tiny;
-    package  # hide from [CheckSelfDependency]
-        HTTP::Tiny;
+    package HTTP::Tiny;
     no warnings 'redefine';
     sub get { die 'HTTP::Tiny::get called!' }
     sub mirror { die 'HTTP::Tiny::mirror called!' }
