@@ -211,7 +211,7 @@ has _modules_before_build => (
             uniq
                 $self->modules,
                 $self->check_all_plugins
-                    ? map { blessed $_ } @{ $self->zilla->plugins }
+                    ? map { $_->meta->name } @{ $self->zilla->plugins }
                     : ()
         ];
     },
