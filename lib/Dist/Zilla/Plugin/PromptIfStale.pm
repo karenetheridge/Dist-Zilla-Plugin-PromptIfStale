@@ -120,8 +120,7 @@ sub before_release
 # already been checked for, so other instances of this plugin do not duplicate
 # the check.
 my %already_checked;
-
-sub __clear_already_checked{ %already_checked = () } # for testing
+sub __clear_already_checked { %already_checked = () } # for testing
 
 sub _check_modules
 {
