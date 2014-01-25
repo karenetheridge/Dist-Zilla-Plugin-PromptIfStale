@@ -129,7 +129,7 @@ sub _check_modules
     $self->log('checking for stale modules...');
 
     my (@bad_modules, @prompts, %module_to_filename);
-    foreach my $module (sort { $a cmp $b } @modules)
+    foreach my $module (sort @modules)
     {
         next if $module eq 'perl';
         next if $already_checked{$module};
@@ -152,7 +152,7 @@ sub _check_modules
         $module_to_filename{$module} = $path;
     }
 
-    foreach my $module (sort { $a cmp $b } keys %module_to_filename)
+    foreach my $module (sort keys %module_to_filename)
     {
         my $indexed_version = $self->_indexed_version($module, !!(keys %module_to_filename > 5));
         my $local_version = Module::Metadata->new_from_file($module_to_filename{$module})->version;
