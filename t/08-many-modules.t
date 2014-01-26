@@ -57,8 +57,8 @@ my @prompts;
 
 
 SKIP: {
-    skip('this test downloads a large file from the CPAN and should only be run for authors', 1)
-        unless $ENV{AUTHOR_TESTING} or -d '.git';
+    skip('this test downloads a large file from the CPAN and usually should only be run for authors', 1)
+        unless $ENV{AUTHOR_TESTING} or $ENV{EXTENDED_TESTING} or -d '.git';
 
     subtest 'testing against real index on the network...' => \&do_tests;
 }
