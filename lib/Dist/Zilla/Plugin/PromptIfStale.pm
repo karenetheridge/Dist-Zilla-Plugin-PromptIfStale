@@ -20,6 +20,7 @@ use Encode;
 use JSON;
 use Module::Path 'module_path';
 use Module::Metadata;
+use Module::CoreList;
 use namespace::autoclean;
 
 sub mvp_multivalue_args { qw(modules skip) }
@@ -40,6 +41,11 @@ has modules => (
     handles => { modules => 'elements' },
     lazy => 1,
     default => sub { [] },
+);
+
+has skip_core_modules => (
+    is => 'ro', isa => Bool,
+    default => 0,
 );
 
 has check_all_plugins => (
@@ -133,6 +139,9 @@ sub _check_modules
     {
         next if $module eq 'perl';
         next if $already_checked{$module};
+        next if $self->skip_core_modules
+            and Module::CoreList->first_release($module) # was/is in core
+            and not Module::CoreList->removed_from($module);#not yet removed
 
         my $path = module_path($module);
         if (not $path)
@@ -360,6 +369,12 @@ and the C<requires>, C<recommends> and C<suggests> types.
 =item * C<skip>
 
 The name of a module to exempt from checking. Can be provided more than once.
+
+=item * C<skip_core_modules>
+
+A boolean, defaulting to false. Exempt from checking all the modules
+that are present in the perl core. This prevents the prompts
+for modules that you can't update anyway, because they require newer perl.
 
 =item * C<fatal>
 
