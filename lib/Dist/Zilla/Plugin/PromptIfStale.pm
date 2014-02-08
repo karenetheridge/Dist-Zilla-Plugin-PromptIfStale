@@ -105,7 +105,7 @@ sub after_build
     if ($self->phase eq 'build' and $self->check_all_prereqs)
     {
         my @modules = $self->_modules_prereq;
-        $self->_check_modules(@modules) if @modules;
+        $self->_prompt_if_stale(@modules) if @modules;
     }
 }
 
@@ -120,7 +120,7 @@ sub before_release
         my @skip = $self->skip;
         @modules = grep { my $module = $_; none { $module eq $_ } @skip } uniq @modules;
 
-        $self->_check_modules(@modules) if @modules;
+        $self->_prompt_if_stale(@modules) if @modules;
     }
 }
 
@@ -130,13 +130,11 @@ sub before_release
 my %already_checked;
 sub __clear_already_checked { %already_checked = () } # for testing
 
-sub _check_modules
+sub stale_modules
 {
     my ($self, @modules) = @_;
 
-    $self->log('checking for stale modules...');
-
-    my (@bad_modules, @prompts, %module_to_filename);
+    my (@stale_modules, @errors, %module_to_filename);
     foreach my $module (sort @modules)
     {
         next if $module eq 'perl';
@@ -146,8 +144,8 @@ sub _check_modules
         if (not $path)
         {
             $already_checked{$module}++;
-            push @bad_modules, $module;
-            push @prompts, $module . ' is not installed.';
+            push @stale_modules, $module;
+            push @errors, $module . ' is not installed.';
             next;
         }
 
@@ -172,8 +170,8 @@ sub _check_modules
         if (not defined $indexed_version)
         {
             $already_checked{$module}++;
-            push @bad_modules, $module;
-            push @prompts, $module . ' is not indexed.';
+            push @stale_modules, $module;
+            push @errors, $module . ' is not indexed.';
             next;
         }
 
@@ -181,19 +179,29 @@ sub _check_modules
             and $local_version < $indexed_version)
         {
             $already_checked{$module}++;
-            push @bad_modules, $module;
-            push @prompts, 'Indexed version of ' . $module . ' is ' . $indexed_version
+            push @stale_modules, $module;
+            push @errors, 'Indexed version of ' . $module . ' is ' . $indexed_version
                     . ' but you only have ' . $local_version
                     . ' installed.';
             next;
         }
     }
 
-    return if not @prompts;
+    return \@stale_modules, \@errors;
+}
 
-    my $prompt = @prompts > 1
-        ? (join("\n    ", 'Issues found:', @prompts) . "\n")
-        : ($prompts[0] . ' ');
+sub _prompt_if_stale
+{
+    my ($self, @modules) = @_;
+
+    $self->log('checking for stale modules...');
+    my ($stale_modules, $errors) = $self->stale_modules(@modules);
+
+    return if not @$errors;
+
+    my $prompt = @$errors > 1
+        ? (join("\n    ", 'Issues found:', @$errors) . "\n")
+        : ($errors->[0] . ' ');
 
     my $continue;
     if (not $self->fatal)
@@ -203,7 +211,7 @@ sub _check_modules
     }
 
     $self->log_fatal('Aborting ' . $self->phase . "\n"
-        . 'To remedy, do: cpanm ' . join(' ', @bad_modules)) if not $continue;
+        . 'To remedy, do: cpanm ' . join(' ', @$stale_modules)) if not $continue;
 }
 
 has _modules_plugin => (
@@ -383,7 +391,7 @@ distribution uses prerequisites found only in your darkpan-like server.
 
 =back
 
-=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release
+=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release stale_modules
 
 =head1 SUPPORT
 
