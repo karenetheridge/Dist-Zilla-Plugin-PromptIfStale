@@ -88,8 +88,13 @@ sub before_build
 
     if ($self->phase eq 'build')
     {
-        my @modules = $self->_modules_before_build;
-        $self->_check_modules(@modules) if @modules;
+        my @skip = $self->skip;
+        my @modules = (
+            grep { my $module = $_; none { $module eq $_ } @skip }
+            uniq $self->modules, $self->_modules_plugin
+        );
+
+        $self->_prompt_if_stale(@modules) if @modules;
     }
 }
 
@@ -109,10 +114,13 @@ sub before_release
     my $self = shift;
     if ($self->phase eq 'release')
     {
-        my @modules = $self->_modules_before_build;
-        push @modules, $self->_modules_prereq
-            if $self->check_all_prereqs;
-        $self->_check_modules( uniq @modules ) if @modules;
+        my @modules = ( $self->modules, $self->_modules_plugin );
+        push @modules, $self->_modules_prereq if $self->check_all_prereqs;
+
+        my @skip = $self->skip;
+        @modules = grep { my $module = $_; none { $module eq $_ } @skip } uniq @modules;
+
+        $self->_check_modules(@modules) if @modules;
     }
 }
 
@@ -197,21 +205,6 @@ sub _check_modules
     $self->log_fatal('Aborting ' . $self->phase . "\n"
         . 'To remedy, do: cpanm ' . join(' ', @bad_modules)) if not $continue;
 }
-
-has _modules_before_build => (
-    isa => 'ArrayRef[Str]',
-    traits => ['Array'],
-    handles => { _modules_before_build => 'elements' },
-    lazy => 1,
-    default => sub {
-        my $self = shift;
-        my @skip = $self->skip;
-        return [
-            grep { my $module = $_; none { $module eq $_ } @skip }
-            uniq $self->modules, $self->_modules_plugin
-        ];
-    },
-);
 
 has _modules_plugin => (
     isa => 'ArrayRef[Str]',
