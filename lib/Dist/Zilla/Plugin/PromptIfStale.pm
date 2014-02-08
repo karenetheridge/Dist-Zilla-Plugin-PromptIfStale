@@ -208,8 +208,22 @@ has _modules_before_build => (
         my @skip = $self->skip;
         return [
             grep { my $module = $_; none { $module eq $_ } @skip }
+            uniq $self->modules, $self->_modules_plugin
+        ];
+    },
+);
+
+has _modules_plugin => (
+    isa => 'ArrayRef[Str]',
+    traits => ['Array'],
+    handles => { _modules_plugin => 'elements' },
+    lazy => 1,
+    default => sub {
+        my $self = shift;
+        my @skip = $self->skip;
+        return [
+            grep { my $module = $_; none { $module eq $_ } @skip }
             uniq
-                $self->modules,
                 $self->check_all_plugins
                     ? map { $_->meta->name } @{ $self->zilla->plugins }
                     : ()
