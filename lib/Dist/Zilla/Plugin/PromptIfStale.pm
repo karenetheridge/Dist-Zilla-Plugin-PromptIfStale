@@ -407,6 +407,7 @@ I am also usually active on irc, as 'ether' at C<irc.perl.org>.
 
 =begin :list
 
+* the L<dzil stale|Dist::Zilla::App::Command::stale> command in this distribution
 * L<Dist::Zilla::Plugin::Prereqs::MatchInstalled>, L<Dist::Zilla::Plugin::Prereqs::MatchInstalled::All>
 
 =end :list

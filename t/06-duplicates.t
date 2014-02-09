@@ -7,6 +7,7 @@ use Test::DZil;
 use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
+use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
 use NoNetworkHits;
@@ -21,6 +22,8 @@ my @prompts;
     });
 }
 
+my $checked_app;
+BUILD:
 my $tzil = Builder->from_config(
     { dist_root => 't/does-not-exist' },
     {
@@ -65,6 +68,19 @@ my @expected_prompts = ((map {
 );
 
 $tzil->chrome->set_response_for($_, 'y') foreach @expected_prompts;
+
+if (not $checked_app++)
+{
+    my $wd = File::pushd::pushd($tzil->root);
+    cmp_deeply(
+        [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
+        [ map { 'Foo' . $_ } qw(A B C J K L X Y Z) ],
+        'app finds stale modules',
+    );
+    Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+    goto BUILD;
+}
+
 
 $tzil->build;
 $_->before_release('Foo.tar.gz') for @{ $tzil->plugins_with(-BeforeRelease) };

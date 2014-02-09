@@ -9,6 +9,7 @@ use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
 use List::Util 'first';
+use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
 use NoNetworkHits;
@@ -27,6 +28,8 @@ for my $case ( 0, 1 ) {
 
     subtest "check_all_prereqs => $case" => sub {
 
+        my $checked_app;
+        BUILD:
         my $tzil = Builder->from_config(
             { dist_root => 't/does-not-exist' },
             {
@@ -60,6 +63,19 @@ for my $case ( 0, 1 ) {
         # specifically requested 0 to 2
 
         my $last = $case ? '8' : '2';
+
+        if (not $checked_app++)
+        {
+            my $wd = File::pushd::pushd($tzil->root);
+            cmp_deeply(
+                [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
+                [ 'Bar', map { 'Foo' . $_ } ('0' .. $last) ],
+                'app finds stale modules',
+            );
+            Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+            goto BUILD;
+        }
+
         my %expected_prompts = (
             before_release => [
                 map { '    ' . $_ . ' is not installed.' } 'Bar', map { 'Foo' . $_ } ('0' .. $last) ],

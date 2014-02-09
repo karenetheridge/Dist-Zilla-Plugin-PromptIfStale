@@ -9,6 +9,7 @@ use Path::Tiny;
 use Test::Deep;
 use Moose::Util 'find_meta';
 use version;
+use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
 use NoNetworkHits;
@@ -51,6 +52,18 @@ my @modules_queried;
 }
 
 $tzil->chrome->logger->set_debug(1);
+
+{
+    my $wd = File::pushd::pushd($tzil->root);
+    cmp_deeply(
+        [ do { Dist::Zilla::App::Command::stale->stale_modules($tzil) }],
+        [ ],
+        'app finds no stale modules',
+    );
+    Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+    @modules_queried = ();
+}
+
 
 # we will die if we are prompted
 is(

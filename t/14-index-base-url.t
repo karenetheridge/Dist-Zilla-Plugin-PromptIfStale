@@ -9,6 +9,7 @@ use Test::Deep;
 use File::Spec;
 use Path::Tiny;
 use Moose::Util 'find_meta';
+use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
 use NoNetworkHits;
@@ -79,6 +80,16 @@ my $http_url;
             also_copy => { 't/lib' => 't/lib' },
         },
     );
+
+    {
+        my $wd = File::pushd::pushd($tzil->root);
+        cmp_deeply(
+            [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
+            [ map { 'Unindexed' . $_ } 0..5 ],
+            'app finds no stale modules',
+        );
+        Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+    }
 
     $tzil->chrome->logger->set_debug(1);
 

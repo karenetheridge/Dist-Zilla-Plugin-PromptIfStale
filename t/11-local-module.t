@@ -9,6 +9,7 @@ use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
 use File::Spec;
+use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
 use NoNetworkHits;
@@ -37,6 +38,16 @@ my $tzil = Builder->from_config(
         also_copy => { 't/lib' => 'source/t/lib' },
     },
 );
+
+{
+    my $wd = File::pushd::pushd($tzil->root);
+    cmp_deeply(
+        [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
+        [ ],
+        'app finds no stale modules',
+    );
+    Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+}
 
 # munge @INC so it contains the source dir
 unshift @INC, File::Spec->catdir($tzil->tempdir, qw(source t lib));

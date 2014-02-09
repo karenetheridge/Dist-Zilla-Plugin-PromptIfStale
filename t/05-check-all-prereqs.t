@@ -8,6 +8,7 @@ use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
 use List::Util 'first';
+use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
 use NoNetworkHits;
@@ -22,6 +23,8 @@ my @prompts;
     });
 }
 
+my $checked_app;
+BUILD:
 my $tzil = Builder->from_config(
     { dist_root => 't/does-not-exist' },
     {
@@ -48,6 +51,19 @@ my $tzil = Builder->from_config(
         },
     },
 );
+
+if (not $checked_app++)
+{
+    my $wd = File::pushd::pushd($tzil->root);
+    cmp_deeply(
+        [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
+        [ 'Bar', map { 'Foo' . $_ } ('0' .. '8') ],
+        'app finds stale modules',
+    );
+    Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+    goto BUILD;
+}
+
 
 my %expected_prompts = (
     before_build => [

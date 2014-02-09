@@ -15,6 +15,8 @@ BEGIN {
     use Dist::Zilla::Plugin::PromptIfStale;
     $Dist::Zilla::Plugin::PromptIfStale::VERSION = 9999
         unless $Dist::Zilla::Plugin::PromptIfStale::VERSION;
+
+    use Dist::Zilla::App::Command::stale;
 }
 
 my @prompts;
@@ -43,6 +45,16 @@ SKIP: {
             },
         },
     );
+
+    {
+        my $wd = File::pushd::pushd($tzil->root);
+        cmp_deeply(
+            [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
+            [],
+            'no stale modules found',
+        );
+        Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+    }
 
     # if a response has not been configured for a particular prompt, we will die
     is(
@@ -89,6 +101,16 @@ my $tzil = Builder->from_config(
         },
     },
 );
+
+{
+    my $wd = File::pushd::pushd($tzil->root);
+    cmp_deeply(
+        [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
+        [ 'strict' ],
+        'app finds stale modules',
+    );
+    Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+}
 
 my $prompt = 'Indexed version of strict is 200.0 but you only have ' . strict->VERSION
     . ' installed. Continue anyway?';

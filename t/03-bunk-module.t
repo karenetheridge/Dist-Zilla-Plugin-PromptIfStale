@@ -9,6 +9,7 @@ use File::Spec;
 use Path::Tiny;
 use Test::Deep;
 use Moose::Util 'find_meta';
+use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
 use NoNetworkHits;
@@ -59,6 +60,17 @@ $tzil->chrome->set_response_for($prompt, 'n');
 $tzil->chrome->logger->set_debug(1);
 
 unshift @INC, File::Spec->catdir($tzil->tempdir, qw(t lib));
+
+{
+    my $wd = File::pushd::pushd($tzil->root);
+    cmp_deeply(
+        [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
+        [ 'Unindexed' ],
+        'app finds stale modules',
+    );
+    Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+}
+
 
 like(
     exception { $tzil->build },

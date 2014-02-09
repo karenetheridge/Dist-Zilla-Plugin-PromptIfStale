@@ -9,6 +9,7 @@ use Test::Deep;
 use File::Spec;
 use Path::Tiny;
 use Moose::Util 'find_meta';
+use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
 use NoNetworkHits;
@@ -91,6 +92,8 @@ sub do_tests
     @checked_via_02packages = @prompts = ();
     Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
 
+    my $checked_app;
+    BUILD:
     my $tzil = Builder->from_config(
         { dist_root => 't/does-not-exist' },
         {
@@ -123,6 +126,19 @@ sub do_tests
 
     local @INC = @INC;
     unshift @INC, File::Spec->catdir($tzil->tempdir, qw(t lib));
+
+    if (not $checked_app++)
+    {
+        my $wd = File::pushd::pushd($tzil->root);
+        cmp_deeply(
+            [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
+            [ map { 'Unindexed' . $_ } 0..6 ],
+            'app finds stale modules',
+        );
+        @checked_via_02packages = ();
+        Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+        goto BUILD;
+    }
 
     like(
         exception { $tzil->build },
