@@ -37,7 +37,7 @@ has phase => (
 has modules => (
     isa => ArrayRef[Str],
     traits => [ 'Array' ],
-    handles => { modules => 'elements' },
+    handles => { _raw_modules => 'elements' },
     lazy => 1,
     default => sub { [] },
 );
@@ -76,7 +76,8 @@ around dump_config => sub
 
     $config->{'' . __PACKAGE__} = {
         (map { $_ => ($self->$_ || 0) } qw(phase check_all_plugins check_all_prereqs)),
-        (map { $_ => [ $self->$_ ] } qw(modules skip)),
+        skip => [ $self->skip ],
+        modules => [ $self->_raw_modules ],
     };
 
     return $config;
@@ -88,11 +89,7 @@ sub before_build
 
     if ($self->phase eq 'build')
     {
-        my @skip = $self->skip;
-        my @modules = (
-            grep { my $module = $_; none { $module eq $_ } @skip }
-            uniq $self->modules, $self->_modules_plugin
-        );
+        my @modules = uniq $self->_modules_extra, $self->_modules_plugin;
 
         $self->_prompt_if_stale(@modules) if @modules;
     }
@@ -114,13 +111,10 @@ sub before_release
     my $self = shift;
     if ($self->phase eq 'release')
     {
-        my @modules = ( $self->modules, $self->_modules_plugin );
+        my @modules = ( $self->_modules_extra, $self->_modules_plugin );
         push @modules, $self->_modules_prereq if $self->check_all_prereqs;
 
-        my @skip = $self->skip;
-        @modules = grep { my $module = $_; none { $module eq $_ } @skip } uniq @modules;
-
-        $self->_prompt_if_stale(@modules) if @modules;
+        $self->_prompt_if_stale(uniq @modules) if @modules;
     }
 }
 
@@ -251,6 +245,14 @@ has _modules_prereq => (
         ];
     },
 );
+
+sub _modules_extra
+{
+    my $self = shift;
+    my @skip = $self->skip;
+    grep { my $module = $_; none { $module eq $_ } @skip } $self->_raw_modules;
+}
+
 
 my $packages;
 sub _indexed_version
