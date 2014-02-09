@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are 
 
 # VERSION
 
-version 0.015
+version 0.016
 
 # SYNOPSIS
 
@@ -78,6 +78,7 @@ I am also usually active on irc, as 'ether' at `irc.perl.org`.
 
 # SEE ALSO
 
+- the [dzil stale](https://metacpan.org/pod/Dist::Zilla::App::Command::stale) command in this distribution
 - [Dist::Zilla::Plugin::Prereqs::MatchInstalled](https://metacpan.org/pod/Dist::Zilla::Plugin::Prereqs::MatchInstalled), [Dist::Zilla::Plugin::Prereqs::MatchInstalled::All](https://metacpan.org/pod/Dist::Zilla::Plugin::Prereqs::MatchInstalled::All)
 
 # AUTHOR

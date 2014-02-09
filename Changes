@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.016     2014-02-09 03:41:16Z
           - new "dzil stale" command
 
 0.015     2013-12-10 23:38:52Z, a.k.a. "The Getty Release"
