@@ -7,7 +7,6 @@ use Test::DZil;
 use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
-use List::Util 'first';
 use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
