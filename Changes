@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.017     2014-02-12 05:20:07Z
           - fix uninitialized warning when 02packages.details.txt cannot be
             downloaded
 
