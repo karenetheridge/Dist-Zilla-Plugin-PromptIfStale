@@ -303,7 +303,7 @@ sub _get_packages
     my $base = $self->index_base_url || 'http://www.cpan.org';
 
     my $response = HTTP::Tiny->new->mirror($base . '/modules/' . $filename, $path);
-    $self->log_debug('could not fetch the index?'), return undef if not $response->{success};
+    $self->log('could not fetch the index - network down?'), return undef if not $response->{success};
 
     require Parse::CPAN::Packages::Fast;
     $packages = Parse::CPAN::Packages::Fast->new($path->stringify);
@@ -313,7 +313,9 @@ sub _indexed_version_via_02packages
 {
     my ($self, $module) = @_;
 
-    my $package = $self->_get_packages->package($module);
+    my $packages = $self->_get_packages;
+    return undef if not $packages;
+    my $package = $packages->package($module);
     return undef if not $package;
     version->parse($package->version);
 }
