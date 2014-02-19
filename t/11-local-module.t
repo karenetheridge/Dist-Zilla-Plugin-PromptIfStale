@@ -64,7 +64,7 @@ cmp_deeply(
     $tzil->log_messages,
     superbagof(
         '[PromptIfStale] Unindexed provided locally (at t/lib/Unindexed.pm); skipping version check',
-        '[DZ] writing DZT-Sample in ' . $tzil->tempdir->subdir('build'),
+        '[DZ] writing DZT-Sample in ' . path($tzil->tempdir)->child('build'),
     ),
     'module skipped, due to being local',
 ) or diag 'got: ', explain $tzil->log_messages;

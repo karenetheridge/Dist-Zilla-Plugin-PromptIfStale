@@ -85,7 +85,7 @@ is(
 
 is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@prompts;
 
-my $build_dir = $tzil->tempdir->subdir('build');
+my $build_dir = path($tzil->tempdir)->child('build');
 
 my @expected_checked = (qw(strict warnings), map { 'Dist::Zilla::Plugin::' . $_ } qw(GatherDir PromptIfStale FinderCode));
 
