@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - new --all option for "dzil stale"
 
 0.017     2014-02-12 05:20:07Z
           - fix uninitialized warning when 02packages.details.txt cannot be

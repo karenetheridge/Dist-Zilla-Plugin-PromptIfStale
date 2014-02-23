@@ -12,22 +12,27 @@ sub abstract { "print your distribution's stale prerequisites and plugins" }
 
 sub opt_spec
 {
+    [ 'all'   , 'check all plugins and prerequisites, regardless of plugin configuration' ]
     # TODO?
-    # [ 'all'   , 'check plugins and prerequisites' ]
     # [ 'plugins', 'check all plugins' ],
     # [ 'prereqs', 'check all prerequisites' ],
 }
 
 sub stale_modules
 {
-    my ($self, $zilla) = @_;
+    my ($self, $zilla, $all) = @_;
 
     my @plugins = grep { $_->isa('Dist::Zilla::Plugin::PromptIfStale') } @{ $zilla->plugins };
-    my @modules = map { $_->_modules_extra, $_->_modules_plugin } @plugins;
+    push @plugins, Dist::Zilla::Plugin::PromptIfStale->new if not @plugins;
+
+    my @modules = map {
+        $_->_modules_extra,
+        ( $all || $_->check_all_plugins ? $_->_modules_plugin : () ),
+    } @plugins;
 
     # ugh, we need to do nearly a full build to get the prereqs
     # (this really should be abstracted better in Dist::Zilla::Dist::Builder)
-    if (grep { $_->check_all_prereqs } @plugins)
+    if ($all or grep { $_->check_all_prereqs } @plugins)
     {
         $_->before_build for grep { not $_->isa('Dist::Zilla::Plugin::PromptIfStale') }
             @{ $zilla->plugins_with(-BeforeBuild) };
@@ -37,7 +42,7 @@ sub stale_modules
         $_->munge_files  for @{ $zilla->plugins_with(-FileMunger) };
         $_->register_prereqs for @{ $zilla->plugins_with(-PrereqSource) };
 
-        push @modules, map { $_->_modules_prereq } @plugins;
+        push @modules, $plugins[0]->_modules_prereq;
     }
 
     return if not @modules;
@@ -48,10 +53,10 @@ sub stale_modules
 
 sub execute
 {
-    my ($self) = @_; # $opt, $arg
+    my ($self, $opt) = @_; # $arg
 
     $self->app->chrome->logger->mute;
-    print join("\n", $self->stale_modules($self->zilla));
+    print join("\n", $self->stale_modules($self->zilla, $opt->all));
 }
 
 1;
@@ -73,9 +78,17 @@ the latest indexed version, and print all modules that are thus found to be
 stale.  You could pipe that list to a CPAN client like L<cpanm> to update all
 of the modules in one quick go.
 
+When a L<[PromptIfStale]|Dist::Zilla::Plugin::PromptIfStale> configuration is
+present in F<dist.ini>, its configuration is honoured (unless C<--all> is
+used); if there is no such configuration, behaviour is as for C<--all>.
+
 =head1 OPTIONS
 
-There are no options at this time.
+=head2 --all
+
+Checks all plugins and prerequisites (as well as any additional modules listed
+in a local L<[PromptIfStale]|Dist::Zilla::Plugin::PromptIfStale>
+configuration, if there is one).
 
 =for Pod::Coverage stale_modules
 

@@ -89,7 +89,9 @@ sub before_build
 
     if ($self->phase eq 'build')
     {
-        my @modules = uniq $self->_modules_extra, $self->_modules_plugin;
+        my @modules = uniq
+            $self->_modules_extra,
+            ( $self->check_all_plugins ? $self->_modules_plugin : () );
 
         $self->_prompt_if_stale(@modules) if @modules;
     }
@@ -111,7 +113,10 @@ sub before_release
     my $self = shift;
     if ($self->phase eq 'release')
     {
-        my @modules = ( $self->_modules_extra, $self->_modules_plugin );
+        my @modules = (
+            $self->_modules_extra,
+            ( $self->check_all_plugins ? $self->_modules_plugin : () ),
+        );
         push @modules, $self->_modules_prereq if $self->check_all_prereqs;
 
         $self->_prompt_if_stale(uniq @modules) if @modules;
@@ -219,9 +224,7 @@ has _modules_plugin => (
         return [
             grep { my $module = $_; none { $module eq $_ } @skip }
             uniq
-                $self->check_all_plugins
-                    ? map { $_->meta->name } @{ $self->zilla->plugins }
-                    : ()
+            map { $_->meta->name } @{ $self->zilla->plugins }
         ];
     },
 );
