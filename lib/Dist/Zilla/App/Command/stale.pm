@@ -4,7 +4,6 @@ package Dist::Zilla::App::Command::stale;
 # ABSTRACT: print your distribution's stale prerequisites and plugins
 
 use Dist::Zilla::App -command;
-use Dist::Zilla::Plugin::PromptIfStale;
 use List::MoreUtils 'uniq';
 use namespace::autoclean;
 
@@ -23,7 +22,11 @@ sub stale_modules
     my ($self, $zilla, $all) = @_;
 
     my @plugins = grep { $_->isa('Dist::Zilla::Plugin::PromptIfStale') } @{ $zilla->plugins };
-    push @plugins, Dist::Zilla::Plugin::PromptIfStale->new if not @plugins;
+    if (not @plugins)
+    {
+        require Dist::Zilla::Plugin::PromptIfStale;
+        push @plugins, Dist::Zilla::Plugin::PromptIfStale->new;
+    }
 
     my @modules = map {
         $_->_modules_extra,
