@@ -128,7 +128,7 @@ cmp_deeply(
     $tzil->log_messages,
     superbagof(
         '[PromptIfStale] comparing indexed vs. local version for strict: indexed=200.0; local version=' . strict->VERSION,
-        '[DZ] writing DZT-Sample in ' . $build_dir,
+        re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),
     'build completed successfully',
 ) or diag 'got: ', explain $tzil->log_messages;

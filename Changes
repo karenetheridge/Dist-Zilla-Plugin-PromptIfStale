@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - fix occasional test failures on win32 due to varying directory
+            separators in filenames
 
 0.018     2014-02-23 23:29:22Z
           - new --all option for "dzil stale"

@@ -79,7 +79,7 @@ cmp_deeply(
     $tzil->log_messages,
     superbagof(
         (map { re(qr/^\Q[PromptIfStale] comparing indexed vs. local version for Dist::Zilla::Plugin::$_: indexed=0; local version=\E/) } qw(GatherDir PromptIfStale)),
-        '[DZ] writing DZT-Sample in ' . $build_dir,
+        re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),
     'build completed successfully',
 ) or diag 'got: ', explain $tzil->log_messages;
