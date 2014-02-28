@@ -59,8 +59,12 @@ sub execute
 {
     my ($self, $opt) = @_; # $arg
 
-    $self->app->chrome->logger->mute;
-    print join("\n", $self->stale_modules($self->zilla, $opt->all), '');
+    $self->app->chrome->logger->mute unless $self->app->global_options->verbose;
+
+    my @stale_modules = $self->stale_modules($self->zilla, $opt->all);
+
+    $self->app->chrome->logger->unmute;
+    print join("\n", @stale_modules, '');
 }
 
 1;
