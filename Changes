@@ -4,6 +4,10 @@ Revision history for {{$dist->name}}
           - fix "dzil stale --all" when no [PromptIfStale] plugins are
             configured for the distribution
           - dzil stale now respects the --verbose flag
+          - dzil stale now does the equivalent of 'dzil authordeps' if some
+            plugins are missing, rather than dying -- you can now use 'dzil
+            stale' as your one stop shop for ensuring all requirements are
+            fulfilled
 
 0.019     2014-02-28 04:34:49Z
           - fix occasional test failures on win32 due to varying directory

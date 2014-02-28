@@ -5,6 +5,7 @@ package Dist::Zilla::App::Command::stale;
 
 use Dist::Zilla::App -command;
 use List::MoreUtils 'uniq';
+use Try::Tiny;
 use namespace::autoclean;
 
 sub abstract { "print your distribution's stale prerequisites and plugins" }
@@ -61,7 +62,32 @@ sub execute
 
     $self->app->chrome->logger->mute unless $self->app->global_options->verbose;
 
-    my @stale_modules = $self->stale_modules($self->zilla, $opt->all);
+    my $zilla = try {
+        $self->zilla;
+    }
+    catch {
+        die $_ unless /Run 'dzil authordeps' to see a list of all required plugins/m;
+
+        # some plugins are not installed; running authordeps...
+
+        $self->app->chrome->logger->unmute;
+
+        require Dist::Zilla::Util::AuthorDeps;
+        require Path::Class;
+        $self->log(Dist::Zilla::Util::AuthorDeps::format_author_deps(
+            Dist::Zilla::Util::AuthorDeps::extract_author_deps(
+                Path::Class::dir('.'),  # ugh!
+                1,                      # --missing
+            ),
+            (),                         # --versions
+        ));
+
+        undef;  # ensure $zilla = undef
+    };
+
+    return if not $zilla;
+
+    my @stale_modules = $self->stale_modules($zilla, $opt->all);
 
     $self->app->chrome->logger->unmute;
     print join("\n", @stale_modules, '');
