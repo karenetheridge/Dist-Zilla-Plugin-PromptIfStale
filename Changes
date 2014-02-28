@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.019     2014-02-28 04:34:49Z
           - fix occasional test failures on win32 due to varying directory
             separators in filenames
 
