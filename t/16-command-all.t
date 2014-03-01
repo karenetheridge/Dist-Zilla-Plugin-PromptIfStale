@@ -64,7 +64,7 @@ my @modules_checked;
         is($result->error, undef, 'no errors');
         is(
             $result->output,
-            '',
+            "\n",
             'nothing found when no PromptIfStale plugins configured',
         );
         cmp_deeply(\@modules_checked, [], 'nothing was actually checked for');

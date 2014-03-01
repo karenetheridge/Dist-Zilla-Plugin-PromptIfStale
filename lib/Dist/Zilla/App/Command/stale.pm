@@ -90,7 +90,7 @@ sub execute
     my @stale_modules = $self->stale_modules($zilla, $opt->all);
 
     $self->app->chrome->logger->unmute;
-    print join("\n", @stale_modules, '');
+    $self->log(join("\n", @stale_modules));
 }
 
 1;
