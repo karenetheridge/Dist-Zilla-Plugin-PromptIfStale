@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.020     2014-03-01 06:49:02Z
           - fix "dzil stale --all" when no [PromptIfStale] plugins are
             configured for the distribution
           - dzil stale now respects the --verbose flag
