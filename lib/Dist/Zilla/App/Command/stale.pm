@@ -25,7 +25,8 @@ sub stale_modules
     if (not @plugins)
     {
         require Dist::Zilla::Plugin::PromptIfStale;
-        push @plugins, Dist::Zilla::Plugin::PromptIfStale->new;
+        push @plugins,
+            Dist::Zilla::Plugin::PromptIfStale->new(zilla => $zilla, plugin_name => 'stale_command');
     }
 
     my @modules = map {
