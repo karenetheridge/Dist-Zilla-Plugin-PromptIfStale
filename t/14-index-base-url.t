@@ -66,7 +66,7 @@ my $http_url;
         { dist_root => 't/does-not-exist' },
         {
             add_files => {
-                'source/dist.ini' => simple_ini(
+                path(qw(source dist.ini)) => simple_ini(
                     [ GatherDir => ],
                     [ PromptIfStale => {
                         modules => [ map { 'Unindexed' . $_ } 0..5 ],

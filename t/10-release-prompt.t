@@ -33,7 +33,7 @@ for my $case ( 0, 1 ) {
             { dist_root => 't/does-not-exist' },
             {
                 add_files => {
-                    'source/dist.ini' => simple_ini(
+                    path(qw(source dist.ini)) => simple_ini(
                         [ GatherDir => ],
                         do {
                             my $mod = '0';
