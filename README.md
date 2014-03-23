@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are 
 
 # VERSION
 
-version 0.020
+version 0.021
 
 # SYNOPSIS
 
