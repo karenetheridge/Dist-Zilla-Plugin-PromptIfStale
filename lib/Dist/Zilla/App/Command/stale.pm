@@ -66,7 +66,9 @@ sub execute
         $self->zilla;
     }
     catch {
-        die $_ unless /Run 'dzil authordeps' to see a list of all required plugins/m;
+        die $_ unless
+            m/Run 'dzil authordeps' to see a list of all required plugins/m
+            or m/ version \(.+\) (does )?not match required version: /m;
 
         # some plugins are not installed; running authordeps...
 
