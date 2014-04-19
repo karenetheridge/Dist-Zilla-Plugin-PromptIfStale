@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.022     2014-04-19 08:28:04Z
           - "dzil stale" now falls back even harder to parsing authordeps out
             of dist.ini when performing the build blew up (such as due to an
             unsatisfied develop prereq)
