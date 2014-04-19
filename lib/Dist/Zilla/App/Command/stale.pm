@@ -63,6 +63,7 @@ sub execute
     $self->app->chrome->logger->mute unless $self->app->global_options->verbose;
 
     my $zilla = try {
+        # parse dist.ini and load, instantiate all plugins
         $self->zilla;
     }
     catch {
@@ -72,27 +73,42 @@ sub execute
 
         # some plugins are not installed; running authordeps...
 
-        $self->app->chrome->logger->unmute;
+        my $authordeps = $self->_get_authordeps;
 
-        require Dist::Zilla::Util::AuthorDeps;
-        require Path::Class;
-        $self->log(Dist::Zilla::Util::AuthorDeps::format_author_deps(
-            Dist::Zilla::Util::AuthorDeps::extract_author_deps(
-                Path::Class::dir('.'),  # ugh!
-                1,                      # --missing
-            ),
-            (),                         # --versions
-        ));
+        $self->app->chrome->logger->unmute;
+        $self->log($authordeps);
 
         undef;  # ensure $zilla = undef
     };
 
     return if not $zilla;
 
-    my @stale_modules = $self->stale_modules($zilla, $opt->all);
+    my @stale_modules = try {
+        $self->stale_modules($zilla, $opt->all);
+    }
+    catch {
+        # if there was an error during the build, fall back to fetching
+        # authordeps, in the hopes that we can report something helpful
+        $self->_get_authordeps;
+    };
 
     $self->app->chrome->logger->unmute;
     $self->log(join("\n", @stale_modules));
+}
+
+sub _get_authordeps
+{
+    my $self = shift;
+
+    require Dist::Zilla::Util::AuthorDeps;
+    require Path::Class;
+    Dist::Zilla::Util::AuthorDeps::format_author_deps(
+        Dist::Zilla::Util::AuthorDeps::extract_author_deps(
+            Path::Class::dir('.'),  # ugh!
+            1,                      # --missing
+        ),
+        (),                         # --versions
+    );
 }
 
 1;
