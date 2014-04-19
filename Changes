@@ -4,6 +4,8 @@ Revision history for {{$dist->name}}
           - "dzil stale" now falls back even harder to parsing authordeps out
             of dist.ini when performing the build blew up (such as due to an
             unsatisfied develop prereq)
+          - new sister plugin, [EnsureNotStale], which aborts instead of
+            prompting (this is for you, Getty - sorry it's too late)
 
 0.021     2014-03-23 05:40:38Z
           - 'dzil stale' properly falls back to fetching authordeps when a

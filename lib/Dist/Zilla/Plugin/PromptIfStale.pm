@@ -93,7 +93,7 @@ sub before_build
             $self->_modules_extra,
             ( $self->check_all_plugins ? $self->_modules_plugin : () );
 
-        $self->_prompt_if_stale(@modules) if @modules;
+        $self->_check_modules(@modules) if @modules;
     }
 }
 
@@ -104,7 +104,7 @@ sub after_build
     if ($self->phase eq 'build' and $self->check_all_prereqs)
     {
         my @modules = $self->_modules_prereq;
-        $self->_prompt_if_stale(@modules) if @modules;
+        $self->_check_modules(@modules) if @modules;
     }
 }
 
@@ -119,7 +119,7 @@ sub before_release
         );
         push @modules, $self->_modules_prereq if $self->check_all_prereqs;
 
-        $self->_prompt_if_stale(uniq @modules) if @modules;
+        $self->_check_modules(uniq @modules) if @modules;
     }
 }
 
@@ -189,7 +189,7 @@ sub stale_modules
     return \@stale_modules, \@errors;
 }
 
-sub _prompt_if_stale
+sub _check_modules
 {
     my ($self, @modules) = @_;
 
@@ -412,6 +412,7 @@ I am also usually active on irc, as 'ether' at C<irc.perl.org>.
 
 =begin :list
 
+* the L<[EnsureNotStale]|Dist::Zilla::Plugin::EnsureNotStale> plugin in this distribution
 * the L<dzil stale|Dist::Zilla::App::Command::stale> command in this distribution
 * L<Dist::Zilla::Plugin::Prereqs::MatchInstalled>, L<Dist::Zilla::Plugin::Prereqs::MatchInstalled::All>
 
