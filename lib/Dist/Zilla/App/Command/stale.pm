@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Dist::Zilla::App::Command::stale;
-# ABSTRACT: print your distribution's stale prerequisites and plugins
+# ABSTRACT: print your distribution's prerequisites and plugins that are out of date
 
 use Dist::Zilla::App -command;
 use List::MoreUtils 'uniq';
