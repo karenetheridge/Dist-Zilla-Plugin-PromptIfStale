@@ -17,6 +17,14 @@ use NoNetworkHits;
 # authordep
 
 {
+    package inc::Funky;
+    use Moose;
+    with 'Dist::Zilla::Role::BeforeBuild';
+    use Module::Runtime 'require_module';
+    sub before_build { require_module('Not::Installed'); }
+}
+
+{
     local $ENV{DZIL_GLOBAL_CONFIG_ROOT} = 'does-not-exist';
 
     # TODO: we should be able to call a sub that specifies our corpus layout
@@ -33,18 +41,6 @@ use NoNetworkHits;
             [ '=inc::Funky' ],
         ) . "\n\n; authordep Not::Installed\n"
     );
-
-    $root->child('inc')->mkpath;
-    path($root, 'inc', 'Funky.pm')->spew_utf8(<<PLUGIN);
-package inc::Funky;
-use Moose;
-with 'Dist::Zilla::Role::BeforeBuild';
-
-sub before_build {
-    require Not::Installed;
-}
-1;
-PLUGIN
 
     # force a full build
     my $result = test_dzil('.', [ 'stale', '--all' ]);
