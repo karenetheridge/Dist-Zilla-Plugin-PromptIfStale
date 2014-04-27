@@ -7,6 +7,7 @@ use Test::DZil;
 use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
+use File::pushd 'pushd';
 use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
@@ -71,7 +72,7 @@ $tzil->chrome->set_response_for($_, 'y') foreach @expected_prompts;
 
 if (not $checked_app++)
 {
-    my $wd = File::pushd::pushd($tzil->root);
+    my $wd = pushd $tzil->root;
     cmp_deeply(
         [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
         [ map { 'Foo' . $_ } qw(A B C J K L X Y Z) ],

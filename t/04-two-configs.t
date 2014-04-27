@@ -9,6 +9,7 @@ use Path::Tiny;
 use Test::Deep;
 use Moose::Util 'find_meta';
 use version;
+use File::pushd 'pushd';
 use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
@@ -54,7 +55,7 @@ my @modules_queried;
 $tzil->chrome->logger->set_debug(1);
 
 {
-    my $wd = File::pushd::pushd($tzil->root);
+    my $wd = pushd $tzil->root;
     cmp_deeply(
         [ do { Dist::Zilla::App::Command::stale->stale_modules($tzil) }],
         [ ],

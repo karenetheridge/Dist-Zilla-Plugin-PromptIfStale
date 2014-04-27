@@ -9,6 +9,7 @@ use Test::Deep;
 use File::Spec;
 use Path::Tiny;
 use Moose::Util 'find_meta';
+use File::pushd 'pushd';
 use version;
 
 BEGIN {
@@ -47,7 +48,7 @@ SKIP: {
     );
 
     {
-        my $wd = File::pushd::pushd($tzil->root);
+        my $wd = pushd $tzil->root;
         cmp_deeply(
             [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
             [],
@@ -103,7 +104,7 @@ my $tzil = Builder->from_config(
 );
 
 {
-    my $wd = File::pushd::pushd($tzil->root);
+    my $wd = pushd $tzil->root;
     cmp_deeply(
         [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
         [ 'strict' ],

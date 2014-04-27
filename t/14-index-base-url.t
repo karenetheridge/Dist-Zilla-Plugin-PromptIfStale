@@ -9,6 +9,7 @@ use Test::Deep;
 use File::Spec;
 use Path::Tiny;
 use Moose::Util 'find_meta';
+use File::pushd 'pushd';
 use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
@@ -82,7 +83,7 @@ my $http_url;
     );
 
     {
-        my $wd = File::pushd::pushd($tzil->root);
+        my $wd = pushd $tzil->root;
         cmp_deeply(
             [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
             [ map { 'Unindexed' . $_ } 0..5 ],

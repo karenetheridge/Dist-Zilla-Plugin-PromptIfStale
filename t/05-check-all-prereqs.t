@@ -7,6 +7,7 @@ use Test::DZil;
 use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
+use File::pushd 'pushd';
 use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
@@ -53,7 +54,7 @@ my $tzil = Builder->from_config(
 
 if (not $checked_app++)
 {
-    my $wd = File::pushd::pushd($tzil->root);
+    my $wd = pushd $tzil->root;
     cmp_deeply(
         [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
         [ 'Bar', map { 'Foo' . $_ } ('0' .. '8') ],

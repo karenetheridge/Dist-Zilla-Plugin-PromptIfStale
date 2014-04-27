@@ -10,6 +10,7 @@ use File::Spec;
 use Path::Tiny;
 use Moose::Util 'find_meta';
 use version;
+use File::pushd 'pushd';
 use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
@@ -78,7 +79,7 @@ $tzil->chrome->logger->set_debug(1);
 unshift @INC, File::Spec->catdir($tzil->tempdir, qw(t lib));
 
 {
-    my $wd = File::pushd::pushd($tzil->root);
+    my $wd = pushd $tzil->root;
     cmp_deeply(
         [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
         [ 'Indexed::But::Not::Installed', 'Unindexed' ],
