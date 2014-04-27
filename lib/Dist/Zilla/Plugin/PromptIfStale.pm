@@ -179,7 +179,8 @@ sub stale_modules
         {
             $already_checked{$module}++;
             push @stale_modules, $module;
-            push @errors, 'Indexed version of ' . $module . ' is ' . $indexed_version
+            push @errors,
+                $module . ' is indexed at version ' . $indexed_version
                     . ' but you only have ' . $local_version
                     . ' installed.';
             next;

@@ -2,6 +2,7 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
           - 'dzil stale' now respects all plugins' skip options
+          - improved debug logging
 
 0.022     2014-04-19 08:28:04Z
           - "dzil stale" now falls back even harder to parsing authordeps out

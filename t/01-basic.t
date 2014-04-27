@@ -113,7 +113,7 @@ my $tzil = Builder->from_config(
     Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
 }
 
-my $prompt = 'Indexed version of strict is 200.0 but you only have ' . strict->VERSION
+my $prompt = 'strict is indexed at version 200.0 but you only have ' . strict->VERSION
     . ' installed. Continue anyway?';
 $tzil->chrome->set_response_for($prompt, 'y');
 
