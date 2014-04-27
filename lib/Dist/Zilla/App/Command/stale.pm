@@ -4,7 +4,7 @@ package Dist::Zilla::App::Command::stale;
 # ABSTRACT: print your distribution's prerequisites and plugins that are out of date
 
 use Dist::Zilla::App -command;
-use List::MoreUtils 'uniq';
+use List::MoreUtils qw(uniq any);
 use Try::Tiny;
 use namespace::autoclean;
 
@@ -34,7 +34,7 @@ sub stale_modules
 
     # ugh, we need to do nearly a full build to get the prereqs
     # (this really should be abstracted better in Dist::Zilla::Dist::Builder)
-    if ($all or grep { $_->check_all_prereqs } @plugins)
+    if ($all or any { $_->check_all_prereqs } @plugins)
     {
         $_->before_build for grep { not $_->isa('Dist::Zilla::Plugin::PromptIfStale') }
             @{ $zilla->plugins_with(-BeforeBuild) };
