@@ -49,10 +49,13 @@ sub stale_modules
         } @plugins;
     }
 
-    push @modules, map {
-        $_->_modules_extra,
-        ( $all || $_->check_all_plugins ? $_->_modules_plugin : () ),
-    } @plugins;
+    foreach my $plugin (@plugins)
+    {
+        push @modules,
+            ( $all || $plugin->check_authordeps ? $plugin->_authordeps : () ),
+            $plugin->_modules_extra,
+            ( $all || $plugin->check_all_plugins ? $plugin->_modules_plugin : () );
+    }
 
     return if not @modules;
 

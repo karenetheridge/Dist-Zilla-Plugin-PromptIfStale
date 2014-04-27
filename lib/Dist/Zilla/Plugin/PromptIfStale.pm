@@ -42,6 +42,11 @@ has modules => (
     default => sub { [] },
 );
 
+has check_authordeps => (
+    is => 'ro', isa => Bool,
+    default => 0,
+);
+
 has check_all_plugins => (
     is => 'ro', isa => Bool,
     default => 0,
@@ -91,6 +96,7 @@ sub before_build
     {
         my @modules = uniq
             $self->_modules_extra,
+            ( $self->check_authordeps ? $self->_authordeps : () ),
             ( $self->check_all_plugins ? $self->_modules_plugin : () );
 
         $self->_check_modules(@modules) if @modules;
@@ -115,6 +121,7 @@ sub before_release
     {
         my @modules = (
             $self->_modules_extra,
+            ( $self->check_authordeps ? $self->_authordeps : () ),
             ( $self->check_all_plugins ? $self->_modules_plugin : () ),
         );
         push @modules, $self->_modules_prereq if $self->check_all_prereqs;
@@ -220,6 +227,25 @@ sub _check_modules
         . 'To remedy, do: cpanm ' . join(' ', @$stale_modules)) if not $continue;
 }
 
+has _authordeps => (
+    isa => 'ArrayRef[Str]',
+    traits => ['Array'],
+    handles => { _authordeps => 'elements' },
+    lazy => 1,
+    default => sub {
+        my $self = shift;
+        require Dist::Zilla::Util::AuthorDeps;
+        require Path::Class;
+        my @skip = $self->skip;
+        [
+            grep { my $module = $_; none { $module eq $_ } @skip }
+            uniq
+            map { (%$_)[0] }
+                @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps(Path::Class::dir('.')) }
+        ];
+    },
+);
+
 has _modules_plugin => (
     isa => 'ArrayRef[Str]',
     traits => ['Array'],
@@ -228,7 +254,7 @@ has _modules_plugin => (
     default => sub {
         my $self = shift;
         my @skip = $self->skip;
-        return [
+        [
             grep { my $module = $_; none { $module eq $_ } @skip }
             uniq
             map { $_->meta->name } @{ $self->zilla->plugins }
@@ -373,6 +399,18 @@ this plugin twice, with different names.)
 =item * C<module>
 
 The name of a module to check for. Can be provided more than once.
+
+=item * C<check_authordeps>
+
+=for stopwords authordeps
+
+A boolean, defaulting to false, indicating that all authordeps in F<dist.ini>
+(like what is done by C<< dzil authordeps >>) should be checked.
+
+As long as this option is not explicitly set to false, a check is always made
+for authordeps being installed (but the indexed version is not checked). This
+serves as a fast way to guard against a build blowing up later through the
+inadvertent lack of fulfillment of an explicit C<< ; authordep >> declaration.
 
 =item * C<check_all_plugins>
 

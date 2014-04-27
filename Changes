@@ -5,6 +5,7 @@ Revision history for {{$dist->name}}
           - improved debug logging
           - cache more data for efficiency when multiple plugins, options are
             used at once
+          - new "check_authordeps" option
 
 0.022     2014-04-19 08:28:04Z
           - "dzil stale" now falls back even harder to parsing authordeps out
