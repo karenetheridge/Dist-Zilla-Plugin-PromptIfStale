@@ -77,7 +77,7 @@ sub execute
 
         # some plugins are not installed; running authordeps --missing...
 
-        my @authordeps = $self->_get_authordeps;
+        my @authordeps = $self->_missing_authordeps;
 
         $self->app->chrome->logger->unmute;
         $self->log(join("\n", @authordeps));
@@ -93,14 +93,14 @@ sub execute
     catch {
         # if there was an error during the build, fall back to fetching
         # authordeps, in the hopes that we can report something helpful
-        $self->_get_authordeps;
+        $self->_missing_authordeps;
     };
 
     $self->app->chrome->logger->unmute;
     $self->log(join("\n", @stale_modules));
 }
 
-sub _get_authordeps
+sub _missing_authordeps
 {
     my $self = shift;
 
