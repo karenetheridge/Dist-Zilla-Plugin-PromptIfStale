@@ -398,7 +398,20 @@ distribution uses prerequisites found only in your darkpan-like server.
 
 =back
 
-=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release stale_modules
+=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release
+
+=head1 METHODS
+
+=head2 stale_modules
+
+Given a list of modules to check, returns
+
+=begin :list
+
+* a list reference of modules that are stale (not installed or the version is not at least the latest indexed version
+* a list reference of error messages describing the issues found
+
+=end :list
 
 =head1 SUPPORT
 
