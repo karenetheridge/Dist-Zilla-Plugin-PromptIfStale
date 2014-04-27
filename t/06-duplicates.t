@@ -37,7 +37,11 @@ my $tzil = Builder->from_config(
                         check_all_prereqs => 1,
                     },
                 ],
-                [ Prereqs => RuntimeRequires => { map { 'Foo' . $_ => 0 } qw(J K L A Y) } ],
+                [ Prereqs => RuntimeRequires => {
+                        perl => 0,
+                        map { 'Foo' . $_ => 0 } qw(J K L A Y),
+                    },
+                ],
                 [ PromptIfStale => 'direct' => {
                         phase => 'release',
                         module => [ map { 'Foo' . $_ } qw(X Y Z B K), ],

@@ -129,14 +129,17 @@ sub before_release
 my %already_checked;
 sub __clear_already_checked { %already_checked = () } # for testing
 
+# module name to absolute filename where the file can be found
+my %module_to_filename;
+
 sub stale_modules
 {
     my ($self, @modules) = @_;
 
-    my (@stale_modules, @errors, %module_to_filename);
+    my (@stale_modules, @errors);
     foreach my $module (sort @modules)
     {
-        next if $module eq 'perl';
+        $already_checked{$module}++ if $module eq 'perl';
         next if $already_checked{$module};
 
         my $path = module_path($module);
@@ -148,18 +151,21 @@ sub stale_modules
             next;
         }
 
+        $module_to_filename{$module} = $path;
+
         # ignore modules in the dist currently being built
         my $relative_path = path($path)->relative(getcwd);
         $self->log_debug($module . ' provided locally (at ' . $relative_path
-                . '); skipping version check'), next
+                . '); skipping version check'),
+                $already_checked{$module}++
             unless $relative_path =~ m/^\.\./;
-
-        $module_to_filename{$module} = $path;
     }
 
-    foreach my $module (sort keys %module_to_filename)
+    @modules = sort grep { !$already_checked{$_} } @modules;
+
+    foreach my $module (@modules)
     {
-        my $indexed_version = $self->_indexed_version($module, !!(keys %module_to_filename > 5));
+        my $indexed_version = $self->_indexed_version($module, !!(@modules > 5));
         my $local_version = Module::Metadata->new_from_file($module_to_filename{$module})->version;
 
         $self->log_debug('comparing indexed vs. local version for ' . $module
@@ -187,7 +193,7 @@ sub stale_modules
         }
     }
 
-    return \@stale_modules, \@errors;
+    return [ sort @stale_modules ], [ sort @errors ];
 }
 
 sub _check_modules
