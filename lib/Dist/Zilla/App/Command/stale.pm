@@ -30,10 +30,7 @@ sub stale_modules
             Dist::Zilla::Plugin::PromptIfStale->new(zilla => $zilla, plugin_name => 'stale_command');
     }
 
-    my @modules = map {
-        $_->_modules_extra,
-        ( $all || $_->check_all_plugins ? $_->_modules_plugin : () ),
-    } @plugins;
+    my @modules;
 
     # ugh, we need to do nearly a full build to get the prereqs
     # (this really should be abstracted better in Dist::Zilla::Dist::Builder)
@@ -47,8 +44,15 @@ sub stale_modules
         $_->munge_files  for @{ $zilla->plugins_with(-FileMunger) };
         $_->register_prereqs for @{ $zilla->plugins_with(-PrereqSource) };
 
-        push @modules, $plugins[0]->_modules_prereq;
+        push @modules, map {
+            ( $all || $_->check_all_prereqs ? $_->_modules_prereq : () ),
+        } @plugins;
     }
+
+    push @modules, map {
+        $_->_modules_extra,
+        ( $all || $_->check_all_plugins ? $_->_modules_plugin : () ),
+    } @plugins;
 
     return if not @modules;
 
