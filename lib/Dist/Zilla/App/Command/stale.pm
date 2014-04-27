@@ -71,12 +71,12 @@ sub execute
             m/Run 'dzil authordeps' to see a list of all required plugins/m
             or m/ version \(.+\) (does )?not match required version: /m;
 
-        # some plugins are not installed; running authordeps...
+        # some plugins are not installed; running authordeps --missing...
 
-        my $authordeps = $self->_get_authordeps;
+        my @authordeps = $self->_get_authordeps;
 
         $self->app->chrome->logger->unmute;
-        $self->log($authordeps);
+        $self->log(join("\n", @authordeps));
 
         undef;  # ensure $zilla = undef
     };
@@ -102,13 +102,11 @@ sub _get_authordeps
 
     require Dist::Zilla::Util::AuthorDeps;
     require Path::Class;
-    Dist::Zilla::Util::AuthorDeps::format_author_deps(
-        Dist::Zilla::Util::AuthorDeps::extract_author_deps(
+    my @authordeps = map { (%$_)[0] }
+        @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps(
             Path::Class::dir('.'),  # ugh!
-            1,                      # --missing
-        ),
-        (),                         # --versions
-    );
+                1,                  # --missing
+           ) };
 }
 
 1;
