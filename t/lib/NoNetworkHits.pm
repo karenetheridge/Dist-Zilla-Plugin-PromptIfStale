@@ -7,7 +7,7 @@ use warnings FATAL => 'all';
     use HTTP::Tiny;
     package HTTP::Tiny;
     no warnings 'redefine';
-    sub get { die 'HTTP::Tiny::get called!' }
-    sub mirror { die 'HTTP::Tiny::mirror called!' }
+    sub get { die "HTTP::Tiny::get called for $_[1]" }
+    sub mirror { die "HTTP::Tiny::mirror called for $_[1]" }
 }
 1;
