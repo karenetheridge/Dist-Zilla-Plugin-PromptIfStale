@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are 
 
 # VERSION
 
-version 0.022
+version 0.023
 
 # SYNOPSIS
 
@@ -43,6 +43,16 @@ build time.
 
     The name of a module to check for. Can be provided more than once.
 
+- `check_authordeps`
+
+    A boolean, defaulting to false, indicating that all authordeps in `dist.ini`
+    (like what is done by `dzil authordeps`) should be checked.
+
+    As long as this option is not explicitly set to false, a check is always made
+    for authordeps being installed (but the indexed version is not checked). This
+    serves as a fast way to guard against a build blowing up later through the
+    inadvertent lack of fulfillment of an explicit `; authordep` declaration.
+
 - `check_all_plugins`
 
     A boolean, defaulting to false, indicating that all plugins being used to
@@ -69,6 +79,15 @@ build time.
     When provided, uses this base URL to fetch `02packages.details.txt.gz`
     instead of the default `http://www.cpan.org`.  Use this when your
     distribution uses prerequisites found only in your darkpan-like server.
+
+# METHODS
+
+## stale\_modules
+
+Given a list of modules to check, returns
+
+- a list reference of modules that are stale (not installed or the version is not at least the latest indexed version
+- a list reference of error messages describing the issues found
 
 # SUPPORT
 
