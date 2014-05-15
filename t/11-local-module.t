@@ -68,7 +68,7 @@ cmp_deeply(
         re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),
     'module skipped, due to being local',
-) or diag 'got: ', explain $tzil->log_messages;
+) or diag 'saw log messages: ', explain $tzil->log_messages;
 
 is(scalar @prompts, 0, 'there were no prompts');
 

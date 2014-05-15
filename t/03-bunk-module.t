@@ -92,6 +92,6 @@ cmp_deeply(
         "[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Unindexed",
     ),
     'build was aborted, with remedy instructions',
-) or diag 'got: ', explain $tzil->log_messages;
+) or diag 'saw log messages: ', explain $tzil->log_messages;
 
 done_testing;

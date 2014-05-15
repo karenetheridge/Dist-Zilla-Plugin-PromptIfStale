@@ -165,5 +165,5 @@ sub do_tests
         $tzil->log_messages,
         superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Unindexed6"),
         'build was aborted, with remedy instructions',
-    ) or diag 'got: ', explain $tzil->log_messages;
+    ) or diag 'saw log messages: ', explain $tzil->log_messages;
 }

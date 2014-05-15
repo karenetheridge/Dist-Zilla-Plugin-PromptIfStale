@@ -76,6 +76,6 @@ cmp_deeply(
     $tzil->log_messages,
     superbagof("[EnsureNotStale] Aborting build\n[EnsureNotStale] To remedy, do: cpanm Indexed::But::Not::Installed"),
     'build was aborted, with remedy instructions',
-) or diag 'got: ', explain $tzil->log_messages;
+) or diag 'saw log messages: ', explain $tzil->log_messages;
 
 done_testing;

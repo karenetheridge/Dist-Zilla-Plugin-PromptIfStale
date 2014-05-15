@@ -115,7 +115,7 @@ my $http_url;
         $tzil->log_messages,
         superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm " . join(' ', map { 'Unindexed' . $_ } 0..5)),
         'build was aborted, with remedy instructions',
-    ) or diag 'got: ', explain $tzil->log_messages;
+    ) or diag 'saw log messages: ', explain $tzil->log_messages;
 }
 
 done_testing;

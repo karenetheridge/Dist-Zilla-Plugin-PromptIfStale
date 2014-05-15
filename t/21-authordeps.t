@@ -94,7 +94,7 @@ use Dist::Zilla::App::Command::stale;
         $tzil->log_messages,
         superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Dist::Zilla::Plugin::GatherDir I::Am::Not::Installed strict"),
         'build was aborted, with remedy instructions',
-    ) or diag 'got: ', explain $tzil->log_messages;
+    ) or diag 'saw log messages: ', explain $tzil->log_messages;
 }
 
 @prompts = ();
