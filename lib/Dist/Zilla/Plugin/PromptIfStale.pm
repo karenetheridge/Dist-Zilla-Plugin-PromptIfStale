@@ -17,7 +17,7 @@ use Path::Tiny;
 use Cwd;
 use HTTP::Tiny;
 use Encode;
-use JSON;
+use JSON::MaybeXS;
 use Module::Path 'module_path';
 use Module::Metadata;
 use namespace::autoclean;
@@ -315,8 +315,7 @@ sub _indexed_version_via_query
 
     # JSON wants UTF-8 bytestreams, so we need to re-encode no matter what
     # encoding we got. -- rjbs, 2011-08-18 (in Dist::Zilla)
-    my $json_octets = Encode::encode_utf8($res->{content});
-    my $payload = JSON::->new->decode($json_octets);
+    my $payload = decode_json(Encode::encode_utf8($res->{content}));
 
     $self->log('invalid payload returned?'), return undef unless $payload;
     $self->log_debug($module . ' not indexed'), return undef if not defined $payload->[0]{mod_vers};
