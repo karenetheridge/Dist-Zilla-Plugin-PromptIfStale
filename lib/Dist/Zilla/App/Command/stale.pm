@@ -112,7 +112,7 @@ sub _missing_authordeps
     my @authordeps = map { (%$_)[0] }
         @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps(
             Path::Class::dir('.'),  # ugh!
-                1,                  # --missing
+            1,                      # --missing
            ) };
 }
 
