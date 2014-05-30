@@ -330,10 +330,9 @@ sub _get_packages
     my $self = shift;
     return $packages if $packages;
 
-    require File::Temp;
-    my $tempdir = File::Temp::tempdir(CLEANUP => 1);
+    my $tempdir = Path::Tiny->tempdir(CLEANUP => 1);
     my $filename = '02packages.details.txt.gz';
-    my $path = path($tempdir, $filename);
+    my $path = $tempdir->child($filename);
 
     my $base = $self->index_base_url || 'http://www.cpan.org';
 
