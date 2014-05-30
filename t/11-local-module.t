@@ -8,7 +8,6 @@ use Test::Fatal;
 use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
-use File::Spec;
 use File::pushd 'pushd';
 use Dist::Zilla::App::Command::stale;
 
@@ -51,7 +50,7 @@ my $tzil = Builder->from_config(
 }
 
 # munge @INC so it contains the source dir
-unshift @INC, File::Spec->catdir($tzil->tempdir, qw(source t lib));
+unshift @INC, path($tzil->tempdir, qw(source t lib))->stringify;
 
 $tzil->chrome->logger->set_debug(1);
 

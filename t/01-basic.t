@@ -6,7 +6,6 @@ use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 use Test::DZil;
 use Test::Fatal;
 use Test::Deep;
-use File::Spec;
 use Path::Tiny;
 use Moose::Util 'find_meta';
 use File::pushd 'pushd';
@@ -72,7 +71,7 @@ SKIP: {
 # we prompt properly about it.
 # This also saves us from having to do a real HTTP hit.
 
-unshift @INC, File::Spec->catdir(qw(t lib));
+unshift @INC, path(qw(t lib))->stringify;
 require NoNetworkHits;
 
 {

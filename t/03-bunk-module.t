@@ -5,7 +5,6 @@ use Test::More;
 use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 use Test::DZil;
 use Test::Fatal;
-use File::Spec;
 use Path::Tiny;
 use Test::Deep;
 use Moose::Util 'find_meta';
@@ -60,7 +59,7 @@ $tzil->chrome->set_response_for($prompt, 'n');
 
 $tzil->chrome->logger->set_debug(1);
 
-unshift @INC, File::Spec->catdir($tzil->tempdir, qw(t lib));
+unshift @INC, path($tzil->tempdir, qw(t lib))->stringify;
 
 {
     my $wd = pushd $tzil->root;
