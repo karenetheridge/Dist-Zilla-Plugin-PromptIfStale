@@ -126,7 +126,7 @@ __END__
 
 =head1 SYNOPSIS
 
-  $ dzil stale | cpanm
+  $ dzil stale --all | cpanm
 
 =head1 DESCRIPTION
 
