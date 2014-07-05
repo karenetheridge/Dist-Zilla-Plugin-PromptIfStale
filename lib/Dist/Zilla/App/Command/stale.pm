@@ -5,7 +5,8 @@ package Dist::Zilla::App::Command::stale;
 # vim: set ts=8 sw=4 tw=78 et :
 
 use Dist::Zilla::App -command;
-use List::MoreUtils qw(uniq any);
+use List::Util 1.33 'any';
+use List::MoreUtils 'uniq';
 use Try::Tiny;
 use namespace::autoclean;
 

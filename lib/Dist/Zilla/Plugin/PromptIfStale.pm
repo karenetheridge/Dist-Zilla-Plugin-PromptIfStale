@@ -12,7 +12,8 @@ with 'Dist::Zilla::Role::BeforeBuild',
 
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw(ArrayRef Bool Str);
-use List::MoreUtils qw(uniq none);
+use List::Util 1.33 'none';
+use List::MoreUtils 'uniq';
 use version;
 use Path::Tiny;
 use Cwd;
