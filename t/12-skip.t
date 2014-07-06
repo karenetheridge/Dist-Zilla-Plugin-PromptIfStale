@@ -48,12 +48,12 @@ my $tzil = Builder->from_config(
         add_files => {
             path(qw(source dist.ini)) => simple_ini(
                 [ GatherDir => ],
-                [ Prereqs => RuntimeRequires => { strict => 0, DoesNotExist => 0 } ],
+                [ Prereqs => RuntimeRequires => { Carp => 0, DoesNotExist => 0 } ],
                 [ 'PromptIfStale' => {
                         phase => 'build',
                         check_all_plugins => 1,
                         check_all_prereqs => 1,
-                        modules => [ qw(NotMeEither warnings) ],
+                        modules => [ qw(NotMeEither Storable) ],
                         skip => [ qw(DoesNotExist Dist::Zilla::Plugin::Prereqs NotMeEither) ],
                     },
                 ],
@@ -88,7 +88,7 @@ is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@promp
 
 my $build_dir = path($tzil->tempdir)->child('build');
 
-my @expected_checked = (qw(strict warnings), map { 'Dist::Zilla::Plugin::' . $_ } qw(GatherDir PromptIfStale FinderCode));
+my @expected_checked = (qw(Carp Storable), map { 'Dist::Zilla::Plugin::' . $_ } qw(GatherDir PromptIfStale FinderCode));
 
 cmp_deeply(
     $tzil->log_messages,

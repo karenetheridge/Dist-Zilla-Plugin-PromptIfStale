@@ -21,7 +21,7 @@ my $tzil = Builder->from_config(
         add_files => {
             path(qw(source dist.ini)) => simple_ini(
                 [ GatherDir => ],
-                [ 'PromptIfStale' => { modules => [ 'strict' ], check_all_plugins => 1, phase => 'build' } ],
+                [ 'PromptIfStale' => { modules => [ 'Carp' ], check_all_plugins => 1, phase => 'build' } ],
             ),
             path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
         },
@@ -87,7 +87,7 @@ cmp_deeply(
 
 cmp_deeply(
     \@modules_queried,
-    bag('strict', map { 'Dist::Zilla::Plugin::' . $_ } qw(GatherDir PromptIfStale FinderCode)),
+    bag('Carp', map { 'Dist::Zilla::Plugin::' . $_ } qw(GatherDir PromptIfStale FinderCode)),
     'all modules, from both configs, are checked',
 );
 

@@ -26,7 +26,7 @@ my @modules_checked;
         my ($module) = @_;
         push @modules_checked, $module;
         return 0 if $module =~ /^Dist::Zilla::Plugin::/;    # all plugins are current
-        return 200 if $module eq 'strict';
+        return 200 if $module eq 'Carp';
         die 'should not be checking for ' . $module;
     });
 }
@@ -55,7 +55,7 @@ my @modules_checked;
                     } qw(Requires Recommends Suggests)
                 } qw(Runtime Test Develop);
             },
-        ) . "\n\n; authordep strict\n",
+        ) . "\n\n; authordep Carp\n",
     );
 
     {
@@ -80,13 +80,13 @@ my @modules_checked;
         is($result->error, undef, 'no errors');
         is(
             $result->output,
-            join("\n", (map { 'Foo' . $_ } ('0' .. '8')), 'strict') . "\n",
+            join("\n", 'Carp', (map { 'Foo' . $_ } ('0' .. '8'))) . "\n",
             'stale prereqs and authordeps found with --all, despite no PromptIfStale plugins configured',
         );
 
         cmp_deeply(
             \@modules_checked,
-            set( 'strict', re(qr/^Dist::Zilla::Plugin::/) ),
+            set( 'Carp', re(qr/^Dist::Zilla::Plugin::/) ),
             'indexed versions of plugins were checked',
         );
     }

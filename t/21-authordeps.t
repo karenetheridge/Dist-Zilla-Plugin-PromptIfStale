@@ -33,7 +33,7 @@ use Dist::Zilla::App::Command::stale;
         my $orig = shift;
         my $self = shift;
         my ($module) = @_;
-        return version->parse('200.0') if $module eq 'strict';
+        return version->parse('200.0') if $module eq 'Carp';
         return version->parse('100.0') if $module eq 'Dist::Zilla::Plugin::GatherDir';
         die 'should not be checking for ' . $module;
     });
@@ -52,7 +52,7 @@ use Dist::Zilla::App::Command::stale;
                             skip => [qw(Dist::Zilla::Plugin::PromptIfStale)],
                         },
                     ],
-                ) . "\n\n; authordep I::Am::Not::Installed\n; authordep strict\n",
+                ) . "\n\n; authordep I::Am::Not::Installed\n; authordep Carp\n",
                 path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
             },
         },
@@ -62,17 +62,16 @@ use Dist::Zilla::App::Command::stale;
         my $wd = pushd $tzil->root;
         cmp_deeply(
             [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
-            bag(qw(Dist::Zilla::Plugin::GatherDir I::Am::Not::Installed strict)),
+            bag(qw(Dist::Zilla::Plugin::GatherDir I::Am::Not::Installed Carp)),
             'app finds uninstalled and stale authordeps',
         );
         Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
     }
 
     my $prompt = "Issues found:\n"
-        . '    Dist::Zilla::Plugin::GatherDir is indexed at version 100.0 but you only have '
-        . Dist::Zilla::Plugin::GatherDir->VERSION . " installed.\n"
+        . "    Carp is indexed at version 200.0 but you only have " . Carp->VERSION . " installed.\n"
+        . '    Dist::Zilla::Plugin::GatherDir is indexed at version 100.0 but you only have ' . Dist::Zilla::Plugin::GatherDir->VERSION . " installed.\n"
         . "    I::Am::Not::Installed is not installed.\n"
-        . "    strict is indexed at version 200.0 but you only have " . strict->VERSION . " installed.\n"
         . 'Continue anyway?';
     $tzil->chrome->set_response_for($prompt, 'n');
 
@@ -92,7 +91,7 @@ use Dist::Zilla::App::Command::stale;
 
     cmp_deeply(
         $tzil->log_messages,
-        superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Dist::Zilla::Plugin::GatherDir I::Am::Not::Installed strict"),
+        superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Carp Dist::Zilla::Plugin::GatherDir I::Am::Not::Installed"),
         'build was aborted, with remedy instructions',
     ) or diag 'saw log messages: ', explain $tzil->log_messages;
 }
