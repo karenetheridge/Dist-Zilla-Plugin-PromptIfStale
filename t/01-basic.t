@@ -30,6 +30,7 @@ my @prompts;
 }
 
 SKIP: {
+    # Note that this test uses the network to query the index for our own module.
     skip('this test can always be expected to work only for the author', 1)
         unless $ENV{AUTHOR_TESTING};
 
@@ -71,7 +72,8 @@ SKIP: {
 # we prompt properly about it.
 # This also saves us from having to do a real HTTP hit.
 
-unshift @INC, path(qw(t lib))->stringify;
+# ensure we find the helper module, before we change directories
+unshift @INC, path(qw(t lib))->absolute->stringify;
 require NoNetworkHits;
 
 {

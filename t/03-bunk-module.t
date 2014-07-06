@@ -39,7 +39,6 @@ my @prompts;
     });
 }
 
-
 my $tzil = Builder->from_config(
     { dist_root => 't/does-not-exist' },
     {
@@ -59,6 +58,7 @@ $tzil->chrome->set_response_for($prompt, 'n');
 
 $tzil->chrome->logger->set_debug(1);
 
+# ensure we find the library, not in a local directory, before we change directories
 unshift @INC, path($tzil->tempdir, qw(t lib))->stringify;
 
 {

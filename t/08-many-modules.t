@@ -124,6 +124,7 @@ sub do_tests
 
     $tzil->chrome->logger->set_debug(1);
 
+    # ensure we find the library, not in a local directory, before we change directories
     local @INC = @INC;
     unshift @INC, path($tzil->tempdir, qw(t lib))->stringify;
 

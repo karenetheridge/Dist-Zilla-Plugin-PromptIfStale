@@ -75,6 +75,7 @@ $tzil->chrome->set_response_for($full_prompt, 'n');
 
 $tzil->chrome->logger->set_debug(1);
 
+# ensure we find the library, not in a local directory, before we change directories
 unshift @INC, path($tzil->tempdir, qw(t lib))->stringify;
 
 {
