@@ -29,6 +29,14 @@ my @modules_checked;
         return 200 if $module eq 'Carp';
         die 'should not be checking for ' . $module;
     });
+    $meta->add_around_method_modifier(_is_duallifed => sub {
+        my $orig = shift;
+        my $self = shift;
+        my ($module) = @_;
+
+        return 1 if $module eq 'Carp';
+        die 'should not be checking for ' . $module;
+    });
 }
 
 {
@@ -88,7 +96,7 @@ my @modules_checked;
             \@modules_checked,
             set( 'Carp', re(qr/^Dist::Zilla::Plugin::/) ),
             'indexed versions of plugins were checked',
-        );
+        ) or diag 'checked modules: ', explain \@modules_checked;
     }
 }
 

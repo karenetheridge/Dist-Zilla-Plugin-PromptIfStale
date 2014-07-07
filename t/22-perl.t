@@ -7,11 +7,20 @@ use Test::DZil;
 use Test::Fatal;
 use Test::Deep;
 use Path::Tiny;
-use File::pushd 'pushd';
 use Moose::Util 'find_meta';
+use File::pushd 'pushd';
+use version;
 
 use lib 't/lib';
 use NoNetworkHits;
+
+BEGIN {
+    use Dist::Zilla::Plugin::PromptIfStale;
+    $Dist::Zilla::Plugin::PromptIfStale::VERSION = 9999
+        unless $Dist::Zilla::Plugin::PromptIfStale::VERSION;
+
+    use Dist::Zilla::App::Command::stale;
+}
 
 my @prompts;
 {
@@ -23,9 +32,6 @@ my @prompts;
     });
 }
 
-use Dist::Zilla::Plugin::PromptIfStale; # make sure we are loaded!!
-use Dist::Zilla::App::Command::stale;
-
 {
     my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
     $meta->make_mutable;
@@ -33,8 +39,8 @@ use Dist::Zilla::App::Command::stale;
         my $orig = shift;
         my $self = shift;
         my ($module) = @_;
-        return version->parse('200.0') if $module eq 'Carp';
-        return version->parse('100.0') if $module eq 'Dist::Zilla::Plugin::GatherDir';
+
+        return version->parse('200.0') if $module eq 'strict' or $module eq 'Carp';
         die 'should not be checking for ' . $module;
     });
     $meta->add_around_method_modifier(_is_duallifed => sub {
@@ -42,6 +48,7 @@ use Dist::Zilla::App::Command::stale;
         my $self = shift;
         my ($module) = @_;
 
+        return if $module eq 'strict';
         return 1 if $module eq 'Carp';
         die 'should not be checking for ' . $module;
     });
@@ -54,41 +61,78 @@ use Dist::Zilla::App::Command::stale;
             add_files => {
                 path(qw(source dist.ini)) => simple_ini(
                     [ GatherDir => ],
-                    [ 'PromptIfStale' => {
-                            check_authordeps => 1,
-                            phase => 'build',
-                            skip => [qw(Dist::Zilla::Plugin::PromptIfStale)],
-                        },
-                    ],
-                ) . "\n\n; authordep I::Am::Not::Installed\n; authordep Carp\n",
+                    [ 'PromptIfStale' => { modules => [ 'strict' ], phase => 'build' } ],
+                ),
                 path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
             },
         },
     );
 
+    $tzil->chrome->logger->set_debug(1);
+
     {
         my $wd = pushd $tzil->root;
         cmp_deeply(
             [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
-            bag(qw(Dist::Zilla::Plugin::GatherDir I::Am::Not::Installed Carp)),
-            'app finds uninstalled and stale authordeps',
+            [ ],
+            'app finds no stale modules',
         );
         Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
     }
 
-    my $prompt = "Issues found:\n"
-        . "    Carp is indexed at version 200.0 but you only have " . Carp->VERSION . " installed.\n"
-        . '    Dist::Zilla::Plugin::GatherDir is indexed at version 100.0 but you only have ' . Dist::Zilla::Plugin::GatherDir->VERSION . " installed.\n"
-        . "    I::Am::Not::Installed is not installed.\n"
-        . 'Continue anyway?';
-    $tzil->chrome->set_response_for($prompt, 'n');
+    is(
+        exception { $tzil->build },
+        undef,
+        'build succeeded when the stale module is core only',
+    );
+
+    is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@prompts;
+
+    cmp_deeply(
+        $tzil->log_messages,
+        superbagof(
+            '[PromptIfStale] comparing indexed vs. local version for strict: indexed=200.0; local version=' . strict->VERSION,
+            re(qr/^\Q[DZ] writing DZT-Sample in /),
+        ),
+        'build completed successfully',
+    ) or diag 'saw log messages: ', explain $tzil->log_messages;
+}
+
+@prompts = ();
+{
+    my $tzil = Builder->from_config(
+        { dist_root => 't/does-not-exist' },
+        {
+            add_files => {
+                path(qw(source dist.ini)) => simple_ini(
+                    [ GatherDir => ],
+                    [ 'PromptIfStale' => { modules => [ 'Carp' ], phase => 'build' } ],
+                ),
+                path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
+            },
+        },
+    );
+
+    my $prompt = 'Carp is indexed at version 200.0 but you only have ' . Carp->VERSION
+        . ' installed. Continue anyway?';
+    $tzil->chrome->set_response_for($prompt, 'y');
 
     $tzil->chrome->logger->set_debug(1);
 
-    like(
+    {
+        my $wd = pushd $tzil->root;
+        cmp_deeply(
+            [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
+            [ 'Carp' ],
+            'app finds stale modules',
+        );
+        Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+    }
+
+    is(
         exception { $tzil->build },
-        qr/\Q[PromptIfStale] Aborting build\E/,
-        'build aborted',
+        undef,
+        'build proceeds normally',
     );
 
     cmp_deeply(
@@ -99,53 +143,12 @@ use Dist::Zilla::App::Command::stale;
 
     cmp_deeply(
         $tzil->log_messages,
-        superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Carp Dist::Zilla::Plugin::GatherDir I::Am::Not::Installed"),
-        'build was aborted, with remedy instructions',
+        superbagof(
+            '[PromptIfStale] comparing indexed vs. local version for Carp: indexed=200.0; local version=' . Carp->VERSION,
+            re(qr/^\Q[DZ] writing DZT-Sample in /),
+        ),
+        'build completed successfully',
     ) or diag 'saw log messages: ', explain $tzil->log_messages;
-}
-
-@prompts = ();
-Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
-
-{
-    my $tzil = Builder->from_config(
-        { dist_root => 't/does-not-exist' },
-        {
-            add_files => {
-                path(qw(source dist.ini)) => simple_ini(
-                    [ GatherDir => ],
-                    [ 'PromptIfStale' => { phase => 'build' },
-                    ],
-                ) . "\n\n; authordep I::Am::Not::Installed\n",
-                path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
-            },
-        },
-    );
-
-    {
-        my $wd = pushd $tzil->root;
-        cmp_deeply(
-            [ Dist::Zilla::App::Command::stale->stale_modules($tzil) ],
-            [ ],
-            'app does not check authordeps without --all',
-        );
-        Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
-    }
-
-    $tzil->chrome->logger->set_debug(1);
-
-    is(
-        exception { $tzil->build },
-        undef,
-        'build succeeded - nothing checked',
-    );
-
-    cmp_deeply(
-        \@prompts,
-        [ ],
-        'there were no prompts',
-    );
-    diag 'got prompts: ', explain $tzil->log_messages if not Test::Builder->new->is_passing;
 }
 
 done_testing;

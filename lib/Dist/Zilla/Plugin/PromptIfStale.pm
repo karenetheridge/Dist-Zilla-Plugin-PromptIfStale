@@ -22,6 +22,7 @@ use Encode;
 use JSON::MaybeXS;
 use Module::Path 'module_path';
 use Module::Metadata;
+use Module::CoreList 3.10;  # covers latest stable perl, 5.20.0
 use namespace::autoclean;
 
 sub mvp_multivalue_args { qw(modules skip) }
@@ -193,11 +194,21 @@ sub stale_modules
             and $local_version < $indexed_version)
         {
             $already_checked{$module}++;
-            push @stale_modules, $module;
-            push @errors,
-                $module . ' is indexed at version ' . $indexed_version
-                    . ' but you only have ' . $local_version
-                    . ' installed.';
+
+            if (Module::CoreList::is_core($module) and not $self->_is_duallifed($module))
+            {
+                $self->log_debug('core module ' . $module . ' is indexed at version '
+                    . $indexed_version . ' but you only have ' . $local_version
+                    . ' installed. You need to use update your perl to get the latest version.');
+            }
+            else
+            {
+                push @stale_modules, $module;
+                push @errors,
+                    $module . ' is indexed at version ' . $indexed_version
+                        . ' but you only have ' . $local_version . ' installed.';
+            }
+
             next;
         }
     }
@@ -291,6 +302,31 @@ sub _modules_extra
     grep { my $module = $_; none { $module eq $_ } @skip } $self->_raw_modules;
 }
 
+# this ought to be in Module::CoreList -- TODO :)
+sub _is_duallifed
+{
+    my ($self, $module) = @_;
+
+    return if not Module::CoreList::is_core($module);
+
+    # Module::CoreList doesn't tell us this information at all right now - for
+    # blead-upstream dual-lifed modules, and non-dual-lifed modules, it
+    # returns all the same data points. :(  Right now all we can do is query
+    # the index and see what dist it belongs to -- luckily, it still lists the
+    # cpan dist for dual-lifed modules that are more recent in core than on
+    # CPAN (e.g. Carp in June 2014 is 1.34 in 5.20.0 but 1.3301 on cpan).
+
+    my $res = HTTP::Tiny->new->get("http://cpanidx.org/cpanidx/json/mod/$module");
+    $self->log('could not query the index?'), return undef if not $res->{success};
+
+    # JSON wants UTF-8 bytestreams, so we need to re-encode no matter what
+    # encoding we got. -- rjbs, 2011-08-18 (in Dist::Zilla)
+    my $payload = decode_json(Encode::encode_utf8($res->{content}));
+
+    $self->log('invalid payload returned?'), return undef unless $payload;
+    $self->log_debug($module . ' not indexed'), return undef if not defined $payload->[0]{dist_name};
+    $payload->[0]{dist_name} ne 'perl';
+}
 
 my $packages;
 sub _indexed_version
