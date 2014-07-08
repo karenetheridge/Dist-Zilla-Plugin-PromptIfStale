@@ -109,7 +109,7 @@ sub do_tests
                 ),
                 path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
             },
-            also_copy => { 't/lib' => 't/lib' },
+            also_copy => { 't/corpus' => 't/lib' },
         },
     );
 
