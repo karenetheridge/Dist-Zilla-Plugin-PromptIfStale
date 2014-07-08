@@ -45,12 +45,6 @@ my @prompts;
     });
 }
 
-{
-    package Unindexed;
-    our $VERSION = '2.0';
-    $INC{'Unindexed.pm'} = '/tmp/bogusfile';    # cannot be in our local dir or we will abort
-}
-
 my $tzil = Builder->from_config(
     { dist_root => 't/does-not-exist' },
     {
@@ -87,7 +81,6 @@ unshift @INC, path($tzil->tempdir, qw(t lib))->stringify;
     );
     Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
 }
-
 
 like(
     exception { $tzil->build },
