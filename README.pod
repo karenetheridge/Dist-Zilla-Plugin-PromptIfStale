@@ -1,0 +1,156 @@
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are out of date
+
+=head1 VERSION
+
+version 0.024
+
+=head1 SYNOPSIS
+
+In your F<dist.ini>:
+
+    [PromptIfStale]
+    phase = build
+    module = Dist::Zilla
+    module = Dist::Zilla::PluginBundle::Author::ME
+
+or:
+
+    [PromptIfStale]
+    check_all_plugins = 1
+
+=head1 DESCRIPTION
+
+C<[PromptIfStale]> is a C<BeforeBuild> or C<BeforeRelease> plugin that compares the
+locally-installed version of a module(s) with the latest indexed version,
+prompting to abort the build process if a discrepancy is found.
+
+Note that there is no effect on the built dist -- all actions are taken at
+build time.
+
+=head1 OPTIONS
+
+=over 4
+
+=item * C<phase>
+
+Indicates whether the checks are performed at I<build> or I<release> time
+(defaults to I<release>).
+
+(Remember that you can use different settings for different phases by employing
+this plugin twice, with different names.)
+
+=item * C<module>
+
+The name of a module to check for. Can be provided more than once.
+
+=item * C<check_authordeps>
+
+=for stopwords authordeps
+
+A boolean, defaulting to false, indicating that all authordeps in F<dist.ini>
+(like what is done by C<< dzil authordeps >>) should be checked.
+
+As long as this option is not explicitly set to false, a check is always made
+for authordeps being installed (but the indexed version is not checked). This
+serves as a fast way to guard against a build blowing up later through the
+inadvertent lack of fulfillment of an explicit C<< ; authordep >> declaration.
+
+=item * C<check_all_plugins>
+
+A boolean, defaulting to false, indicating that all plugins being used to
+build this distribution should be checked.
+
+=item * C<check_all_prereqs>
+
+A boolean, defaulting to false, indicating that all prerequisites in the
+distribution metadata should be checked. The modules are a merged list taken
+from all phases (C<configure>, C<build>, C<runtime>, C<test> and C<develop>) ,
+and the C<requires>, C<recommends> and C<suggests> types.
+
+=item * C<skip>
+
+The name of a module to exempt from checking. Can be provided more than once.
+
+=item * C<fatal>
+
+A boolean, defaulting to false, indicating that missing prereqs will result in
+an immediate abort of the build/release process, without prompting.
+
+=item * C<index_base_url>
+
+=for stopwords darkpan
+
+When provided, uses this base URL to fetch F<02packages.details.txt.gz>
+instead of the default C<http://www.cpan.org>.  Use this when your
+distribution uses prerequisites found only in your darkpan-like server.
+
+=back
+
+=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release
+
+=head1 METHODS
+
+=head2 stale_modules
+
+Given a list of modules to check, returns
+
+=over 4
+
+=item *
+
+a list reference of modules that are stale (not installed or the version is not at least the latest indexed version
+
+=item *
+
+a list reference of error messages describing the issues found
+
+=back
+
+=head1 SUPPORT
+
+=for stopwords irc
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-PromptIfStale>
+(or L<bug-Dist-Zilla-Plugin-PromptIfStale@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-PromptIfStale@rt.cpan.org>).
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
+
+=head1 SEE ALSO
+
+=over 4
+
+=item *
+
+the L<[EnsureNotStale]|Dist::Zilla::Plugin::EnsureNotStale> plugin in this distribution
+
+=item *
+
+the L<dzil stale|Dist::Zilla::App::Command::stale> command in this distribution
+
+=item *
+
+L<Dist::Zilla::Plugin::Prereqs::MatchInstalled>, L<Dist::Zilla::Plugin::Prereqs::MatchInstalled::All>
+
+=back
+
+=head1 AUTHOR
+
+Karen Etheridge <ether@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Karen Etheridge.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=head1 CONTRIBUTOR
+
+David Golden <dagolden@cpan.org>
+
+=cut

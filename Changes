@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.024     2014-07-23 20:13:17Z
           - switch from using JSON to JSON::MaybeXS
           - avoid reporting core (non-duallifed) modules as being stale, since
             they cannot be updated without updating perl itself
