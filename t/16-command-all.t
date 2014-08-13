@@ -97,6 +97,9 @@ my @modules_checked;
             set( 'Carp', re(qr/^Dist::Zilla::Plugin::/) ),
             'indexed versions of plugins were checked',
         ) or diag 'checked modules: ', explain \@modules_checked;
+
+        diag 'got result', explain $result
+            if not Test::Builder->new->is_passing;
     }
 }
 

@@ -101,6 +101,9 @@ for my $case ( 0, 1 ) {
 
         Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
         @prompts = ();
+
+        diag 'got log messages: ', explain $tzil->log_messages
+            if not Test::Builder->new->is_passing;
     }
 }
 

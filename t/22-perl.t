@@ -95,7 +95,10 @@ my @prompts;
             re(qr/^\Q[DZ] writing DZT-Sample in /),
         ),
         'build completed successfully',
-    ) or diag 'saw log messages: ', explain $tzil->log_messages;
+    );
+
+    diag 'got log messages: ', explain $tzil->log_messages
+        if not Test::Builder->new->is_passing;
 }
 
 @prompts = ();
@@ -117,8 +120,6 @@ my @prompts;
         . ' installed. Continue anyway?';
     $tzil->chrome->set_response_for($prompt, 'y');
 
-    $tzil->chrome->logger->set_debug(1);
-
     {
         my $wd = pushd $tzil->root;
         cmp_deeply(
@@ -128,6 +129,8 @@ my @prompts;
         );
         Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
     }
+
+    $tzil->chrome->logger->set_debug(1);
 
     is(
         exception { $tzil->build },
@@ -148,7 +151,10 @@ my @prompts;
             re(qr/^\Q[DZ] writing DZT-Sample in /),
         ),
         'build completed successfully',
-    ) or diag 'saw log messages: ', explain $tzil->log_messages;
+    );
+
+    diag 'got log messages: ', explain $tzil->log_messages
+        if not Test::Builder->new->is_passing;
 }
 
 done_testing;

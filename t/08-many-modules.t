@@ -122,8 +122,6 @@ sub do_tests
     my $prompt1 = 'Unindexed6 is not indexed. Continue anyway?';
     $tzil->chrome->set_response_for($prompt1, 'n');
 
-    $tzil->chrome->logger->set_debug(1);
-
     # ensure we find the library, not in a local directory, before we change directories
     local @INC = @INC;
     unshift @INC, path($tzil->tempdir, qw(t lib))->stringify;
@@ -140,6 +138,8 @@ sub do_tests
         Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
         goto BUILD;
     }
+
+    $tzil->chrome->logger->set_debug(1);
 
     like(
         exception { $tzil->build },
@@ -165,5 +165,8 @@ sub do_tests
         $tzil->log_messages,
         superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Unindexed6"),
         'build was aborted, with remedy instructions',
-    ) or diag 'saw log messages: ', explain $tzil->log_messages;
+    );
+
+    diag 'got log messages: ', explain $tzil->log_messages
+        if not Test::Builder->new->is_passing;
 }

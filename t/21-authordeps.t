@@ -66,6 +66,8 @@ use Dist::Zilla::App::Command::stale;
         },
     );
 
+    $tzil->chrome->logger->set_debug(1);
+
     {
         my $wd = pushd $tzil->root;
         cmp_deeply(
@@ -82,8 +84,6 @@ use Dist::Zilla::App::Command::stale;
         . "    I::Am::Not::Installed is not installed.\n"
         . 'Continue anyway?';
     $tzil->chrome->set_response_for($prompt, 'n');
-
-    $tzil->chrome->logger->set_debug(1);
 
     like(
         exception { $tzil->build },
@@ -145,7 +145,9 @@ Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
         [ ],
         'there were no prompts',
     );
-    diag 'got prompts: ', explain $tzil->log_messages if not Test::Builder->new->is_passing;
+
+    diag 'got prompts: ', explain $tzil->log_messages
+        if not Test::Builder->new->is_passing;
 }
 
 done_testing;

@@ -30,6 +30,9 @@ use NoNetworkHits;
     is($result->exit_code, 0, 'dzil would have exited 0');
     is($result->error, undef, 'no errors');
     is($result->output, "Dist::Zilla::Plugin::NonexistentPlugin\n", 'dzil authordeps ran to get missing plugins');
+
+    diag 'got result', explain $result
+        if not Test::Builder->new->is_passing;
 }
 
 done_testing;

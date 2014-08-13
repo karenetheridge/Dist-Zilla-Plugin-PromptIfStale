@@ -78,6 +78,7 @@ my @expected_prompts = map {
 
 $tzil->chrome->set_response_for($_, 'y') foreach @expected_prompts;
 
+$tzil->chrome->logger->set_debug(1);
 $tzil->build;
 
 cmp_deeply(
@@ -85,5 +86,8 @@ cmp_deeply(
     \@expected_prompts,
     'we were indeed prompted, for exactly all the right phases and types, and not twice for the duplicates',
 );
+
+diag 'got log messages: ', explain $tzil->log_messages
+    if not Test::Builder->new->is_passing;
 
 done_testing;

@@ -52,6 +52,9 @@ use NoNetworkHits;
         "Not::Installed\n",
         'dzil authordeps ran to get prereq that causes a full build to explode',
     );
+
+    diag 'got result', explain $result
+        if not Test::Builder->new->is_passing;
 }
 
 done_testing;

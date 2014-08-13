@@ -80,6 +80,9 @@ use NoNetworkHits;
         ) . "\n",
         'stale modules and prereqs found, as configured in all PromptIfStale plugins',
     );
+
+    diag 'got result', explain $result
+        if not Test::Builder->new->is_passing;
 }
 
 done_testing;

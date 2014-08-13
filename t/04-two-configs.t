@@ -52,8 +52,6 @@ my @modules_queried;
     });
 }
 
-$tzil->chrome->logger->set_debug(1);
-
 {
     my $wd = pushd $tzil->root;
     cmp_deeply(
@@ -65,6 +63,7 @@ $tzil->chrome->logger->set_debug(1);
     @modules_queried = ();
 }
 
+$tzil->chrome->logger->set_debug(1);
 
 # we will die if we are prompted
 is(
@@ -83,12 +82,15 @@ cmp_deeply(
         re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),
     'build completed successfully',
-) or diag 'saw log messages: ', explain $tzil->log_messages;
+);
 
 cmp_deeply(
     \@modules_queried,
     bag('Carp', map { 'Dist::Zilla::Plugin::' . $_ } qw(GatherDir PromptIfStale FinderCode)),
     'all modules, from both configs, are checked',
 );
+
+diag 'got log messages: ', explain $tzil->log_messages
+    if not Test::Builder->new->is_passing;
 
 done_testing;

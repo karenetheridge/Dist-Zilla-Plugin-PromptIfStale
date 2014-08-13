@@ -52,7 +52,6 @@ unshift @INC, path($tzil->tempdir, qw(source t lib))->stringify;
     Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
 }
 
-
 $tzil->chrome->logger->set_debug(1);
 
 is(
@@ -68,8 +67,11 @@ cmp_deeply(
         re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),
     'module skipped, due to being local',
-) or diag 'saw log messages: ', explain $tzil->log_messages;
+);
 
 is(scalar @prompts, 0, 'there were no prompts');
+
+diag 'got log messages: ', explain $tzil->log_messages
+    if not Test::Builder->new->is_passing;
 
 done_testing;
