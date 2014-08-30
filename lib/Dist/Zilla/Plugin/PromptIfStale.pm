@@ -482,12 +482,9 @@ distribution uses prerequisites found only in your darkpan-like server.
 
 Given a list of modules to check, returns
 
-=begin :list
-
+=for :list
 * a list reference of modules that are stale (not installed or the version is not at least the latest indexed version
 * a list reference of error messages describing the issues found
-
-=end :list
 
 =head1 SUPPORT
 
@@ -499,12 +496,9 @@ I am also usually active on irc, as 'ether' at C<irc.perl.org>.
 
 =head1 SEE ALSO
 
-=begin :list
-
+=for :list
 * the L<[EnsureNotStale]|Dist::Zilla::Plugin::EnsureNotStale> plugin in this distribution
 * the L<dzil stale|Dist::Zilla::App::Command::stale> command in this distribution
 * L<Dist::Zilla::Plugin::Prereqs::MatchInstalled>, L<Dist::Zilla::Plugin::Prereqs::MatchInstalled::All>
-
-=end :list
 
 =cut

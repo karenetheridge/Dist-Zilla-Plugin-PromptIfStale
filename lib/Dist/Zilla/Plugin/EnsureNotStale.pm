@@ -50,12 +50,9 @@ Getty made me do this!
 
 =head1 SEE ALSO
 
-=begin :list
-
+=for :list
 * the L<[PromptIfStale]|Dist::Zilla::Plugin::PromptIfStale> plugin in this distribution
 * the L<dzil stale|Dist::Zilla::App::Command::stale> command in this distribution
 * L<Dist::Zilla::Plugin::Prereqs::MatchInstalled>, L<Dist::Zilla::Plugin::Prereqs::MatchInstalled::All>
-
-=end :list
 
 =cut
