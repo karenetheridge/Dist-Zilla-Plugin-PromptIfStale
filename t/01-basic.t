@@ -129,8 +129,6 @@ is(
 
 cmp_deeply(\@prompts, [ $prompt ], 'we were indeed prompted');
 
-my $build_dir = path($tzil->tempdir)->child('build');
-
 cmp_deeply(
     $tzil->log_messages,
     superbagof(

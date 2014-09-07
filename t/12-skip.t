@@ -86,8 +86,6 @@ is(
 
 is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@prompts;
 
-my $build_dir = path($tzil->tempdir)->child('build');
-
 my @expected_checked = (qw(Carp Storable), map { 'Dist::Zilla::Plugin::' . $_ } qw(GatherDir PromptIfStale FinderCode));
 
 cmp_deeply(
