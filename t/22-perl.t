@@ -10,17 +10,10 @@ use Path::Tiny;
 use Moose::Util 'find_meta';
 use File::pushd 'pushd';
 use version;
+use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
 use NoNetworkHits;
-
-BEGIN {
-    use Dist::Zilla::Plugin::PromptIfStale;
-    $Dist::Zilla::Plugin::PromptIfStale::VERSION = 9999
-        unless $Dist::Zilla::Plugin::PromptIfStale::VERSION;
-
-    use Dist::Zilla::App::Command::stale;
-}
 
 my @prompts;
 {
@@ -33,6 +26,7 @@ my @prompts;
 }
 
 {
+    use Dist::Zilla::Plugin::PromptIfStale;
     my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
     $meta->make_mutable;
     $meta->add_around_method_modifier(_indexed_version => sub {

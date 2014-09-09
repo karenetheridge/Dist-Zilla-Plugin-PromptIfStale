@@ -9,6 +9,7 @@ use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
 use File::pushd 'pushd';
+use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
 use NoNetworkHits;
@@ -16,7 +17,6 @@ use NoNetworkHits;
 my @modules_queried;
 {
     use Dist::Zilla::Plugin::PromptIfStale;
-    use Dist::Zilla::App::Command::stale;
     my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
     $meta->make_mutable;
     $meta->add_around_method_modifier(_indexed_version => sub {

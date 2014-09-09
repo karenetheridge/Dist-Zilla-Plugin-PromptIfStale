@@ -17,9 +17,8 @@ use NoNetworkHits;
 
 # simulate a response from the PAUSE index, without having to do a real HTTP hit
 
-use Dist::Zilla::Plugin::PromptIfStale; # make sure we are loaded!!
-
 {
+    use Dist::Zilla::Plugin::PromptIfStale;
     my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
     $meta->make_mutable;
     $meta->add_around_method_modifier(_indexed_version => sub {

@@ -14,14 +14,9 @@ use Dist::Zilla::App::Command::stale;
 use lib 't/lib';
 use NoNetworkHits;
 
-BEGIN {
-    use Dist::Zilla::Plugin::PromptIfStale;
-    $Dist::Zilla::Plugin::PromptIfStale::VERSION = 9999
-        unless $Dist::Zilla::Plugin::PromptIfStale::VERSION;
-}
-
 my @checked_via_02packages;
 {
+    use Dist::Zilla::Plugin::PromptIfStale;
     my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
     $meta->make_mutable;
     $meta->add_around_method_modifier(_indexed_version_via_query => sub {

@@ -10,14 +10,8 @@ use Path::Tiny;
 use Moose::Util 'find_meta';
 use File::pushd 'pushd';
 use version;
-
-BEGIN {
-    use Dist::Zilla::Plugin::PromptIfStale;
-    $Dist::Zilla::Plugin::PromptIfStale::VERSION = 9999
-        unless $Dist::Zilla::Plugin::PromptIfStale::VERSION;
-
-    use Dist::Zilla::App::Command::stale;
-}
+use Dist::Zilla::Plugin::PromptIfStale;
+use Dist::Zilla::App::Command::stale;
 
 my @prompts;
 {

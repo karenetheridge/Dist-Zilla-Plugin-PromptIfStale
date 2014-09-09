@@ -15,12 +15,6 @@ use Dist::Zilla::App::Command::stale;
 use lib 't/lib';
 use NoNetworkHits;
 
-BEGIN {
-    use Dist::Zilla::Plugin::PromptIfStale;
-    $Dist::Zilla::Plugin::PromptIfStale::VERSION = 9999
-        unless $Dist::Zilla::Plugin::PromptIfStale::VERSION;
-}
-
 {
     my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
     $meta->make_mutable;
@@ -37,6 +31,7 @@ BEGIN {
 
 my @prompts;
 {
+    use Dist::Zilla::Plugin::PromptIfStale;
     my $meta = find_meta('Dist::Zilla::Chrome::Test');
     $meta->make_mutable;
     $meta->add_before_method_modifier(prompt_str => sub {
