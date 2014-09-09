@@ -228,6 +228,13 @@ sub _check_modules
         ? join("\n    ", 'Issues found:', @$errors)
         : $errors->[0];
 
+    # just issue a warning if not being run interactively (e.g. travis)
+    if (not (-t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT))))
+    {
+        $self->log($message . "\n" . 'To remedy, do: cpanm ' . join(' ', @$stale_modules));
+        return;
+    }
+
     my $continue;
     if ($self->fatal)
     {

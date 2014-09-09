@@ -3,6 +3,8 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
           - in "fatal" mode, also print the detailed list of what is stale and
             why, before dying with an advisory to run 'cpanm'
+          - only issue a warning, rather than prompting, when being run
+            non-interactively
 
 0.024     2014-07-23 20:13:17Z
           - switch from using JSON to JSON::MaybeXS
