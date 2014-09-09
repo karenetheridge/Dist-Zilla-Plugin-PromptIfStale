@@ -224,15 +224,21 @@ sub _check_modules
 
     return if not @$errors;
 
-    my $prompt = @$errors > 1
-        ? (join("\n    ", 'Issues found:', @$errors) . "\n")
-        : ($errors->[0] . ' ');
+    my $message = @$errors > 1
+        ? join("\n    ", 'Issues found:', @$errors)
+        : $errors->[0];
 
     my $continue;
-    if (not $self->fatal)
+    if ($self->fatal)
     {
-        $prompt .= 'Continue anyway?';
-        $continue = $self->zilla->chrome->prompt_yn($prompt, { default => 0 });
+        $self->log($message);
+    }
+    else
+    {
+        $continue = $self->zilla->chrome->prompt_yn(
+            $message . (@$errors > 1 ? "\n" : ' ') . 'Continue anyway?',
+            { default => 0 },
+        );
     }
 
     $self->log_fatal('Aborting ' . $self->phase . "\n"
