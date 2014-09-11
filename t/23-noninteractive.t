@@ -10,6 +10,7 @@ use Path::Tiny;
 use Moose::Util 'find_meta';
 use File::pushd 'pushd';
 use version;
+use File::Spec;
 use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
