@@ -13,6 +13,9 @@ use version;
 use Dist::Zilla::Plugin::PromptIfStale;
 use Dist::Zilla::App::Command::stale;
 
+use lib 't/lib';
+use EnsureStdinTty;
+
 my @prompts;
 {
     my $meta = find_meta('Dist::Zilla::Chrome::Test');
