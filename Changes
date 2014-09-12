@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.026     2014-09-12 03:24:50Z
           - fix tests (new in 0.025) that fail when stdin is not a tty (e.g.
             piping module names to cpanm)
 
