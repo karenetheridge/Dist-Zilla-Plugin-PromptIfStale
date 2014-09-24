@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - fix tty handling in tests to resolve filehandle issues on linux
+            (RT#99074)
 
 0.026     2014-09-12 03:24:50Z
           - fix tests (new in 0.025) that fail when stdin is not a tty (e.g.
