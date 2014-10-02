@@ -98,7 +98,7 @@ my @modules_checked;
             'indexed versions of plugins were checked',
         ) or diag 'checked modules: ', explain \@modules_checked;
 
-        diag 'got result', explain $result
+        diag 'got result: ', explain $result
             if not Test::Builder->new->is_passing;
     }
 }

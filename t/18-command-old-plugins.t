@@ -36,7 +36,7 @@ use NoNetworkHits;
     is($result->error, undef, 'no errors');
     is($result->output, "Dist::Zilla::Plugin::OldPlugin\n", 'dzil authordeps ran to get updated plugins');
 
-    diag 'got result', explain $result
+    diag 'got result: ', explain $result
         if not Test::Builder->new->is_passing;
 }
 

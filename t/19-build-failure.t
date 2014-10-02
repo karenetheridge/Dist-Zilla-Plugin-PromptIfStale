@@ -53,7 +53,7 @@ use NoNetworkHits;
         'dzil authordeps ran to get prereq that causes a full build to explode',
     );
 
-    diag 'got result', explain $result
+    diag 'got result: ', explain $result
         if not Test::Builder->new->is_passing;
 }
 

@@ -81,7 +81,7 @@ use NoNetworkHits;
         'stale modules and prereqs found, as configured in all PromptIfStale plugins',
     );
 
-    diag 'got result', explain $result
+    diag 'got result: ', explain $result
         if not Test::Builder->new->is_passing;
 }
 
