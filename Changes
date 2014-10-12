@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.028     2014-10-12 18:51:44Z
           - added extra diagnostics on filehandle states when tests fail
 
 0.027     2014-09-24 01:58:26Z
