@@ -10,6 +10,13 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are 
 
 version 0.029
 
+=begin html
+
+<a href="http://badge.fury.io/pl/Dist-Zilla-Plugin-PromptIfStale"><img alt="CPAN version" src="https://badge.fury.io/pl/Dist-Zilla-Plugin-PromptIfStale.svg"></a>
+<a href="https://travis-ci.org/karenetheridge/Dist-Zilla-Plugin-PromptIfStale"><img alt="Build status" src="https://travis-ci.org/karenetheridge/Dist-Zilla-Plugin-PromptIfStale.png?branch=master"></a>
+
+=end html
+
 =head1 SYNOPSIS
 
 In your F<dist.ini>:
