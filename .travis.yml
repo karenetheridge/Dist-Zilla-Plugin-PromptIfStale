@@ -1,0 +1,16 @@
+language: perl
+perl:
+  - "5.10@dzil"
+  - "5.12@dzil"
+  - "5.14@dzil"
+  - "5.16@dzil"
+  - "5.18@dzil"
+  - "5.20@dzil"
+  - "blead"
+before_install:
+  - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
+  - source ~/travis-perl-helpers/init --auto
+env:
+  - AUTHOR_TESTING=1
+  - AUTOMATED_TESTING=0
+  - RELEASE_TESTING=0
