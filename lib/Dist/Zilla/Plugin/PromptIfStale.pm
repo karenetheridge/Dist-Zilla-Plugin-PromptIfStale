@@ -19,7 +19,7 @@ use Path::Tiny;
 use Cwd;
 use HTTP::Tiny;
 use JSON::MaybeXS;
-use Module::Path 'module_path';
+use Module::Path 0.15 'module_path';
 use Module::Metadata;
 use Module::CoreList 3.10;  # covers latest stable perl, 5.20.0
 use namespace::autoclean;

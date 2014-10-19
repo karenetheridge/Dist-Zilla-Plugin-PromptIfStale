@@ -13,7 +13,10 @@ use version;
 use Dist::Zilla::Plugin::PromptIfStale;
 use Dist::Zilla::App::Command::stale;
 
-use lib 't/lib';
+BEGIN {
+    # dzil changes directories..
+    unshift @INC, path(qw(t lib))->absolute->stringify;
+}
 use EnsureStdinTty;
 
 my @prompts;
@@ -74,8 +77,6 @@ SKIP: {
 # we prompt properly about it.
 # This also saves us from having to do a real HTTP hit.
 
-# ensure we find the helper module, before we change directories
-unshift @INC, path(qw(t lib))->absolute->stringify;
 require NoNetworkHits;
 
 {
