@@ -1,19 +1,12 @@
 language: perl
 perl:
   - "5.10@dzil"
-    env: AUTHOR_TESTING=1 AUTOMATED_TESTING=1 RELEASE_TESTING=0
   - "5.12@dzil"
-    env: AUTHOR_TESTING=1 AUTOMATED_TESTING=1 RELEASE_TESTING=0
   - "5.14@dzil"
-    env: AUTHOR_TESTING=1 AUTOMATED_TESTING=1 RELEASE_TESTING=0
   - "5.16@dzil"
-    env: AUTHOR_TESTING=1 AUTOMATED_TESTING=1 RELEASE_TESTING=0
   - "5.18@dzil"
-    env: AUTHOR_TESTING=1 AUTOMATED_TESTING=1 RELEASE_TESTING=0
   - "5.20@dzil"
-    env: AUTHOR_TESTING=1 AUTOMATED_TESTING=1 RELEASE_TESTING=0
   - "blead"
-    env: AUTHOR_TESTING=1 AUTOMATED_TESTING=1 RELEASE_TESTING=0
 before_install:
   - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
   - source ~/travis-perl-helpers/init --auto
