@@ -21,7 +21,7 @@ use HTTP::Tiny;
 use JSON::MaybeXS;
 use Module::Path 0.15 'module_path';
 use Module::Metadata;
-use Module::CoreList 3.10;  # covers latest stable perl, 5.20.0
+use Module::CoreList 3.10;  # includes information about the 5.20.0 release
 use namespace::autoclean;
 
 sub mvp_multivalue_args { qw(modules skip) }
