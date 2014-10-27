@@ -260,13 +260,13 @@ has _authordeps => (
     default => sub {
         my $self = shift;
         require Dist::Zilla::Util::AuthorDeps;
-        require Path::Class;
+        Dist::Zilla::Util::AuthorDeps->VERSION(5.021);
         my @skip = $self->skip;
         [
             grep { my $module = $_; none { $module eq $_ } @skip }
             uniq
             map { (%$_)[0] }
-                @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps(Path::Class::dir('.')) }
+                @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps('.') }
         ];
     },
 );

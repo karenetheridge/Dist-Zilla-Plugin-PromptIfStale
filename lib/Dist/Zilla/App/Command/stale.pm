@@ -110,12 +110,13 @@ sub _missing_authordeps
     my $self = shift;
 
     require Dist::Zilla::Util::AuthorDeps;
-    require Path::Class;
+    Dist::Zilla::Util::AuthorDeps->VERSION(5.021);
     my @authordeps = map { (%$_)[0] }
         @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps(
-            Path::Class::dir('.'),  # ugh!
-            1,                      # --missing
-           ) };
+            '.',            # repository root
+            1,              # --missing
+          )
+        };
 }
 
 1;
