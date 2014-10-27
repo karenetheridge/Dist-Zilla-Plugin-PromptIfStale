@@ -22,6 +22,7 @@ use JSON::MaybeXS;
 use Module::Path 0.15 'module_path';
 use Module::Metadata;
 use Module::CoreList 3.10;  # includes information about the 5.20.0 release
+use Encode ();
 use namespace::autoclean;
 
 sub mvp_multivalue_args { qw(modules skip) }
@@ -331,7 +332,15 @@ sub _is_duallifed
     my $res = HTTP::Tiny->new->get("http://cpanidx.org/cpanidx/json/mod/$module");
     $self->log('could not query the index?'), return undef if not $res->{success};
 
-    my $payload = JSON::MaybeXS->new(utf8 => 0)->decode($res->{content});
+    my $data = $res->{content};
+
+    require HTTP::Headers;
+    if (my $charset = HTTP::Headers->new(%{ $res->{headers} })->content_type_charset)
+    {
+        $data = Encode::decode($charset, $data, Encode::FB_CROAK);
+    }
+
+    my $payload = JSON::MaybeXS->new(utf8 => 0)->decode($data);
 
     $self->log('invalid payload returned?'), return undef unless $payload;
     $self->log_debug($module . ' not indexed'), return undef if not defined $payload->[0]{dist_name};
@@ -361,7 +370,15 @@ sub _indexed_version_via_query
     my $res = HTTP::Tiny->new->get("http://cpanidx.org/cpanidx/json/mod/$module");
     $self->log('could not query the index?'), return undef if not $res->{success};
 
-    my $payload = JSON::MaybeXS->new(utf8 => 0)->decode($res->{content});
+    my $data = $res->{content};
+
+    require HTTP::Headers;
+    if (my $charset = HTTP::Headers->new(%{ $res->{headers} })->content_type_charset)
+    {
+        $data = Encode::decode($charset, $data, Encode::FB_CROAK);
+    }
+
+    my $payload = JSON::MaybeXS->new(utf8 => 0)->decode($data);
 
     $self->log('invalid payload returned?'), return undef unless $payload;
     $self->log_debug($module . ' not indexed'), return undef if not defined $payload->[0]{mod_vers};
