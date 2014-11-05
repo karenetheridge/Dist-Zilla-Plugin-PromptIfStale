@@ -8,7 +8,7 @@ perl:
   - 5.10
 install:
   - cpanm Dist::Zilla
-  - dzil authordeps --missing | cpanm || { cat ~/.cpanm/build.log ; false ; }
-  - dzil listdeps --author --missing | cpanm || { cat ~/.cpanm/build.log ; false ; }
+  - dzil authordeps | cpanm || { cat ~/.cpanm/build.log ; false ; }
+  - dzil listdeps --author | cpanm || { cat ~/.cpanm/build.log ; false ; }
 script:
   - HARNESS_OPTIONS=j9,c dzil test --author --release
