@@ -1,0 +1,14 @@
+language: perl
+perl:
+  - 5.20
+  - 5.18
+  - 5.16
+  - 5.14
+  - 5.12
+  - 5.10
+install:
+  - cpanm Dist::Zilla Dist::Zilla::Plugin::BlockRelease
+  - dzil authordeps | cpanm || { cat ~/.cpanm/build.log ; false ; }
+  - dzil listdeps --author | cpanm || { cat ~/.cpanm/build.log ; false ; }
+script:
+  - HARNESS_OPTIONS=j9:c DZIL_AIRPLANE=1 dzil test --author
