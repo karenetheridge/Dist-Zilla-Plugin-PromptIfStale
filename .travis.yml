@@ -11,4 +11,4 @@ install:
   - dzil authordeps | cpanm || { cat ~/.cpanm/build.log ; false ; }
   - dzil listdeps --author | cpanm || { cat ~/.cpanm/build.log ; false ; }
 script:
-  - HARNESS_OPTIONS=j9:c dzil test --author --release
+  - HARNESS_OPTIONS=j9:c DZIL_AIRPLANE=1 dzil test --author --release
