@@ -78,11 +78,7 @@ my @prompts;
         Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
     }
 
-    my $prompt = "Issues found:\n"
-        . "    Carp is indexed at version 200.0 but you only have " . Carp->VERSION . " installed.\n"
-        . '    Dist::Zilla::Plugin::GatherDir is indexed at version 100.0 but you only have ' . Dist::Zilla::Plugin::GatherDir->VERSION . " installed.\n"
-        . "    I::Am::Not::Installed is not installed.\n"
-        . 'Continue anyway?';
+    my $prompt = '3 stale modules found, continue anyway?';
     $tzil->chrome->set_response_for($prompt, 'n');
 
     like(
@@ -99,7 +95,7 @@ my @prompts;
 
     cmp_deeply(
         $tzil->log_messages,
-        superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Carp Dist::Zilla::Plugin::GatherDir I::Am::Not::Installed"),
+        superbagof("[PromptIfStale] Aborting build due to stale modules!"),
         'build was aborted, with remedy instructions',
     ) or diag 'saw log messages: ', explain $tzil->log_messages;
 }

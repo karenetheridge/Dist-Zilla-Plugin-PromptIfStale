@@ -54,7 +54,7 @@ my $tzil = Builder->from_config(
     },
 );
 
-my $prompt = 'Unindexed is not indexed. Continue anyway?';
+my $prompt = '1 stale modules found, continue anyway?';
 $tzil->chrome->set_response_for($prompt, 'n');
 
 # ensure we find the library, not in a local directory, before we change directories
@@ -88,7 +88,7 @@ cmp_deeply(
     $tzil->log_messages,
     superbagof(
        '[PromptIfStale] comparing indexed vs. local version for Unindexed: indexed=undef; local version=2.0',
-        "[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Unindexed",
+       '[PromptIfStale] Aborting build due to stale modules!',
     ),
     'build was aborted, with remedy instructions',
 );

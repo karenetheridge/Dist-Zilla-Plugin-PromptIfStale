@@ -107,7 +107,7 @@ my $tzil = Builder->from_config(
     },
 );
 
-my $prompt = 'StaleModule is indexed at version 200.0 but you only have 1.0 installed. Continue anyway?';
+my $prompt = '1 stale modules found, continue anyway?';
 $tzil->chrome->set_response_for($prompt, 'y');
 
 # ensure we find the library, not in a local directory, before we change directories

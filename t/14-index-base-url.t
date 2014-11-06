@@ -110,8 +110,8 @@ my $http_url;
     cmp_deeply(
         $tzil->log_messages,
         superbagof(
-            "[PromptIfStale] Issues found:\n" . join("\n", map { '[PromptIfStale]     Unindexed' . $_ . ' is not indexed.' } 0..5),
-            "[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm " . join(' ', map { 'Unindexed' . $_ } 0..5)
+            (map { '[PromptIfStale] Unindexed' . $_ . ' is not indexed.' } 0..5),
+            "[PromptIfStale] Aborting build due to stale modules!"
         ),
         'build was aborted, with remedy instructions',
     );

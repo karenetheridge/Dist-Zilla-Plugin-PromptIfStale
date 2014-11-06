@@ -73,14 +73,15 @@ my %expected_prompts = (
         map { '    ' . $_ . ' is not installed.' } map { 'Foo' . $_ } ('3' .. '8') ],
 );
 
-my @expected_prompts = map {
-    "Issues found:\n" . join("\n", @{$expected_prompts{$_}}, 'Continue anyway?')
-} qw(before_build after_build);
+my @expected_prompts = (
+    "4 stale modules found, continue anyway?",
+    "6 stale modules found, continue anyway?"
+);
 
 $tzil->chrome->set_response_for($_, 'y') foreach @expected_prompts;
 
 $tzil->chrome->logger->set_debug(1);
-$tzil->build;
+eval {$tzil->build}; # guard this so the test doesn't blow up
 
 cmp_deeply(
     \@prompts,

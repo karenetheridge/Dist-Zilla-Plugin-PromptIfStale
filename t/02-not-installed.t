@@ -65,7 +65,7 @@ my $tzil = Builder->from_config(
     Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
 }
 
-my $prompt = 'Indexed::But::Not::Installed is not installed. Continue anyway?';
+my $prompt = '1 stale modules found, continue anyway?';
 $tzil->chrome->set_response_for($prompt, 'n');
 
 $tzil->chrome->logger->set_debug(1);
@@ -84,7 +84,7 @@ cmp_deeply(
 
 cmp_deeply(
     $tzil->log_messages,
-    superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Indexed::But::Not::Installed"),
+    superbagof("[PromptIfStale] Aborting build due to stale modules!"),
     'build was aborted, with remedy instructions',
 );
 

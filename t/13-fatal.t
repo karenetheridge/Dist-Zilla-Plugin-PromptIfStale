@@ -77,7 +77,7 @@ cmp_deeply(
     $tzil->log_messages,
     superbagof(
         '[PromptIfStale] Indexed::But::Not::Installed is not installed.',
-        "[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Indexed::But::Not::Installed",
+        "[PromptIfStale] Aborting build due to stale modules!",
     ),
     'build was aborted, with remedy instructions',
 );
