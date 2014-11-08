@@ -1,6 +1,9 @@
 use strict;
 use warnings FATAL => 'all';
 
+# do not release before global destruction
+my $pty;
+
 if (not -t STDIN)
 {
     if ($^O ne 'MSWin32')
@@ -13,7 +16,8 @@ if (not -t STDIN)
         close STDIN;
 
         require IO::Pty;
-        STDIN->fdopen(IO::Pty->new->slave, '<')
+        $pty = IO::Pty->new;
+        STDIN->fdopen($pty->slave, '<')
             or die "could not connect stdin to a pty: $!";
     }
     else {
