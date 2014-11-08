@@ -147,7 +147,7 @@ sub stale_modules
     my ($self, @modules) = @_;
 
     my (@stale_modules, @errors);
-    foreach my $module (sort @modules)
+    foreach my $module (uniq sort @modules)
     {
         $already_checked{$module}++ if $module eq 'perl';
         next if $already_checked{$module};
@@ -171,7 +171,7 @@ sub stale_modules
             unless $relative_path =~ m/^\.\./;
     }
 
-    @modules = sort grep { !$already_checked{$_} } @modules;
+    @modules = grep { !$already_checked{$_} } @modules;
 
     foreach my $module (@modules)
     {
