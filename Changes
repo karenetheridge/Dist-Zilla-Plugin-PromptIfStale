@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.029     2014-11-08 23:55:57Z
           - ensure @INC does not become mangled during tests
           - use newer Dist::Zilla::Util::AuthorDeps to avoid using Path::Class
 
