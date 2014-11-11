@@ -8,7 +8,6 @@ perl:
   - 5.10
 install:
   - cpanm Dist::Zilla::Plugin::BlockRelease
-  - dzil authordeps | cpanm || { cat ~/.cpanm/build.log ; false ; }
-  - dzil listdeps | cpanm || { cat ~/.cpanm/build.log ; false ; }
+  - cpanm --installdeps --notest Dist::Zilla::Plugin::PromptIfStale
 script:
   - perl Makefile.PL && make && make test
