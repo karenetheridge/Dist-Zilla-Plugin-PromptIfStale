@@ -7,7 +7,7 @@ perl:
   - 5.12
   - 5.10
 install:
-  - cpanm Dist::Zilla Dist::Zilla::Plugin::BlockRelease
+  - cpanm Dist::Zilla::Plugin::BlockRelease
   - dzil authordeps | cpanm || { cat ~/.cpanm/build.log ; false ; }
   - dzil listdeps --author | cpanm || { cat ~/.cpanm/build.log ; false ; }
 script:
