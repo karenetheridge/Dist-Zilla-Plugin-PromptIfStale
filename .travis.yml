@@ -10,4 +10,5 @@ install:
   - cpanm Dist::Zilla::Plugin::BlockRelease
   - cpanm --installdeps --notest Dist::Zilla::Plugin::PromptIfStale
 script:
-  - perl Makefile.PL && make && make test
+  - perl Makefile.PL && make
+  - echo "no tty on stdin" | make test
