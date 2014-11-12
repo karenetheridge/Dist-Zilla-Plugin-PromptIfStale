@@ -22,12 +22,12 @@ if (not -t STDIN)
         STDIN->fdopen($pty->slave, '<')
             or die "could not connect stdin to a pty: $!";
 
-::diag 'status of filehandles: ', ::explain +{
+::diag 'status of filehandles at test start: ', ::explain +{
     '-t STDIN' => -t STDIN,
     '-t STDOUT' => -t STDOUT,
     '-f STDOUT' => -f STDOUT,
     '-c STDOUT' => -c STDOUT,
-} if not Test::Builder->new->is_passing;
+}
     }
     else {
         ::plan skip_all => 'cannot run these tests on MSWin32 when stdin is not a tty';
