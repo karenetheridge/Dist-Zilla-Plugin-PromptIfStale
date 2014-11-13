@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.030     2014-11-13 06:48:50Z
           - make prompt tests unfailable on perls older than 5.16, to work around an
             apparent issue with IO::Pty
 
