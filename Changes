@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - make prompt tests unfailable on perls older than 5.16, to work around an
+            apparent issue with IO::Pty
 
 0.029     2014-11-08 23:55:57Z
           - ensure @INC does not become mangled during tests

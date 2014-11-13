@@ -19,6 +19,9 @@ if (not -t STDIN)
         $pty = IO::Pty->new;
         STDIN->fdopen($pty->slave, '<')
             or die "could not connect stdin to a pty: $!";
+
+        $TODO = 'on perls <5.16, IO::Pty may not work on all platforms'
+            if $] < 5.016;
     }
     else {
         ::plan skip_all => 'cannot run these tests on MSWin32 when stdin is not a tty';
