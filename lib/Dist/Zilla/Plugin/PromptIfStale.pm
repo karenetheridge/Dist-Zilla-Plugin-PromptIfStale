@@ -445,11 +445,9 @@ prompting to abort the build process if a discrepancy is found.
 Note that there is no effect on the built dist -- all actions are taken at
 build time.
 
-=head1 OPTIONS
+=head1 CONFIGURATION OPTIONS
 
-=over 4
-
-=item * C<phase>
+=head2 C<phase>
 
 Indicates whether the checks are performed at I<build> or I<release> time
 (defaults to I<release>).
@@ -457,11 +455,11 @@ Indicates whether the checks are performed at I<build> or I<release> time
 (Remember that you can use different settings for different phases by employing
 this plugin twice, with different names.)
 
-=item * C<module>
+=head2 C<module>
 
 The name of a module to check for. Can be provided more than once.
 
-=item * C<check_authordeps>
+=head2 C<check_authordeps>
 
 =for stopwords authordeps
 
@@ -473,36 +471,34 @@ for authordeps being installed (but the indexed version is not checked). This
 serves as a fast way to guard against a build blowing up later through the
 inadvertent lack of fulfillment of an explicit C<< ; authordep >> declaration.
 
-=item * C<check_all_plugins>
+=head2 C<check_all_plugins>
 
 A boolean, defaulting to false, indicating that all plugins being used to
 build this distribution should be checked.
 
-=item * C<check_all_prereqs>
+=head2 C<check_all_prereqs>
 
 A boolean, defaulting to false, indicating that all prerequisites in the
 distribution metadata should be checked. The modules are a merged list taken
 from all phases (C<configure>, C<build>, C<runtime>, C<test> and C<develop>) ,
 and the C<requires>, C<recommends> and C<suggests> types.
 
-=item * C<skip>
+=head2 C<skip>
 
 The name of a module to exempt from checking. Can be provided more than once.
 
-=item * C<fatal>
+=head2 C<fatal>
 
 A boolean, defaulting to false, indicating that missing prereqs will result in
 an immediate abort of the build/release process, without prompting.
 
-=item * C<index_base_url>
+=head2 C<index_base_url>
 
 =for stopwords darkpan
 
 When provided, uses this base URL to fetch F<02packages.details.txt.gz>
 instead of the default C<http://www.cpan.org>.  Use this when your
 distribution uses prerequisites found only in your darkpan-like server.
-
-=back
 
 =for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release
 
