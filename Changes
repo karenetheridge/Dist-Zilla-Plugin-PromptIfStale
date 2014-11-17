@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.031     2014-11-17 02:51:40Z
           - add a dynamic test prereq to avoid new warnings added to perl 5.21.6
 
 0.030     2014-11-13 06:48:50Z
