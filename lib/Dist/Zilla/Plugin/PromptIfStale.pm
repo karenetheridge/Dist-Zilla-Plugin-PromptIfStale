@@ -367,7 +367,9 @@ sub _indexed_version_via_query
 
     die 'should not be here - get 02packages instead' if $self->index_base_url;
 
-    my $res = HTTP::Tiny->new->get("http://cpanidx.org/cpanidx/json/mod/$module");
+    my $url = 'http://cpanidx.org/cpanidx/json/mod/' . $module;
+    $self->log_debug([ 'fetching %s', $url ]);
+    my $res = HTTP::Tiny->new->get($url);
     $self->log('could not query the index?'), return undef if not $res->{success};
 
     my $data = $res->{content};
@@ -377,6 +379,7 @@ sub _indexed_version_via_query
     {
         $data = Encode::decode($charset, $data, Encode::FB_CROAK);
     }
+    $self->log_debug([ 'got response: %s', $data ]);
 
     my $payload = JSON::MaybeXS->new(utf8 => 0)->decode($data);
 
@@ -399,7 +402,9 @@ sub _get_packages
 
     my $base = $self->index_base_url || 'http://www.cpan.org';
 
-    my $response = HTTP::Tiny->new->mirror($base . '/modules/' . $filename, $path);
+    my $url = $base . '/modules/' . $filename;
+    $self->log_debug([ 'fetching %s', $url ]);
+    my $response = HTTP::Tiny->new->mirror($url, $path);
     $self->log('could not fetch the index - network down?'), return undef if not $response->{success};
 
     require Parse::CPAN::Packages::Fast;
