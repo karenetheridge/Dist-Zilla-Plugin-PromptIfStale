@@ -341,6 +341,7 @@ sub _is_duallifed
     {
         $data = Encode::decode($charset, $data, Encode::FB_CROAK);
     }
+    $self->log_debug([ 'got response: %s', $data ]);
 
     my $payload = YAML::Tiny->read_string($data);
 
