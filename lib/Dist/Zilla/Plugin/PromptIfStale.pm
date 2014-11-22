@@ -17,8 +17,9 @@ use List::MoreUtils 'uniq';
 use version;
 use Path::Tiny;
 use Cwd;
+use CPAN::DistnameInfo;
 use HTTP::Tiny;
-use JSON::MaybeXS;
+use YAML::Tiny;
 use Module::Path 0.15 'module_path';
 use Module::Metadata;
 use Module::CoreList 3.10;  # includes information about the 5.20.0 release
@@ -328,7 +329,7 @@ sub _is_duallifed
     # cpan dist for dual-lifed modules that are more recent in core than on
     # CPAN (e.g. Carp in June 2014 is 1.34 in 5.20.0 but 1.3301 on cpan).
 
-    my $url = 'http://cpanidx.org/cpanidx/json/mod/' . $module;
+    my $url = 'http://cpanmetadb.plackperl.org/v1.0/package/' . $module;
     $self->log_debug([ 'fetching %s', $url ]);
     my $res = HTTP::Tiny->new->get($url);
     $self->log('could not query the index?'), return undef if not $res->{success};
@@ -341,11 +342,11 @@ sub _is_duallifed
         $data = Encode::decode($charset, $data, Encode::FB_CROAK);
     }
 
-    my $payload = JSON::MaybeXS->new(utf8 => 0)->decode($data);
+    my $payload = YAML::Tiny->read_string($data);
 
     $self->log('invalid payload returned?'), return undef unless $payload;
     $self->log_debug([ '%s not indexed', $module ]), return undef if not defined $payload->[0]{dist_name};
-    $payload->[0]{dist_name} ne 'perl';
+    CPAN::DistnameInfo->new($payload->[0]{dist_name})->dist ne 'perl';
 }
 
 my $packages;
@@ -368,7 +369,7 @@ sub _indexed_version_via_query
 
     die 'should not be here - get 02packages instead' if $self->index_base_url;
 
-    my $url = 'http://cpanidx.org/cpanidx/json/mod/' . $module;
+    my $url = 'http://cpanmetadb.plackperl.org/v1.0/package/' . $module;
     $self->log_debug([ 'fetching %s', $url ]);
     my $res = HTTP::Tiny->new->get($url);
     $self->log('could not query the index?'), return undef if not $res->{success};
@@ -382,11 +383,11 @@ sub _indexed_version_via_query
     }
     $self->log_debug([ 'got response: %s', $data ]);
 
-    my $payload = JSON::MaybeXS->new(utf8 => 0)->decode($data);
+    my $payload = YAML::Tiny->read_string($data);
 
     $self->log('invalid payload returned?'), return undef unless $payload;
-    $self->log_debug([ '%s not indexed', $module ]), return undef if not defined $payload->[0]{mod_vers};
-    version->parse($payload->[0]{mod_vers});
+    $self->log_debug([ '%s not indexed', $module ]), return undef if not defined $payload->[0]{version};
+    version->parse($payload->[0]{version});
 }
 
 # TODO: it would be AWESOME to provide this to multiple plugins via a role
