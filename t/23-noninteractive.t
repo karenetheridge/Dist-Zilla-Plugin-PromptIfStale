@@ -85,7 +85,7 @@ cmp_deeply(
     $tzil->log_messages,
     superbagof(
         '[PromptIfStale] comparing indexed vs. local version for StaleModule: indexed=200.0; local version=1.0',
-        "[PromptIfStale] StaleModule is indexed at version 200.0 but you only have 1.0 installed.\n[PromptIfStale] To remedy, do: cpanm StaleModule",
+        "[PromptIfStale] StaleModule is indexed at version 200.0 but you only have 1.0 installed.",
         re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),
     'stale module was still found and logged',

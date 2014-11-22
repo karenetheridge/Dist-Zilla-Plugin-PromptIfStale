@@ -83,7 +83,7 @@ for my $case ( 0, 1 ) {
         );
 
         my @expected_prompts = map {
-            "Issues found:\n" . join("\n", @{$expected_prompts{$_}}, 'Continue anyway?')
+            ( $case ? 10 : 4 ) . ' stale modules found, continue anyway?'
         } qw(before_release);
 
         $tzil->chrome->logger->set_debug(1);

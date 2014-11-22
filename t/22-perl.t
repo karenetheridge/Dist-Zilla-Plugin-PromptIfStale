@@ -111,8 +111,7 @@ my @prompts;
         },
     );
 
-    my $prompt = 'Carp is indexed at version 200.0 but you only have ' . Carp->VERSION
-        . ' installed. Continue anyway?';
+    my $prompt = '1 stale modules found, continue anyway?';
     $tzil->chrome->set_response_for($prompt, 'y');
 
     {

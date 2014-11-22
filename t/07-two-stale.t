@@ -56,11 +56,7 @@ my $tzil = Builder->from_config(
 );
 
 # no need to test all combinations - we sort the module list
-
-my $full_prompt = "Issues found:
-    Indexed::But::Not::Installed is not installed.
-    Unindexed is not indexed.
-Continue anyway?";
+my $full_prompt = "2 stale modules found, continue anyway?";
 $tzil->chrome->set_response_for($full_prompt, 'n');
 
 # ensure we find the library, not in a local directory, before we change directories
@@ -92,7 +88,7 @@ cmp_deeply(
 
 cmp_deeply(
     $tzil->log_messages,
-    superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Indexed::But::Not::Installed Unindexed"),
+    superbagof("[PromptIfStale] Aborting build due to stale modules!"),
     'build was aborted, with remedy instructions',
 );
 

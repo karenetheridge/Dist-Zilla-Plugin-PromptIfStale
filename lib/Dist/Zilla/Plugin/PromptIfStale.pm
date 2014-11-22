@@ -225,32 +225,29 @@ sub _check_modules
 
     return if not @$errors;
 
-    my $message = @$errors > 1
-        ? join("\n    ", 'Issues found:', @$errors)
-        : $errors->[0];
+    # avoid term issues reported by APOCAL and DAGOLDEN
+    # the problem was that somehow term wrapping was enabled and mangling the output
+    # installing Term::ReadLine::Gnu solved it but this is a "fix" :)
+    $self->log('Issues found:');
+    $self->log($_) for @$errors;
 
     # just issue a warning if not being run interactively (e.g. travis)
     if (not (-t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT))))
     {
-        $self->log($message . "\n" . 'To remedy, do: cpanm ' . join(' ', @$stale_modules));
         return;
     }
 
     my $continue;
-    if ($self->fatal)
-    {
-        $self->log($message);
-    }
-    else
-    {
+    if ( ! $self->fatal ) {
         $continue = $self->zilla->chrome->prompt_yn(
-            $message . (@$errors > 1 ? "\n" : ' ') . 'Continue anyway?',
+            scalar @$stale_modules . ' stale modules found, continue anyway?',
             { default => 0 },
         );
     }
-
-    $self->log_fatal('Aborting ' . $self->phase . "\n"
-        . 'To remedy, do: cpanm ' . join(' ', @$stale_modules)) if not $continue;
+    if (not $continue) {
+        $self->log('To remedy, do: cpanm ' . join(' ', @$stale_modules));
+        $self->log_fatal('Aborting ' . $self->phase . ' due to stale modules!');
+    }
 }
 
 has _authordeps => (
