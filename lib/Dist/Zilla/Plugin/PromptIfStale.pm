@@ -165,9 +165,9 @@ sub stale_modules
 
         # ignore modules in the dist currently being built
         my $relative_path = path($path)->relative(getcwd);
-        $self->log_debug($module . ' provided locally (at ' . $relative_path
-                . '); skipping version check'),
-                $already_checked{$module}++
+        $already_checked{$module}++,
+            $self->log_debug([ '%s provided locally (at %s); skipping version check',
+                $module, $relative_path->stringify ])
             unless $relative_path =~ m/^\.\./;
     }
 
@@ -178,9 +178,8 @@ sub stale_modules
         my $indexed_version = $self->_indexed_version($module, !!(@modules > 5));
         my $local_version = Module::Metadata->new_from_file($module_to_filename{$module})->version;
 
-        $self->log_debug('comparing indexed vs. local version for ' . $module
-            . ': indexed=' . ($indexed_version // 'undef')
-            . '; local version=' . ($local_version // 'undef'));
+        $self->log_debug([ 'comparing indexed vs. local version for %s: indexed=%s; local version=%s',
+            $module, sub { ($indexed_version // 'undef') . '' }, sub { ($local_version // 'undef') . '' } ]);
 
         if (not defined $indexed_version)
         {
@@ -197,9 +196,9 @@ sub stale_modules
 
             if (Module::CoreList::is_core($module) and not $self->_is_duallifed($module))
             {
-                $self->log_debug('core module ' . $module . ' is indexed at version '
-                    . $indexed_version . ' but you only have ' . $local_version
-                    . ' installed. You need to use update your perl to get the latest version.');
+                $self->log_debug([ 'core module %s is indexed at version %s but you only have %s installed. You need to use update your perl to get the latest version.',
+                    $module, $indexed_version, $local_version,
+                ]);
             }
             else
             {
@@ -343,7 +342,7 @@ sub _is_duallifed
     my $payload = JSON::MaybeXS->new(utf8 => 0)->decode($data);
 
     $self->log('invalid payload returned?'), return undef unless $payload;
-    $self->log_debug($module . ' not indexed'), return undef if not defined $payload->[0]{dist_name};
+    $self->log_debug([ '%s not indexed', $module ]), return undef if not defined $payload->[0]{dist_name};
     $payload->[0]{dist_name} ne 'perl';
 }
 
@@ -381,7 +380,7 @@ sub _indexed_version_via_query
     my $payload = JSON::MaybeXS->new(utf8 => 0)->decode($data);
 
     $self->log('invalid payload returned?'), return undef unless $payload;
-    $self->log_debug($module . ' not indexed'), return undef if not defined $payload->[0]{mod_vers};
+    $self->log_debug([ '%s not indexed', $module ]), return undef if not defined $payload->[0]{mod_vers};
     version->parse($payload->[0]{mod_vers});
 }
 
