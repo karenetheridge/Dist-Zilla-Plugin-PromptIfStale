@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.032     2014-11-22 03:36:00Z
           - better way of avoiding warnings in perl 5.21.6, while still
             allowing this dist to install
           - switch from cpanidx to cpanmetadb index
