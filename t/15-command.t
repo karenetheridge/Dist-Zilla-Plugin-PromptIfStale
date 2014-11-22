@@ -71,7 +71,7 @@ use NoNetworkHits;
     is($result->exit_code, 0, 'dzil would have exited 0');
     is($result->error, undef, 'no errors');
     is(
-        $result->output,
+        $result->stdout,
         join("\n",
             'Bar',
             (map { 'Foo' . $_ } ('0' .. '8')),
@@ -80,6 +80,9 @@ use NoNetworkHits;
         ) . "\n",
         'stale modules and prereqs found, as configured in all PromptIfStale plugins',
     );
+
+    diag 'got stderr output: ' . $result->stderr
+        if $result->stderr;
 
     diag 'got result: ', explain $result
         if not Test::Builder->new->is_passing;

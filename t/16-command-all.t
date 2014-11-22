@@ -72,11 +72,14 @@ my @modules_checked;
         is($result->exit_code, 0, 'dzil would have exited 0');
         is($result->error, undef, 'no errors');
         is(
-            $result->output,
+            $result->stdout,
             "\n",
             'nothing found when no PromptIfStale plugins configured',
         );
         cmp_deeply(\@modules_checked, [], 'nothing was actually checked for');
+
+        diag 'got stderr output: ' . $result->stderr
+            if $result->stderr;
     }
 
     Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
