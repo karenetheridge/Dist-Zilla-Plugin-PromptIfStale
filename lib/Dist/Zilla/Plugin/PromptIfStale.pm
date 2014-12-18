@@ -20,7 +20,7 @@ use Cwd;
 use CPAN::DistnameInfo;
 use HTTP::Tiny;
 use YAML::Tiny;
-use Module::Path 0.15 'module_path';
+use Module::Path 0.18 'module_path';
 use Module::Metadata;
 use Module::CoreList 3.10;  # includes information about the 5.20.0 release
 use Encode ();
