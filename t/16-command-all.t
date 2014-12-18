@@ -93,7 +93,7 @@ my @modules_checked;
         is($result->exit_code, 0, 'dzil would have exited 0');
         is($result->error, undef, 'no errors');
         is(
-            $result->output,
+            $result->stdout,
             join("\n", 'Carp', (map { 'Foo' . $_ } ('0' .. '8'))) . "\n",
             'stale prereqs and authordeps found with --all, despite no PromptIfStale plugins configured',
         );
