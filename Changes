@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - bump Module::Metdata prereq for $VERSION parsing (RT#101095)
 
 0.032     2014-11-22 03:36:00Z
           - better way of avoiding warnings in perl 5.21.6, while still
