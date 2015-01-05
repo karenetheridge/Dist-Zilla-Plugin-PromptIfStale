@@ -139,7 +139,7 @@ cmp_deeply(
         '[PromptIfStale] comparing indexed vs. local version for StaleModule: indexed=200.0; local version=1.0',
         re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),
-    'build completed successfully',
+    'log messages indicate what is checked',
 );
 
 diag 'got log messages: ', explain $tzil->log_messages
