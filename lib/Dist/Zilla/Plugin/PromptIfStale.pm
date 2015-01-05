@@ -12,7 +12,7 @@ with 'Dist::Zilla::Role::BeforeBuild',
 
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw(ArrayRef Bool Str);
-use List::Util 1.33 'none';
+use List::Util 1.33 qw(none any);
 use List::MoreUtils 'uniq';
 use version;
 use Path::Tiny;
@@ -152,6 +152,14 @@ sub stale_modules
     {
         $already_checked{$module}++ if $module eq 'perl';
         next if $already_checked{$module};
+
+        # these core modules should be indexed, but aren't
+        if (any { $module eq $_ } qw(Config DB Errno integer NEXT Pod::Functions))
+        {
+            $self->log_debug([ 'skipping core module: %s', $module ]);
+            $already_checked{$module}++;
+            next;
+        }
 
         my $path = module_path($module);
         if (not $path)

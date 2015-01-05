@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - avoid prompting for unindexed core modules (RT#101293)
 
 0.033     2015-01-03 20:27:49Z
           - bump Module::Metdata prereq for $VERSION parsing (RT#101095)
