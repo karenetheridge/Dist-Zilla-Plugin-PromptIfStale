@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - now properly detects when running under travis, to prevent
+            prompting when trying to perform 'dzil listdeps' as a preliminary
+            step to testing a distribution
 
 0.034     2015-01-12 00:17:50Z
           - avoid prompting for unindexed core modules (RT#101293)
