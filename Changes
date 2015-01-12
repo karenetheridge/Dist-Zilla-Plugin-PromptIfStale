@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - now properly detects when running under travis (except when running
+            tests), to prevent prompting when trying to perform 'listdeps'
 
 0.034     2015-01-12 00:17:50Z
           - avoid prompting for unindexed core modules (RT#101293)
