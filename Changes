@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.034     2015-01-12 00:17:50Z
           - avoid prompting for unindexed core modules (RT#101293)
 
 0.033     2015-01-03 20:27:49Z
