@@ -7,9 +7,7 @@ use Test::DZil;
 use Test::Fatal;
 use Test::Deep;
 use Path::Tiny;
-use Moose::Util 'find_meta';
 use File::pushd 'pushd';
-use Dist::Zilla::Plugin::PromptIfStale;
 use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
@@ -18,14 +16,12 @@ use NoNetworkHits;
 
 {
     use Dist::Zilla::Plugin::PromptIfStale;
-    my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
-    $meta->make_mutable;
-    $meta->add_around_method_modifier(_indexed_version => sub {
-        my $orig = shift;
-        my $self = shift;
-        my ($module) = @_;
+    package Dist::Zilla::Plugin::PromptIfStale;
+    no warnings 'redefine';
+    sub _indexed_version {
+        my ($self, $module) = @_;
         die 'should not be checking for ' . $module;
-    });
+    }
 }
 
 my $tzil = Builder->from_config(

@@ -9,7 +9,6 @@ use Test::DZil;
 use Dist::Zilla::App::Tester;
 use Path::Tiny;
 use File::pushd 'pushd';
-use Moose::Util 'find_meta';
 use Dist::Zilla::App::Command::stale;   # load this now, before we change directories
 
 use lib 't/lib';
@@ -18,25 +17,20 @@ use NoNetworkHits;
 my @modules_checked;
 {
     use Dist::Zilla::Plugin::PromptIfStale;
-    my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
-    $meta->make_mutable;
-    $meta->add_around_method_modifier(_indexed_version => sub {
-        my $orig = shift;
-        my $self = shift;
-        my ($module) = @_;
+    package Dist::Zilla::Plugin::PromptIfStale;
+    no warnings 'redefine';
+    sub _indexed_version {
+        my ($self, $module) = @_;
         push @modules_checked, $module;
         return 0 if $module =~ /^Dist::Zilla::Plugin::/;    # all plugins are current
         return 200 if $module eq 'Carp';
         die 'should not be checking for ' . $module;
-    });
-    $meta->add_around_method_modifier(_is_duallifed => sub {
-        my $orig = shift;
-        my $self = shift;
-        my ($module) = @_;
-
+    }
+    sub _is_duallifed {
+        my ($self, $module) = @_;
         return 1 if $module eq 'Carp';
         die 'should not be checking for ' . $module;
-    });
+    }
 }
 
 {

@@ -17,17 +17,14 @@ use NoNetworkHits;
 use EnsureStdinTty;
 
 {
-    use Dist::Zilla::Plugin::EnsureNotStale;
-    my $meta = find_meta('Dist::Zilla::Plugin::EnsureNotStale');
-    $meta->make_mutable;
-    $meta->add_around_method_modifier(_indexed_version => sub {
-        my $orig = shift;
-        my $self = shift;
-        my ($module) = @_;
-
+    use Dist::Zilla::Plugin::PromptIfStale;
+    package Dist::Zilla::Plugin::PromptIfStale;
+    no warnings 'redefine';
+    sub _indexed_version {
+        my ($self, $module) = @_;
         return version->parse('200.0') if $module eq 'Indexed::But::Not::Installed';
         die 'should not be checking for ' . $module;
-    });
+    }
 }
 
 my @prompts;

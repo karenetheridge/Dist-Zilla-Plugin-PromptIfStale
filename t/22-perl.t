@@ -28,25 +28,19 @@ my @prompts;
 
 {
     use Dist::Zilla::Plugin::PromptIfStale;
-    my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
-    $meta->make_mutable;
-    $meta->add_around_method_modifier(_indexed_version => sub {
-        my $orig = shift;
-        my $self = shift;
-        my ($module) = @_;
-
+    package Dist::Zilla::Plugin::PromptIfStale;
+    no warnings 'redefine';
+    sub _indexed_version {
+        my ($self, $module) = @_;
         return version->parse('200.0') if $module eq 'strict' or $module eq 'Carp';
         die 'should not be checking for ' . $module;
-    });
-    $meta->add_around_method_modifier(_is_duallifed => sub {
-        my $orig = shift;
-        my $self = shift;
-        my ($module) = @_;
-
+    }
+    sub _is_duallifed {
+        my ($self, $module) = @_;
         return if $module eq 'strict';
         return 1 if $module eq 'Carp';
         die 'should not be checking for ' . $module;
-    });
+    }
 }
 
 {

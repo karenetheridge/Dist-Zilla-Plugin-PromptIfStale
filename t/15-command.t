@@ -7,7 +7,6 @@ use Test::DZil;
 use Dist::Zilla::App::Tester;
 use Path::Tiny;
 use File::pushd 'pushd';
-use Moose::Util 'find_meta';
 use Dist::Zilla::App::Command::stale;   # load this now, before we change directories
 
 use lib 't/lib';
@@ -15,17 +14,14 @@ use NoNetworkHits;
 
 {
     use Dist::Zilla::Plugin::PromptIfStale;
-    my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
-    $meta->make_mutable;
-    $meta->add_around_method_modifier(_indexed_version => sub {
-        my $orig = shift;
-        my $self = shift;
-        my ($module) = @_;
-
+    package Dist::Zilla::Plugin::PromptIfStale;
+    no warnings 'redefine';
+    sub _indexed_version {
+        my ($self, $module) = @_;
         return version->parse('200.0') if $module eq 'Indexed::But::Not::Installed';
         return undef if $module eq 'Unindexed';
         die 'should not be checking for ' . $module;
-    });
+    }
 }
 
 {

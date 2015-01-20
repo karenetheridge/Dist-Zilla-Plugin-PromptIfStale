@@ -17,16 +17,13 @@ use NoNetworkHits;
 my @modules_queried;
 {
     use Dist::Zilla::Plugin::PromptIfStale;
-    my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
-    $meta->make_mutable;
-    $meta->add_around_method_modifier(_indexed_version => sub {
-        my $orig = shift;
-        my $self = shift;
-        my ($module) = @_;
-
+    package Dist::Zilla::Plugin::PromptIfStale;
+    no warnings 'redefine';
+    sub _indexed_version {
+        my ($self, $module) = @_;
         push @modules_queried, $module;
         return version->parse('0');
-    });
+    }
 }
 
 my @prompts;

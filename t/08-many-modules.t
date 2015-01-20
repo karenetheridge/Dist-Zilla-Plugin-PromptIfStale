@@ -18,24 +18,18 @@ use EnsureStdinTty;
 my @checked_via_02packages;
 {
     use Dist::Zilla::Plugin::PromptIfStale;
-    my $meta = find_meta('Dist::Zilla::Plugin::PromptIfStale');
-    $meta->make_mutable;
-    $meta->add_around_method_modifier(_indexed_version_via_query => sub {
-        my $orig = shift;
-        my $self = shift;
-        my ($module) = @_;
+    package Dist::Zilla::Plugin::PromptIfStale;
+    no warnings 'redefine';
+    sub _indexed_version_via_query {
+        my ($self, $module) = @_;
         die 'should not be checking for ' . $module;
-    });
-    $meta->add_around_method_modifier(_indexed_version_via_02packages => sub {
-        my $orig = shift;
-        my $self = shift;
-        my ($module) = @_;
-
+    }
+    sub _indexed_version_via_02packages {
+        my ($self, $module) = @_;
         $self->_get_packages;   # force this to be initialized in the class
         push(@checked_via_02packages, $module), return undef if $module =~ /^Unindexed[0-6]$/;
         die 'should not be checking for ' . $module;
-    });
-    my $packages;
+    }
 }
 
 # for non-author tests, we also patch HTTP::Tiny and
