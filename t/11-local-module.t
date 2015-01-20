@@ -24,7 +24,6 @@ my @prompts;
     });
 }
 
-
 my $tzil = Builder->from_config(
     { dist_root => 't/does-not-exist' },
     {

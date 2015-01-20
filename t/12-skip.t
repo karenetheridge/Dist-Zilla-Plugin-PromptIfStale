@@ -29,7 +29,6 @@ my @modules_queried;
     });
 }
 
-
 my @prompts;
 {
     my $meta = find_meta('Dist::Zilla::Chrome::Test');
