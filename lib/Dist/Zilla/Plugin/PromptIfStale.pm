@@ -354,8 +354,8 @@ sub _is_duallifed
     my $payload = YAML::Tiny->read_string($data);
 
     $self->log('invalid payload returned?'), return undef unless $payload;
-    $self->log_debug([ '%s not indexed', $module ]), return undef if not defined $payload->[0]{dist_name};
-    CPAN::DistnameInfo->new($payload->[0]{dist_name})->dist ne 'perl';
+    $self->log_debug([ '%s not indexed', $module ]), return undef if not defined $payload->[0]{distfile};
+    return CPAN::DistnameInfo->new($payload->[0]{distfile})->dist ne 'perl';
 }
 
 my $packages;

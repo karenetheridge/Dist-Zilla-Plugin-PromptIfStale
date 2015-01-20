@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - fixed bad parsing of response from cpanmetadb, which resulted in
+            false negatives when checking dual-life upstream-cpan modules
 
 0.035     2015-01-18 00:36:26Z
           - now properly detects when running under travis, to prevent

@@ -30,12 +30,27 @@ my @prompts;
 }
 
 {
-    use Dist::Zilla::Plugin::PromptIfStale;
-    package Dist::Zilla::Plugin::PromptIfStale;
+    use HTTP::Tiny;
+    package HTTP::Tiny;
     no warnings 'redefine';
-    sub _indexed_version {
-        my ($self, $module) = @_;
-        return version->parse('200.0') if $module eq 'StaleModule';
+    sub get {
+        my ($self, $url) = @_;
+        ::note 'in monkeypatched HTTP::Tiny::get for ' . $url;
+        my ($module) = reverse split('/', $url);
+        return +{
+            success => 1,
+            status => '200',
+            reason => 'OK',
+            protocol => 'HTTP/1.1',
+            url => $url,
+            headers => {
+                'content-type' => 'text/x-yaml',
+            },
+            content => '---
+distfile: A/AN/ANONYMOUS/Some-Dist-200.0.tar.gz
+version: 200.0
+',
+        } if $module eq 'StaleModule';
         die 'should not be checking for ' . $module;
     }
 }

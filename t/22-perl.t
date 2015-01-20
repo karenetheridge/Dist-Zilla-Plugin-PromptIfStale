@@ -27,18 +27,34 @@ my @prompts;
 }
 
 {
-    use Dist::Zilla::Plugin::PromptIfStale;
-    package Dist::Zilla::Plugin::PromptIfStale;
+    use HTTP::Tiny;
+    package HTTP::Tiny;
     no warnings 'redefine';
-    sub _indexed_version {
-        my ($self, $module) = @_;
-        return version->parse('200.0') if $module eq 'strict' or $module eq 'Carp';
-        die 'should not be checking for ' . $module;
-    }
-    sub _is_duallifed {
-        my ($self, $module) = @_;
-        return if $module eq 'strict';
-        return 1 if $module eq 'Carp';
+    sub get {
+        my ($self, $url) = @_;
+        ::note 'in monkeypatched HTTP::Tiny::get for ' . $url;
+        my ($module) = reverse split('/', $url);
+        return +{
+            success => 1,
+            status => '200',
+            reason => 'OK',
+            protocol => 'HTTP/1.1',
+            url => $url,
+            headers => {
+                'content-type' => 'text/x-yaml',
+            },
+            content =>
+                $module eq 'strict' ? '---
+distfile: R/RJ/RJBS/perl-5.20.0.tar.gz
+version: 200.0
+'
+                : $module eq 'Carp' ? '---
+distfile: Z/ZE/ZEFRAM/Carp-1.3301.tar.gz
+version: 200.0
+'
+                : die "should not be checking for $module"
+            ,
+        };
         die 'should not be checking for ' . $module;
     }
 }
