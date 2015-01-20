@@ -205,9 +205,8 @@ sub stale_modules
 
             if (Module::CoreList::is_core($module) and not $self->_is_duallifed($module))
             {
-                $self->log_debug([ 'core module %s is indexed at version %s but you only have %s installed. You need to use update your perl to get the latest version.',
-                    $module, $indexed_version, $local_version,
-                ]);
+                $self->log_debug([ 'core module %s is indexed at version %s but you only have %s installed. You need to update your perl to get the latest version.',
+                    $module, sub { ($indexed_version // 'undef') . '' }, sub { ($local_version // 'undef') . '' } ]);
             }
             else
             {
