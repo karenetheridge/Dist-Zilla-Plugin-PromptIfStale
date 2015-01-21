@@ -80,6 +80,7 @@ my @prompts;
         . 'Continue anyway?';
     $tzil->chrome->set_response_for($prompt, 'n');
 
+    # if a response has not been configured for a particular prompt, we will die
     like(
         exception { $tzil->build },
         qr/\Q[PromptIfStale] Aborting build\E/,
@@ -129,6 +130,7 @@ Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
 
     $tzil->chrome->logger->set_debug(1);
 
+    # we will die if we are prompted
     is(
         exception { $tzil->build },
         undef,

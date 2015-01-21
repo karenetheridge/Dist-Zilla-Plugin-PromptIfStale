@@ -4,6 +4,7 @@ use warnings FATAL => 'all';
 use Test::More;
 use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 use Test::DZil;
+use Test::Fatal;
 use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
@@ -80,7 +81,13 @@ my @expected_prompts = map {
 $tzil->chrome->set_response_for($_, 'y') foreach @expected_prompts;
 
 $tzil->chrome->logger->set_debug(1);
-$tzil->build;
+
+# if a response has not been configured for a particular prompt, we will die
+is(
+    exception { $tzil->build },
+    undef,
+    'build succeeded when checking for a module that is not stale',
+);
 
 cmp_deeply(
     \@prompts,

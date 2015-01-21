@@ -69,6 +69,7 @@ my @prompts;
         Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
     }
 
+    # we will die if we are prompted
     is(
         exception { $tzil->build },
         undef,
@@ -121,6 +122,7 @@ my @prompts;
 
     $tzil->chrome->logger->set_debug(1);
 
+    # if a response has not been configured for a particular prompt, we will die
     is(
         exception { $tzil->build },
         undef,

@@ -53,6 +53,7 @@ unshift @INC, path($tzil->tempdir, qw(source t lib))->stringify;
 
 $tzil->chrome->logger->set_debug(1);
 
+# we will die if we are prompted
 is(
     exception { $tzil->build },
     undef,

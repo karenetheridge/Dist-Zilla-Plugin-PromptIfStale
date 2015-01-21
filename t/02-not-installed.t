@@ -67,6 +67,7 @@ $tzil->chrome->set_response_for($prompt, 'n');
 
 $tzil->chrome->logger->set_debug(1);
 
+# if a response has not been configured for a particular prompt, we will die
 like(
     exception { $tzil->build },
     qr/\Q[PromptIfStale] Aborting build\E/,

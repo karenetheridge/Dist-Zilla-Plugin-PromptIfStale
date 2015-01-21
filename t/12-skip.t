@@ -74,6 +74,7 @@ if (not $checked_app++)
 
 $tzil->chrome->logger->set_debug(1);
 
+# we will die if we are prompted
 is(
     exception { $tzil->build },
     undef,

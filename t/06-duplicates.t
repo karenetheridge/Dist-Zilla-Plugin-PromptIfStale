@@ -4,6 +4,7 @@ use warnings FATAL => 'all';
 use Test::More;
 use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 use Test::DZil;
+use Test::Fatal;
 use Test::Deep;
 use Path::Tiny;
 use Moose::Util 'find_meta';
@@ -90,7 +91,12 @@ if (not $checked_app++)
 
 $tzil->chrome->logger->set_debug(1);
 
-$tzil->build;
+# if a response has not been configured for a particular prompt, we will die
+is(
+    exception { $tzil->build },
+    undef,
+    'build succeeded when checking for a module that is not stale',
+);
 $_->before_release('Foo.tar.gz') for @{ $tzil->plugins_with(-BeforeRelease) };
 
 cmp_deeply(

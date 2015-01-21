@@ -62,6 +62,7 @@ my $tzil = Builder->from_config(
 
 $tzil->chrome->logger->set_debug(1);
 
+# we will die if we are prompted
 like(
     exception { $tzil->build },
     qr/\Q[PromptIfStale] Aborting build\E/,
