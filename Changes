@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.036     2015-01-24 06:09:05Z
           - fixed bad parsing of response from cpanmetadb, which resulted in
             false negatives when checking dual-life upstream-cpan modules
 
