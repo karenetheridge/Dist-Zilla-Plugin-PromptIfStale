@@ -1,5 +1,5 @@
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 
 # Thanks to the changes in 0.025, code now behaves differently depending on
 # the state of our filehandles. We test here that we are indeed forcing stdin
