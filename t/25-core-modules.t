@@ -50,7 +50,7 @@ my @prompts;
 distfile: R/RJ/RJBS/perl-5.20.0.tar.gz
 version: 200.0
 ',
-        } if $module eq 'POSIX';
+        } if $module eq 'strict';
         die 'should not be checking for ' . $module;
     }
 }
@@ -61,7 +61,7 @@ my $tzil = Builder->from_config(
         add_files => {
             path(qw(source dist.ini)) => simple_ini(
                 [ GatherDir => ],
-                [ 'PromptIfStale' => { modules => [ 'POSIX' ], phase => 'build' } ],
+                [ 'PromptIfStale' => { modules => [ 'strict' ], phase => 'build' } ],
             ),
             path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
         },
@@ -96,7 +96,7 @@ is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@promp
 cmp_deeply(
     $tzil->log_messages,
     superbagof(
-        '[PromptIfStale] core module POSIX is indexed at version 200.0 but you only have ' . POSIX->VERSION . ' installed. You need to update your perl to get the latest version.',
+        '[PromptIfStale] core module strict is indexed at version 200.0 but you only have ' . strict->VERSION . ' installed. You need to update your perl to get the latest version.',
         re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),
     'log messages indicate what is checked',

@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - fix test failure in 0.036 caused by assuming a module is loaded
+            when it isn't always on all platforms
 
 0.036     2015-01-24 06:09:05Z
           - fixed bad parsing of response from cpanmetadb, which resulted in
