@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.037     2015-01-30 03:06:09Z
           - fix test failure in 0.036 caused by assuming a module is loaded
             when it isn't always on all platforms
 
