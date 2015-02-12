@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.038     2015-02-12 01:42:54Z
           - 'dzil stale' command now also properly detects modules and plugins
             that are loaded indirectly, e.g. via a plugin bundle
 
