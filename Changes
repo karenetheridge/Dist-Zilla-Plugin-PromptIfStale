@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - 'dzil stale' command now also properly detects modules and plugins
+            that are loaded indirectly, e.g. via a plugin bundle
 
 0.037     2015-01-30 03:06:09Z
           - fix test failure in 0.036 caused by assuming a module is loaded

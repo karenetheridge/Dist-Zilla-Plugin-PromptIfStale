@@ -76,16 +76,33 @@ sub execute
         $self->zilla;
     }
     catch {
-        die $_ unless
-            m/Run 'dzil authordeps' to see a list of all required plugins/m
-            or m/ version \(.+\) (does )?not match required version: /m;
+        my @authordeps;
 
-        # some plugins are not installed; running authordeps --missing...
+        # if a plugin or bundle tries to loads another module that isn't
+        # installed or at the wrong version, catch it and add to the list of missing modules
+        if (/\ACan't locate (\S+) .+ at \S+ line/
+            or /^Compilation failed in require at (\S+) line/
+            or /^(\S+) version \S+ required--this is only version \S+ at \S+ line/)
+        {
+            my $module = $1 || $2 || $3;
+            $module =~ s{/}{::}g;
+            $module =~ s{\.pm$}{};
+            push @authordeps, $module;
+        }
+        else
+        {
+            push @authordeps, $1 if /Required plugin (\S+) isn't installed\./;
 
-        my @authordeps = $self->_missing_authordeps;
+            # some plugins are not installed; need to run authordeps --missing
+            die $_ unless
+                m/Run 'dzil authordeps' to see a list of all required plugins/m
+                or m/ version \(.+\) (does )?not match required version: /m;
+        }
+
+        push @authordeps, $self->_missing_authordeps;
 
         $self->app->chrome->logger->unmute;
-        $self->log(join("\n", @authordeps));
+        $self->log(join("\n", uniq sort @authordeps));
 
         undef;  # ensure $zilla = undef
     };
