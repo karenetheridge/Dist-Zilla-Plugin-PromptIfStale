@@ -3,7 +3,9 @@ use warnings;
 package Dist::Zilla::Plugin::EnsureNotStale;
 # ABSTRACT: Abort at build/release time if modules are out of date
 # vim: set ts=8 sw=4 tw=78 et :
+
 our $VERSION = '0.039';
+
 use Moose;
 extends 'Dist::Zilla::Plugin::PromptIfStale';
 use namespace::autoclean;

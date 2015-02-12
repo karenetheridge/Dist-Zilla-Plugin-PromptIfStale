@@ -3,7 +3,9 @@ use warnings;
 package Dist::Zilla::App::Command::stale;
 # ABSTRACT: print your distribution's prerequisites and plugins that are out of date
 # vim: set ts=8 sw=4 tw=78 et :
+
 our $VERSION = '0.039';
+
 use Dist::Zilla::App -command;
 use List::Util 1.33 'any';
 use List::MoreUtils 'uniq';
