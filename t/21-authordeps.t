@@ -73,9 +73,13 @@ my @prompts;
         Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
     }
 
+    # allow for dev releases - Module::Metadata includes _, but $VERSION does not.
+    my $CARP_VERSION = Module::Metadata->new_from_module('Carp')->version;
+    my $GATHERDIR_VERSION = Module::Metadata->new_from_module('Dist::Zilla::Plugin::GatherDir')->version;
+
     my $prompt = "Issues found:\n"
-        . "    Carp is indexed at version 200.0 but you only have " . Carp->VERSION . " installed.\n"
-        . '    Dist::Zilla::Plugin::GatherDir is indexed at version 100.0 but you only have ' . Dist::Zilla::Plugin::GatherDir->VERSION . " installed.\n"
+        . "    Carp is indexed at version 200.0 but you only have $CARP_VERSION installed.\n"
+        . "    Dist::Zilla::Plugin::GatherDir is indexed at version 100.0 but you only have $GATHERDIR_VERSION installed.\n"
         . "    I::Am::Not::Installed is not installed.\n"
         . 'Continue anyway?';
     $tzil->chrome->set_response_for($prompt, 'n');

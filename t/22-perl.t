@@ -94,10 +94,13 @@ version: 200.0
 
     is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@prompts;
 
+    # allow for dev releases - Module::Metadata includes _, but $VERSION does not.
+    my $STRICT_VERSION = Module::Metadata->new_from_module('strict')->version;
+
     cmp_deeply(
         $tzil->log_messages,
         superbagof(
-            '[PromptIfStale] comparing indexed vs. local version for strict: indexed=200.0; local version=' . strict->VERSION,
+            '[PromptIfStale] comparing indexed vs. local version for strict: indexed=200.0; local version=' . $STRICT_VERSION,
             re(qr/^\Q[DZ] writing DZT-Sample in /),
         ),
         'build completed successfully',
@@ -122,7 +125,10 @@ version: 200.0
         },
     );
 
-    my $prompt = 'Carp is indexed at version 200.0 but you only have ' . Carp->VERSION
+    # allow for dev releases - Module::Metadata includes _, but $VERSION does not.
+    my $CARP_VERSION = Module::Metadata->new_from_module('Carp')->version;
+
+    my $prompt = 'Carp is indexed at version 200.0 but you only have ' . $CARP_VERSION
         . ' installed. Continue anyway?';
     $tzil->chrome->set_response_for($prompt, 'y');
 
@@ -154,7 +160,7 @@ version: 200.0
     cmp_deeply(
         $tzil->log_messages,
         superbagof(
-            '[PromptIfStale] comparing indexed vs. local version for Carp: indexed=200.0; local version=' . Carp->VERSION,
+            '[PromptIfStale] comparing indexed vs. local version for Carp: indexed=200.0; local version=' . $CARP_VERSION,
             re(qr/^\Q[DZ] writing DZT-Sample in /),
         ),
         'build completed successfully',

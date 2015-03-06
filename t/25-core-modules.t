@@ -93,10 +93,13 @@ is(
 
 is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@prompts;
 
+# allow for dev releases - Module::Metadata includes _, but $VERSION does not.
+my $STRICT_VERSION = Module::Metadata->new_from_module('strict')->version;
+
 cmp_deeply(
     $tzil->log_messages,
     superbagof(
-        '[PromptIfStale] core module strict is indexed at version 200.0 but you only have ' . strict->VERSION . ' installed. You need to update your perl to get the latest version.',
+        '[PromptIfStale] core module strict is indexed at version 200.0 but you only have ' . $STRICT_VERSION . ' installed. You need to update your perl to get the latest version.',
         re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),
     'log messages indicate what is checked',
