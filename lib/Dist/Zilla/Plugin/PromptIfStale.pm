@@ -13,7 +13,6 @@ with 'Dist::Zilla::Role::BeforeBuild',
     'Dist::Zilla::Role::BeforeRelease';
 
 use Moose::Util::TypeConstraints;
-use MooseX::Types::Moose qw(ArrayRef Bool Str);
 use List::Util 1.33 qw(none any);
 use List::MoreUtils 'uniq';
 use version;
@@ -41,7 +40,7 @@ has phase => (
 );
 
 has modules => (
-    isa => ArrayRef[Str],
+    isa => 'ArrayRef[Str]',
     traits => [ 'Array' ],
     handles => { _raw_modules => 'elements' },
     lazy => 1,
@@ -49,22 +48,22 @@ has modules => (
 );
 
 has check_authordeps => (
-    is => 'ro', isa => Bool,
+    is => 'ro', isa => 'Bool',
     default => 0,
 );
 
 has check_all_plugins => (
-    is => 'ro', isa => Bool,
+    is => 'ro', isa => 'Bool',
     default => 0,
 );
 
 has check_all_prereqs => (
-    is => 'ro', isa => Bool,
+    is => 'ro', isa => 'Bool',
     default => 0,
 );
 
 has skip => (
-    isa => ArrayRef[Str],
+    isa => 'ArrayRef[Str]',
     traits => [ 'Array' ],
     handles => { skip => 'elements' },
     lazy => 1,
@@ -72,12 +71,12 @@ has skip => (
 );
 
 has fatal => (
-    is => 'ro', isa => Bool,
+    is => 'ro', isa => 'Bool',
     default => 0,
 );
 
 has index_base_url => (
-    is => 'ro', isa => Str,
+    is => 'ro', isa => 'Str',
 );
 
 around dump_config => sub
