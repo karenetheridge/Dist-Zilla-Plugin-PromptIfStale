@@ -23,7 +23,7 @@ use HTTP::Tiny;
 use YAML::Tiny;
 use Module::Path 0.18 'module_path';
 use Module::Metadata 1.000023;
-use Module::CoreList 3.10;  # includes information about the 5.20.0 release
+use Module::CoreList 5.20150214;
 use Encode ();
 use namespace::autoclean;
 
