@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.039     2015-03-07 05:26:43Z
           - fix tests that fail when Carp is installed at a dev release
           - fix shortened plugin names returned when Config::MVP::Section is
             an old version
