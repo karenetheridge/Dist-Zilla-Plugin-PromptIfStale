@@ -94,7 +94,7 @@ sub execute
         }
         else
         {
-            push @authordeps, $1 if /Required plugin (\S+) isn't installed\./;
+            push @authordeps, $1 if /Required plugin \[?(\S+)\]? isn't installed\./;
 
             # some plugins are not installed; need to run authordeps --missing
             die $_ unless
