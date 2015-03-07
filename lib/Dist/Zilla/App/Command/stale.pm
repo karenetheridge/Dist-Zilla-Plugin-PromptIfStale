@@ -81,19 +81,23 @@ sub execute
     catch {
         my @authordeps;
 
-        # if a plugin or bundle tries to loads another module that isn't
-        # installed or at the wrong version, catch it and add to the list of missing modules
-        if (/\ACan't locate (\S+) .+ at \S+ line/
-            or /^Compilation failed in require at (\S+) line/
-            or /^(\S+) version \S+ required--this is only version \S+ at \S+ line/)
+        # a plugin or bundle tried to loads another module that isn't installed
+        if (/^Can't locate (\S+) .+ at \S+ line/
+            or /^Compilation failed in require at (\S+) line/)
         {
-            my $module = $1 || $2 || $3;
+            my $module = $1 || $2;
             $module =~ s{/}{::}g;
             $module =~ s{\.pm$}{};
             push @authordeps, $module;
         }
+        # ...or at the wrong version
+        elsif (/^(\S+) version \S+ required--this is only version \S+ at \S+ line/)
+        {
+            push @authordeps, $1;
+        }
         else
         {
+            # a plugin was referenced in dist.ini or a bundle
             push @authordeps, $1 if /Required plugin \[?(\S+)\]? isn't installed\./;
 
             # some plugins are not installed; need to run authordeps --missing
