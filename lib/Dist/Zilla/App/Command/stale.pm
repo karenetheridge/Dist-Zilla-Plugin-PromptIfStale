@@ -10,6 +10,7 @@ use Dist::Zilla::App -command;
 use List::Util 1.33 'any';
 use List::MoreUtils 'uniq';
 use Try::Tiny;
+use Config::MVP::Section 2.200004 ();
 use namespace::autoclean;
 
 sub abstract { "print your distribution's stale prerequisites and plugins" }

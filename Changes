@@ -2,6 +2,8 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
           - fix tests that fail when Carp is installed at a dev release
+          - fix shortened plugin names returned when Config::MVP::Section is
+            an old version
 
 0.038     2015-02-12 01:42:54Z
           - 'dzil stale' command now also properly detects modules and plugins
