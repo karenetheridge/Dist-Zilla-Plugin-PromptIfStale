@@ -98,7 +98,7 @@ sub execute
         else
         {
             # a plugin was referenced in dist.ini or a bundle
-            push @authordeps, $1 if /Required plugin \[?(\S+)\]? isn't installed\./;
+            push @authordeps, $1 if /Required plugin(?: bundle)? \[?(\S+)\]? isn't installed\./;
 
             # some plugins are not installed; need to run authordeps --missing
             die $_ unless
