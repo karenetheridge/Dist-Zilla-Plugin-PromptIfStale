@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.040     2015-03-08 00:05:42Z
           - properly understand error strings when a plugin bundle is stale,
             from changes in Dist::Zilla 5.033
 
