@@ -5,7 +5,7 @@ package Dist::Zilla::Plugin::PromptIfStale;
 # KEYWORDS: prerequisites upstream dependencies modules metadata update stale
 # vim: set ts=8 sw=4 tw=78 et :
 
-our $VERSION = '0.040';
+our $VERSION = '0.041';
 
 use Moose;
 with 'Dist::Zilla::Role::BeforeBuild',
