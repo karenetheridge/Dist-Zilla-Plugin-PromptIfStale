@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::stale;
 # ABSTRACT: print your distribution's prerequisites and plugins that are out of date
-# vim: set ts=8 sw=4 tw=78 et :
+# vim: set ts=8 sts=4 sw=4 tw=78 et :
 
 our $VERSION = '0.041';
 
