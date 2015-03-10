@@ -13,6 +13,7 @@ use Dist::Zilla::App::Command::stale;   # load this now, before we change direct
 
 use lib 't/lib';
 use NoNetworkHits;
+use DiagFilehandles;
 
 my @modules_checked;
 {

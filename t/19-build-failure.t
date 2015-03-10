@@ -11,6 +11,7 @@ use Dist::Zilla::App::Command::stale;   # load this now, before we change direct
 
 use lib 't/lib';
 use NoNetworkHits;
+use DiagFilehandles;
 
 # simulate something like in Acme::CPANAuthors::Nonhuman - where getting
 # $zilla works fine, but actually *doing the build* blows up due to a missing

@@ -18,6 +18,7 @@ BEGIN {
 }
 use EnsureStdinTty;
 use NoNetworkHits;
+use DiagFilehandles;
 
 my @prompts;
 {

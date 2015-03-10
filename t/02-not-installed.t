@@ -15,6 +15,7 @@ use Dist::Zilla::App::Command::stale;
 use lib 't/lib';
 use NoNetworkHits;
 use EnsureStdinTty;
+use DiagFilehandles;
 
 # simulate a response from the PAUSE index, without having to do a real HTTP hit
 

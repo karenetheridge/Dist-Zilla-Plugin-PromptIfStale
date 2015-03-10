@@ -15,6 +15,7 @@ use Dist::Zilla::App::Command::stale;
 
 use lib 't/lib';
 use NoNetworkHits;
+use DiagFilehandles;
 
 # make it look like we are running non-interactively
 close STDIN;

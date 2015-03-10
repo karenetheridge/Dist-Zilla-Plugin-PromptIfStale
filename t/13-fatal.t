@@ -15,6 +15,7 @@ use Dist::Zilla::App::Command::stale;
 use lib 't/lib';
 use NoNetworkHits;
 use EnsureStdinTty;
+use DiagFilehandles;
 
 {
     use Dist::Zilla::Plugin::PromptIfStale;

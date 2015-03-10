@@ -13,6 +13,7 @@ use Dist::Zilla::App::Command::stale;
 use lib 't/lib';
 use NoNetworkHits;
 use EnsureStdinTty;
+use DiagFilehandles;
 
 my @checked_via_02packages;
 {

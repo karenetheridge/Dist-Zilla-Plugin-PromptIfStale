@@ -11,6 +11,7 @@ use Dist::Zilla::App::Command::stale;   # load this now, before we change direct
 
 use lib 't/lib';
 use NoNetworkHits;
+use DiagFilehandles;
 
 {
     local $ENV{DZIL_GLOBAL_CONFIG_ROOT} = 'does-not-exist';

@@ -28,13 +28,4 @@ if (not -t STDIN)
     }
 }
 
-END {
-    ::diag 'status of filehandles: ', ::explain +{
-        '-t STDIN' => -t STDIN,
-        '-t STDOUT' => -t STDOUT,
-        '-f STDOUT' => -f STDOUT,
-        '-c STDOUT' => -c STDOUT,
-    } if not Test::Builder->new->is_passing;
-}
-
 1;
