@@ -111,6 +111,9 @@ sub execute
         $self->app->chrome->logger->unmute;
         $self->log(join("\n", uniq sort @authordeps));
 
+        print STDERR "Some authordeps were missing. Run the stale command again to check for regular dependencies.\n"
+            if @authordeps;
+
         undef;  # ensure $zilla = undef
     };
 
