@@ -12,7 +12,7 @@ with 'Dist::Zilla::Role::BeforeBuild',
     'Dist::Zilla::Role::AfterBuild',
     'Dist::Zilla::Role::BeforeRelease';
 
-use Moose::Util::TypeConstraints;
+use Moose::Util::TypeConstraints 'enum';
 use List::Util 1.33 qw(none any);
 use List::MoreUtils 'uniq';
 use version;
