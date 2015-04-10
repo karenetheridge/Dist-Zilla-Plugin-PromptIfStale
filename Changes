@@ -1,4 +1,6 @@
-Revision history for Dist-Zilla-Plugin-PromptIfStale
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
 
 0.041     2015-04-10 19:13:59Z
           - 'dzil stale' now provides extra output (to stderr) when not all
