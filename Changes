@@ -3,6 +3,8 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
           - 'dzil stale' now provides extra output (to stderr) when not all
             stale modules can be found in a single pass
+          - eliminate loading modules up front in the 'stale' command, to
+            speed up all dzil commands (RT#103435)
 
 0.040     2015-03-08 00:05:42Z
           - properly understand error strings when a plugin bundle is stale,

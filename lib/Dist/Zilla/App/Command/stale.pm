@@ -7,11 +7,6 @@ package Dist::Zilla::App::Command::stale;
 our $VERSION = '0.041';
 
 use Dist::Zilla::App -command;
-use List::Util 1.33 'any';
-use List::MoreUtils 'uniq';
-use Try::Tiny;
-use Config::MVP::Section 2.200004 ();
-use namespace::autoclean;
 
 sub abstract { "print your distribution's stale prerequisites and plugins" }
 
@@ -39,7 +34,7 @@ sub stale_modules
 
     # ugh, we need to do nearly a full build to get the prereqs
     # (this really should be abstracted better in Dist::Zilla::Dist::Builder)
-    if ($all or any { $_->check_all_prereqs } @plugins)
+    if ($all or do { require List::Util; List::Util->VERSION('1.33'); List::Util::any { $_->check_all_prereqs } @plugins})
     {
         $_->before_build for grep { not $_->isa('Dist::Zilla::Plugin::PromptIfStale') }
             @{ $zilla->plugins_with(-BeforeBuild) };
@@ -64,7 +59,8 @@ sub stale_modules
 
     return if not @modules;
 
-    my ($stale_modules, undef) = $plugins[0]->stale_modules(uniq @modules);
+    require List::MoreUtils;
+    my ($stale_modules, undef) = $plugins[0]->stale_modules(List::MoreUtils::uniq(@modules));
     return @$stale_modules;
 }
 
@@ -74,11 +70,12 @@ sub execute
 
     $self->app->chrome->logger->mute unless $self->app->global_options->verbose;
 
-    my $zilla = try {
+    require Try::Tiny;
+    my $zilla = Try::Tiny::try {
         # parse dist.ini and load, instantiate all plugins
         $self->zilla;
     }
-    catch {
+    Try::Tiny::catch {
         my @authordeps;
 
         # a plugin or bundle tried to loads another module that isn't installed
@@ -109,7 +106,8 @@ sub execute
         push @authordeps, $self->_missing_authordeps;
 
         $self->app->chrome->logger->unmute;
-        $self->log(join("\n", uniq sort @authordeps));
+        require List::MoreUtils;
+        $self->log(join("\n", List::MoreUtils::uniq(sort @authordeps)));
 
         print STDERR "Some authordeps were missing. Run the stale command again to check for regular dependencies.\n"
             if @authordeps;
@@ -119,10 +117,10 @@ sub execute
 
     return if not $zilla;
 
-    my @stale_modules = try {
+    my @stale_modules = Try::Tiny::try {
         $self->stale_modules($zilla, $opt->all);
     }
-    catch {
+    Try::Tiny::catch {
         # if there was an error during the build, fall back to fetching
         # authordeps, in the hopes that we can report something helpful
         $self->_missing_authordeps;
