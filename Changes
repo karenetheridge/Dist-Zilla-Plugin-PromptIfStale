@@ -1,6 +1,6 @@
-Revision history for {{$dist->name}}
+Revision history for Dist-Zilla-Plugin-PromptIfStale
 
-{{$NEXT}}
+0.041     2015-04-10 19:13:59Z
           - 'dzil stale' now provides extra output (to stderr) when not all
             stale modules can be found in a single pass
           - eliminate loading modules up front in the 'stale' command, to
