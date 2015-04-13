@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - fix tests that will fail with an upcoming change to
+            Test::DZil (Dist::Zilla::Tester and Dist::Zilla::Chrome::Term will
+            no longer always be loaded)
 
 0.041     2015-04-10 19:13:59Z
           - 'dzil stale' now provides extra output (to stderr) when not all
