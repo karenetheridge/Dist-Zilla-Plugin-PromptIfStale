@@ -1,4 +1,9 @@
 
+new failure in 0.041, in perl-in-space:
+http://www.cpantesters.org/cpan/report/e99ea815-6ecb-1014-a7d4-cd6baff55ff3
+
+-----
+
 - still ongoing interactivity detection problems on *some* win32 systems:
 http://www.cpantesters.org/cpan/report/8fa10b71-6c0f-1014-8791-357216532392
 http://www.cpantesters.org/cpan/report/6ba84686-6bf6-1014-8bf6-63f88c9410e3
