@@ -31,7 +31,7 @@ my $tzil = Builder->from_config(
         add_files => {
             path(qw(source dist.ini)) => simple_ini(
                 [ GatherDir => ],
-                [ 'PromptIfStale' => { modules => [ 'Config', 'integer' ], phase => 'build' } ],
+                [ 'PromptIfStale' => { modules => [ 'Config', 'Errno' ], phase => 'build' } ],
             ),
             path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
         },
@@ -61,7 +61,7 @@ cmp_deeply(
     $tzil->log_messages,
     superbagof(
         '[PromptIfStale] skipping core module: Config',
-        '[PromptIfStale] skipping core module: integer',
+        '[PromptIfStale] skipping core module: Errno',
         re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),
     'log messages reference special-cased core modules',

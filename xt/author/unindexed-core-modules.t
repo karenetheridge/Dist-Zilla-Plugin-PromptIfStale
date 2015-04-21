@@ -19,7 +19,7 @@ my $tzil = Builder->from_config(
         add_files => {
             path(qw(source dist.ini)) => simple_ini(
                 [ GatherDir => ],
-                [ 'PromptIfStale' => { modules => [ 'Config', 'integer' ], phase => 'build' } ],
+                [ 'PromptIfStale' => { modules => [ 'Config', 'Errno' ], phase => 'build' } ],
             ),
             path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
         },
@@ -33,7 +33,6 @@ foreach my $module (qw(
     Config
     DB
     Errno
-    integer
     NEXT
     Pod::Functions
 )) {
