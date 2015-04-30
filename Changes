@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
 {{$NEXT}}
+          - make a 'dzil stale' warning about authordeps a little more visible
+            by using ANSI colours
 
 0.042     2015-04-21 21:22:51Z
           - fix tests that will fail with an upcoming change to

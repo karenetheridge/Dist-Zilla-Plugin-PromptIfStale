@@ -109,8 +109,12 @@ sub execute
         require List::MoreUtils;
         $self->log(join("\n", List::MoreUtils::uniq(sort @authordeps)));
 
-        print STDERR "Some authordeps were missing. Run the stale command again to check for regular dependencies.\n"
-            if @authordeps;
+        if (@authordeps)
+        {
+            require Term::ANSIColor;
+            Term::ANSIColor->VERSION('3.00');
+            print STDERR Term::ANSIColor::colored("Some authordeps were missing. Run the stale command again to check for regular dependencies.\n", 'bright_yellow');
+        }
 
         undef;  # ensure $zilla = undef
     };

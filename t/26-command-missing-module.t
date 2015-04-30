@@ -7,6 +7,7 @@ use Test::DZil;
 use Dist::Zilla::App::Tester;
 use Path::Tiny;
 use File::pushd 'pushd';
+use Term::ANSIColor 2.01 'colorstrip';
 use Dist::Zilla::App::Command::stale;   # load this now, before we change directories
 
 use lib 't/lib';
@@ -86,13 +87,13 @@ foreach my $module ('Dist::Zilla::Plugin::NotInstalled1', 'Dist::Zilla::Plugin::
         "stale module $module is properly detected and reported",
     );
     like(
-        $result->stderr,
+        colorstrip($result->stderr),
         qr/^Some authordeps were missing. Run the stale command again to check for regular dependencies.\n/m,
         'user given a warning to run the command again',
     );
 
     diag 'got stderr output: ' . $result->stderr
-        if $result->stderr ne "Some authordeps were missing. Run the stale command again to check for regular dependencies.\n";
+        if colorstrip($result->stderr) ne "Some authordeps were missing. Run the stale command again to check for regular dependencies.\n";
 
     diag 'got result: ', explain $result
         if not Test::Builder->new->is_passing;
