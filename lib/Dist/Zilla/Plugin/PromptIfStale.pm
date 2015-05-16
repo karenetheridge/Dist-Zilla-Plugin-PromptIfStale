@@ -16,6 +16,7 @@ use Moose::Util::TypeConstraints 'enum';
 use List::Util 1.33 qw(none any);
 use List::MoreUtils 'uniq';
 use version;
+use Moose::Util 'find_meta';
 use Path::Tiny;
 use Cwd;
 use CPAN::DistnameInfo;
@@ -292,7 +293,7 @@ has _modules_plugin => (
         [
             grep { my $module = $_; none { $module eq $_ } @skip }
             uniq
-            map { $_->meta->name } @{ $self->zilla->plugins }
+            map { find_meta($_)->name } @{ $self->zilla->plugins }
         ];
     },
 );
