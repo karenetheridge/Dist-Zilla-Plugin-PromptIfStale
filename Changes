@@ -3,6 +3,8 @@ Revision history for Dist-Zilla-Plugin-PromptIfStale
 {{$NEXT}}
           - make a 'dzil stale' warning about authordeps a little more visible
             by using ANSI colours
+          - fix version range in prerequisites that is problematic for
+            ExtUtils::MakeMaker
 
 0.042     2015-04-21 21:22:51Z
           - fix tests that will fail with an upcoming change to
