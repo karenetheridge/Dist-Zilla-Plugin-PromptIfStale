@@ -19,6 +19,7 @@ use EnsureStdinTty;
 
 my @prompts;
 {
+    use Dist::Zilla::Chrome::Test;
     my $meta = find_meta('Dist::Zilla::Chrome::Test');
     $meta->make_mutable;
     $meta->add_before_method_modifier(prompt_str => sub {
