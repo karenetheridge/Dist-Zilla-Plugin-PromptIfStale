@@ -116,7 +116,7 @@ sub after_build
     if ($self->phase eq 'build' and $self->check_all_prereqs)
     {
         my @modules = $self->_modules_prereq;
-        $self->_check_modules(@modules) if @modules;
+        $self->_check_modules(uniq @modules) if @modules;
     }
 }
 
