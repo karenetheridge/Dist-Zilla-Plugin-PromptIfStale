@@ -1,5 +1,7 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
+{{$NEXT}}
+
 0.044     2015-05-23 17:05:24Z
           - eliminate remaining uses of List::MoreUtils
 
