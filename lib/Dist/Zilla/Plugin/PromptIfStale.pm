@@ -14,7 +14,7 @@ with 'Dist::Zilla::Role::BeforeBuild',
 
 use Moose::Util::TypeConstraints 'enum';
 use List::Util 1.33 qw(none any);
-use List::MoreUtils 'uniq';
+use List::UtilsBy ();
 use version;
 use Moose::Util 'find_meta';
 use Path::Tiny;
@@ -93,6 +93,9 @@ around dump_config => sub
 
     return $config;
 };
+
+# until List::Util::uniq exists...
+sub uniq { unshift @_, sub { $_ }; goto &List::UtilsBy::uniq_by }
 
 sub before_build
 {
@@ -518,7 +521,7 @@ When provided, uses this base URL to fetch F<02packages.details.txt.gz>
 instead of the default C<http://www.cpan.org>.  Use this when your
 distribution uses prerequisites found only in your darkpan-like server.
 
-=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release
+=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release uniq
 
 =head1 METHODS
 
