@@ -14,7 +14,6 @@ with 'Dist::Zilla::Role::BeforeBuild',
 
 use Moose::Util::TypeConstraints 'enum';
 use List::Util 1.33 qw(none any);
-use List::UtilsBy ();
 use version;
 use Moose::Util 'find_meta';
 use Path::Tiny;
@@ -26,7 +25,7 @@ use Module::Path 0.18 'module_path';
 use Module::Metadata 1.000023;
 use Module::CoreList 5.20150214;
 use Encode ();
-use namespace::autoclean;
+use namespace::autoclean -also => ['_uniq'];
 
 sub mvp_multivalue_args { qw(modules skip) }
 sub mvp_aliases { {
@@ -95,7 +94,7 @@ around dump_config => sub
 };
 
 # until List::Util::uniq exists...
-sub uniq { unshift @_, sub { $_ }; goto &List::UtilsBy::uniq_by }
+sub _uniq { keys %{ +{ map { $_ => undef } @_ } } }
 
 sub before_build
 {
@@ -103,12 +102,13 @@ sub before_build
 
     if ($self->phase eq 'build')
     {
-        my @modules = uniq
+        my @modules = (
             $self->_modules_extra,
             ( $self->check_authordeps ? $self->_authordeps : () ),
-            ( $self->check_all_plugins ? $self->_modules_plugin : () );
+            ( $self->check_all_plugins ? $self->_modules_plugin : () ),
+        );
 
-        $self->_check_modules(@modules) if @modules;
+        $self->_check_modules(sort(_uniq(@modules))) if @modules;
     }
 }
 
@@ -119,7 +119,7 @@ sub after_build
     if ($self->phase eq 'build' and $self->check_all_prereqs)
     {
         my @modules = $self->_modules_prereq;
-        $self->_check_modules(uniq @modules) if @modules;
+        $self->_check_modules(sort(_uniq(@modules))) if @modules;
     }
 }
 
@@ -135,7 +135,7 @@ sub before_release
         );
         push @modules, $self->_modules_prereq if $self->check_all_prereqs;
 
-        $self->_check_modules(uniq @modules) if @modules;
+        $self->_check_modules(sort(_uniq(@modules))) if @modules;
     }
 }
 
@@ -153,7 +153,7 @@ sub stale_modules
     my ($self, @modules) = @_;
 
     my (@stale_modules, @errors);
-    foreach my $module (uniq sort @modules)
+    foreach my $module (sort(_uniq(@modules)))
     {
         $already_checked{$module}++ if $module eq 'perl';
         next if $already_checked{$module};
@@ -278,9 +278,10 @@ has _authordeps => (
         my @skip = $self->skip;
         [
             grep { my $module = $_; none { $module eq $_ } @skip }
-            uniq
-            map { (%$_)[0] }
-                @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps('.') }
+            _uniq(
+                map { (%$_)[0] }
+                    @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps('.') }
+            )
         ];
     },
 );
@@ -295,8 +296,9 @@ has _modules_plugin => (
         my @skip = $self->skip;
         [
             grep { my $module = $_; none { $module eq $_ } @skip }
-            uniq
-            map { find_meta($_)->name } @{ $self->zilla->plugins }
+            _uniq(
+                map { find_meta($_)->name } @{ $self->zilla->plugins }
+            )
         ];
     },
 );
@@ -521,7 +523,7 @@ When provided, uses this base URL to fetch F<02packages.details.txt.gz>
 instead of the default C<http://www.cpan.org>.  Use this when your
 distribution uses prerequisites found only in your darkpan-like server.
 
-=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release uniq
+=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release
 
 =head1 METHODS
 

@@ -59,7 +59,7 @@ sub stale_modules
 
     return if not @modules;
 
-    my ($stale_modules, undef) = $plugins[0]->stale_modules(uniq(@modules));
+    my ($stale_modules, undef) = $plugins[0]->stale_modules(_uniq(@modules));
     return @$stale_modules;
 }
 
@@ -105,7 +105,7 @@ sub execute
         push @authordeps, $self->_missing_authordeps;
 
         $self->app->chrome->logger->unmute;
-        $self->log(join("\n", uniq(sort @authordeps)));
+        $self->log(join("\n", sort(_uniq(@authordeps))));
 
         if (@authordeps)
         {
@@ -147,7 +147,7 @@ sub _missing_authordeps
 }
 
 # until List::Util::uniq exists...
-sub uniq { require List::UtilsBy; unshift @_, sub { $_ }; goto &List::UtilsBy::uniq_by }
+sub _uniq { keys %{ +{ map { $_ => undef } @_ } } }
 
 1;
 
@@ -180,7 +180,7 @@ Checks all plugins and prerequisites (as well as any additional modules listed
 in a local L<[PromptIfStale]|Dist::Zilla::Plugin::PromptIfStale>
 configuration, if there is one).
 
-=for Pod::Coverage stale_modules uniq
+=for Pod::Coverage stale_modules
 
 =head1 SUPPORT
 
