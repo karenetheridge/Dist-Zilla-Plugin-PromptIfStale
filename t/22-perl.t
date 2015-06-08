@@ -63,7 +63,7 @@ version: 200.0
 
 {
     my $tzil = Builder->from_config(
-        { dist_root => 't/does-not-exist' },
+        { dist_root => 'does-not-exist' },
         {
             add_files => {
                 path(qw(source dist.ini)) => simple_ini(
@@ -115,7 +115,7 @@ version: 200.0
 @prompts = ();
 {
     my $tzil = Builder->from_config(
-        { dist_root => 't/does-not-exist' },
+        { dist_root => 'does-not-exist' },
         {
             add_files => {
                 path(qw(source dist.ini)) => simple_ini(
