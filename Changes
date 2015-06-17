@@ -1,5 +1,7 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
+{{$NEXT}}
+
 0.045     2015-06-17 03:42:30Z
           - fix false negatives on MSWin32 if a module is installed to a
             different volume than the current working directory (thanks
