@@ -180,6 +180,9 @@ Checks all plugins and prerequisites (as well as any additional modules listed
 in a local L<[PromptIfStale]|Dist::Zilla::Plugin::PromptIfStale>
 configuration, if there is one).
 
+I have a shell alias: C<alias unstale="dzil stale --all | cpanm"> which I use
+quite regularly! You should do this too.
+
 =for Pod::Coverage stale_modules
 
 =head1 SUPPORT
