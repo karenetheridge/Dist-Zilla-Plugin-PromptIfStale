@@ -15,6 +15,9 @@ use lib 't/lib';
 use NoNetworkHits;
 use DiagFilehandles;
 
+use Dist::Zilla::Chrome::Test;
+my $chrome = Dist::Zilla::Chrome::Test->new->logger->proxy({ proxy_prefix => '[PromptIfStale-CAPTURED] ', });
+
 my @modules_checked;
 {
     use Dist::Zilla::Plugin::PromptIfStale;
@@ -32,6 +35,14 @@ my @modules_checked;
         return 1 if $module eq 'Carp';
         die 'should not be checking for ' . $module;
     }
+    sub log {
+        my $self = shift;
+        $chrome->logger->log(@_);
+    }
+    sub log_debug { goto \&log }
+
+    # XXX hook log, log_debug so we can catch issues?
+    # and dump it on failure.
 }
 
 {
@@ -102,8 +113,11 @@ my @modules_checked;
         diag 'got stderr output: ' . $result->stderr
             if $result->stderr;
 
-        diag 'got result: ', explain $result
-            if not Test::Builder->new->is_passing;
+        if (not Test::Builder->new->is_passing)
+        {
+            diag 'got result: ', explain $result;
+            diag 'plugin logged messages: ', explain([ map {; $_->{message} } @{ $chrome->logger->events } ]);
+        }
     }
 }
 
