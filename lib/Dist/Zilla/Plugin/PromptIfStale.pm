@@ -189,14 +189,10 @@ sub stale_modules
                 $already_checked{$module}++;
                 $self->log_debug([ '%s provided locally (at %s); skipping version check',
                     $module, $relative_path->stringify ]);
+                next;
             }
         }
-    }
 
-    @modules = grep { !$already_checked{$_} } @modules;
-
-    foreach my $module (@modules)
-    {
         my $indexed_version = $self->_indexed_version($module, !!(@modules > 5));
         my $local_version = Module::Metadata->new_from_file($module_to_filename{$module})->version;
 
