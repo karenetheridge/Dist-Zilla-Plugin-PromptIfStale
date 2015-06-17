@@ -12,6 +12,7 @@ use Dist::Zilla::App::Command::stale;   # load this now, before we change direct
 use lib 't/lib';
 use NoNetworkHits;
 use DiagFilehandles;
+use CaptureDiagnostics;
 
 # simulate something like in Acme::CPANAuthors::Nonhuman - where getting
 # $zilla works fine, but actually *doing the build* blows up due to a missing
@@ -57,8 +58,11 @@ use DiagFilehandles;
     diag 'got stderr output: ' . $result->stderr
         if $result->stderr;
 
-    diag 'got result: ', explain $result
-        if not Test::Builder->new->is_passing;
+    if (not Test::Builder->new->is_passing)
+    {
+        diag 'got result: ', explain $result;
+        diag 'plugin logged messages: ', explain(_log_messages());
+    }
 }
 
 done_testing;

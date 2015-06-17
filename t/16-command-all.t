@@ -14,6 +14,7 @@ use Dist::Zilla::App::Command::stale;   # load this now, before we change direct
 use lib 't/lib';
 use NoNetworkHits;
 use DiagFilehandles;
+use CaptureDiagnostics;
 
 my @modules_checked;
 {
@@ -76,11 +77,15 @@ my @modules_checked;
         diag 'got stderr output: ' . $result->stderr
             if $result->stderr;
 
-        diag 'got result: ', explain $result
-            if not Test::Builder->new->is_passing;
+        if (not Test::Builder->new->is_passing)
+        {
+            diag 'got result: ', explain $result;
+            diag 'plugin logged messages: ', explain(_log_messages());
+        }
     }
 
     Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+    _clear_log_messages();
 
     {
         my $result = test_dzil('.', [ 'stale', '--all' ]);
@@ -102,8 +107,11 @@ my @modules_checked;
         diag 'got stderr output: ' . $result->stderr
             if $result->stderr;
 
-        diag 'got result: ', explain $result
-            if not Test::Builder->new->is_passing;
+        if (not Test::Builder->new->is_passing)
+        {
+            diag 'got result: ', explain $result;
+            diag 'plugin logged messages: ', explain(_log_messages());
+        }
     }
 }
 

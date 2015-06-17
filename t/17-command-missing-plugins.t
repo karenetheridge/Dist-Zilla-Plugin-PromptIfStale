@@ -13,6 +13,7 @@ use Dist::Zilla::App::Command::stale;   # load this now, before we change direct
 use lib 't/lib';
 use NoNetworkHits;
 use DiagFilehandles;
+use CaptureDiagnostics;
 
 {
     local $ENV{DZIL_GLOBAL_CONFIG_ROOT} = 'does-not-exist';
@@ -41,8 +42,11 @@ use DiagFilehandles;
     diag 'got stderr output: ' . $result->stderr
         if colorstrip($result->stderr) ne "Some authordeps were missing. Run the stale command again to check for regular dependencies.\n";
 
-    diag 'got result: ', explain $result
-        if not Test::Builder->new->is_passing;
+    if (not Test::Builder->new->is_passing)
+    {
+        diag 'got result: ', explain $result;
+        diag 'plugin logged messages: ', explain(_log_messages());
+    }
 }
 
 done_testing;

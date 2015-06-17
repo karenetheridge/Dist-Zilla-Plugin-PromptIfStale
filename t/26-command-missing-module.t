@@ -13,6 +13,7 @@ use Dist::Zilla::App::Command::stale;   # load this now, before we change direct
 use lib 't/lib';
 use NoNetworkHits;
 use DiagFilehandles;
+use CaptureDiagnostics;
 
 my $expected_stale;
 
@@ -50,6 +51,9 @@ my $expected_stale;
 
 foreach my $module ('Dist::Zilla::Plugin::NotInstalled1', 'Dist::Zilla::Plugin::Broken', 'Broken', 'strict')
 {
+    Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
+    _clear_log_messages();
+
     $expected_stale = $module;
     local $ENV{DZIL_GLOBAL_CONFIG_ROOT} = 'does-not-exist';
 
@@ -95,8 +99,11 @@ foreach my $module ('Dist::Zilla::Plugin::NotInstalled1', 'Dist::Zilla::Plugin::
     diag 'got stderr output: ' . $result->stderr
         if colorstrip($result->stderr) ne "Some authordeps were missing. Run the stale command again to check for regular dependencies.\n";
 
-    diag 'got result: ', explain $result
-        if not Test::Builder->new->is_passing;
+    if (not Test::Builder->new->is_passing)
+    {
+        diag 'got result: ', explain $result;
+        diag 'plugin logged messages: ', explain(_log_messages());
+    }
 }
 
 done_testing;
