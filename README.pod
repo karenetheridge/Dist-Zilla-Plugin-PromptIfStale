@@ -8,7 +8,7 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are 
 
 =head1 VERSION
 
-version 0.044
+version 0.045
 
 =head1 SYNOPSIS
 
@@ -88,7 +88,7 @@ When provided, uses this base URL to fetch F<02packages.details.txt.gz>
 instead of the default C<http://www.cpan.org>.  Use this when your
 distribution uses prerequisites found only in your darkpan-like server.
 
-=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release uniq
+=for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release
 
 =head1 METHODS
 
@@ -138,17 +138,17 @@ L<Dist::Zilla::Plugin::Prereqs::MatchInstalled>, L<Dist::Zilla::Plugin::Prereqs:
 
 Karen Etheridge <ether@cpan.org>
 
+=head1 CONTRIBUTOR
+
+=for stopwords David Golden
+
+David Golden <dagolden@cpan.org>
+
 =head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2013 by Karen Etheridge.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
-
-=head1 CONTRIBUTOR
-
-=for stopwords David Golden
-
-David Golden <dagolden@cpan.org>
 
 =cut
