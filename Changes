@@ -1,6 +1,9 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
 {{$NEXT}}
+          - fix false negatives on MSWin32 if a module is installed to a
+            different volume than the current working directory (thanks
+            for helping me track this down, Mithaldu!!)
 
 0.044     2015-05-23 17:05:24Z
           - eliminate remaining uses of List::MoreUtils

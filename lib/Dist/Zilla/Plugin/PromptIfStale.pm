@@ -152,6 +152,9 @@ sub stale_modules
 {
     my ($self, @modules) = @_;
 
+    my $cwd = getcwd();
+    my $cwd_volume = path($cwd)->volume;
+
     my (@stale_modules, @errors);
     foreach my $module (sort(_uniq(@modules)))
     {
@@ -178,11 +181,16 @@ sub stale_modules
         $module_to_filename{$module} = $path;
 
         # ignore modules in the dist currently being built
-        my $relative_path = path($path)->relative(getcwd);
-        $already_checked{$module}++,
-            $self->log_debug([ '%s provided locally (at %s); skipping version check',
-                $module, $relative_path->stringify ])
-            unless $relative_path =~ m/^\.\./;
+        if (path($path)->volume eq $cwd_volume)
+        {
+            my $relative_path = path($path)->relative($cwd);
+            if ($relative_path !~ m/^\.\./)
+            {
+                $already_checked{$module}++;
+                $self->log_debug([ '%s provided locally (at %s); skipping version check',
+                    $module, $relative_path->stringify ]);
+            }
+        }
     }
 
     @modules = grep { !$already_checked{$_} } @modules;
