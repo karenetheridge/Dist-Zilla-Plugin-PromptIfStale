@@ -85,9 +85,10 @@ around dump_config => sub
     my $config = $self->$orig;
 
     $config->{+__PACKAGE__} = {
-        (map { $_ => ($self->$_ || 0) } qw(phase check_all_plugins check_all_prereqs)),
-        skip => [ $self->skip ],
-        modules => [ $self->_raw_modules ],
+        (map { $_ => $self->$_ ? 1 : 0 } qw(check_all_plugins check_all_prereqs)),
+        phase => $self->phase,
+        skip => [ sort $self->skip ],
+        modules => [ sort $self->_raw_modules ],
     };
 
     return $config;
