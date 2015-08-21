@@ -35,6 +35,7 @@ my @prompts;
         my ($self, $module) = @_;
         return version->parse('200.0') if $module eq 'Carp';
         return version->parse('100.0') if $module eq 'Dist::Zilla::Plugin::GatherDir';
+        return version->parse('0') if $module =~ /^Software::License::/;
         die 'should not be checking for ' . $module;
     }
     sub _is_duallifed {

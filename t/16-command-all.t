@@ -24,7 +24,8 @@ my @modules_checked;
     sub _indexed_version {
         my ($self, $module) = @_;
         push @modules_checked, $module;
-        return 0 if $module =~ /^Dist::Zilla::Plugin::/;    # all plugins are current
+        return 0 if $module =~ /^Dist::Zilla::Plugin::/;    # all dzil plugins are current
+        return 0 if $module =~ /^Software::License::/;      # all licence plugins are current
         return 200 if $module eq 'Carp';
         die 'should not be checking for ' . $module;
     }
@@ -100,7 +101,7 @@ my @modules_checked;
 
         cmp_deeply(
             \@modules_checked,
-            set( 'Carp', re(qr/^Dist::Zilla::Plugin::/) ),
+            supersetof( 'Carp', re(qr/^Dist::Zilla::Plugin::/) ),
             'indexed versions of plugins were checked',
         ) or diag 'checked modules: ', explain \@modules_checked;
 
