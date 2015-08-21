@@ -119,10 +119,13 @@ sub execute
 
     return if not $zilla;
 
+    my $error;
     my @stale_modules = Try::Tiny::try {
         $self->stale_modules($zilla, $opt->all);
     }
     Try::Tiny::catch {
+        $error = $_;
+
         # if there was an error during the build, fall back to fetching
         # authordeps, in the hopes that we can report something helpful
         $self->_missing_authordeps;
@@ -130,6 +133,7 @@ sub execute
 
     $self->app->chrome->logger->unmute;
     $self->log(join("\n", @stale_modules));
+    $self->log([ 'got error from stale_modules check: %s', $error ]) if $error and not @stale_modules;
 }
 
 sub _missing_authordeps
