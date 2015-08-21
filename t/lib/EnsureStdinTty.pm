@@ -20,8 +20,19 @@ if (not -t STDIN)
         STDIN->fdopen($pty->slave, '<')
             or die "could not connect stdin to a pty: $!";
 
-        $TODO = 'on perls <5.16, IO::Pty may not work on all platforms'
-            if $] < 5.016;
+        if ($] < 5.016)
+        {
+            $TODO = 'on perls <5.16, IO::Pty may not work on all platforms';
+
+            # diag uses todo_output if in_todo :/
+            no warnings 'redefine';
+            sub diag
+            {
+                local $Test::Builder::Level = $Test::Builder::Level + 1;
+                my $tb = Test::Builder->new;
+                $tb->_print_comment($tb->failure_output, @_);
+            }
+        }
     }
     else {
         ::plan skip_all => 'cannot run these tests on MSWin32 when stdin is not a tty';
