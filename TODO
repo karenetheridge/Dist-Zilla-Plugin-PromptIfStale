@@ -8,6 +8,7 @@ http://www.cpantesters.org/cpan/report/e99ea815-6ecb-1014-a7d4-cd6baff55ff3
 http://www.cpantesters.org/cpan/report/8fa10b71-6c0f-1014-8791-357216532392
 http://www.cpantesters.org/cpan/report/6ba84686-6bf6-1014-8bf6-63f88c9410e3
 http://www.cpantesters.org/cpan/report/b3269062-6bf5-1014-b257-88339fec631c
+http://www.cpantesters.org/cpan/report/053f5ef8-6c04-1014-b564-d929e8dd8576
 
 
 ------
@@ -15,3 +16,11 @@ http://www.cpantesters.org/cpan/report/b3269062-6bf5-1014-b257-88339fec631c
 I wish Dist::Zilla::App::Command::stale could understand this string and not react to it:
 
     Can't locate object method "section_name" via package "Moose::Meta::Class::__ANON__::SERIAL::18" at .../lib/Dist/Zilla/Dist/Builder.pm
+
+
+
+-----
+
+add an API for querying metacpan, so I can support updating to -TRIAL
+releases?
+is there a CPAN::Common::Index interface for this?
