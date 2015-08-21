@@ -89,6 +89,7 @@ around dump_config => sub
         phase => $self->phase,
         skip => [ sort $self->skip ],
         modules => [ sort $self->_raw_modules ],
+        blessed($self) ne __PACKAGE__ ? ( version => $VERSION ) : (),
     };
 
     return $config;
