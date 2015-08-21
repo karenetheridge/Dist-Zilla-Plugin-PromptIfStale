@@ -3,6 +3,8 @@ Revision history for Dist-Zilla-Plugin-PromptIfStale
 {{$NEXT}}
           - fix tests that started failing with Dist::Zilla 5.038, which now
             injects a licence provider class into authordeps
+          - pull in an updated Log::Dispatch if it was in the version range
+            that causes issues for App::Cmd testing
 
 0.045     2015-06-17 03:42:30Z
           - fix false negatives on MSWin32 if a module is installed to a
