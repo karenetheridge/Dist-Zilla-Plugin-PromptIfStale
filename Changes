@@ -1,6 +1,6 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
-{{$NEXT}}
+0.046     2015-08-22 05:18:01Z
           - fix tests that started failing with Dist::Zilla 5.038, which now
             injects a licence provider class into authordeps
           - pull in an updated Log::Dispatch if it was in the version range
