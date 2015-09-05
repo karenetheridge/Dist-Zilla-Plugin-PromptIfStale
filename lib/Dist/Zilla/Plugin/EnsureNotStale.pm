@@ -38,14 +38,6 @@ or release is aborted immediately.
 All options are as for L<[PromptIfStale]|Dist::Zilla::Plugin::PromptIfStale>,
 except C<fatal> cannot be passed or set (it is always true).
 
-=head1 SUPPORT
-
-=for stopwords irc
-
-Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-PromptIfStale>
-(or L<bug-Dist-Zilla-Plugin-PromptIfStale@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-PromptIfStale@rt.cpan.org>).
-I am also usually active on irc, as 'ether' at C<irc.perl.org>.
-
 =head1 ACKNOWLEDGEMENTS
 
 Getty made me do this!
