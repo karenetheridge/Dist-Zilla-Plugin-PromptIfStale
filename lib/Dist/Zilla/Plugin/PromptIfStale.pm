@@ -390,6 +390,7 @@ sub _indexed_version_via_query
     my ($self, $module) = @_;
 
     die 'should not be here - get 02packages instead' if $self->index_base_url;
+    die 'no module?' if not $module;
 
     my $url = 'http://cpanmetadb.plackperl.org/v1.0/package/' . $module;
     $self->log_debug([ 'fetching %s', $url ]);
@@ -439,6 +440,7 @@ sub _indexed_version_via_02packages
 {
     my ($self, $module) = @_;
 
+    die 'no module?' if not $module;
     my $packages = $self->_get_packages;
     return undef if not $packages;
     my $package = $packages->package($module);
