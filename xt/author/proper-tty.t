@@ -26,6 +26,7 @@ foreach my $test (glob('t/*'))
         open my $stdout, '>', File::Spec->devnull or die "can't open devnull: $!";
         my $stderr = IO::Handle->new;
         # this *should* pick up our PERL5LIB and DTRT...
+        diag "running $^X $inc_switch $test";
         my $pid = open3($stdin, $stdout, $stderr, $^X, $inc_switch, $test);
         binmode $stderr, ':crlf' if $^O eq 'MSWin32';
         my @stderr = <$stderr>;
