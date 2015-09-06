@@ -112,12 +112,13 @@ sub execute
             require Term::ANSIColor;
             Term::ANSIColor->VERSION('3.00');
             print STDERR Term::ANSIColor::colored("Some authordeps were missing. Run the stale command again to check for regular dependencies.\n", 'bright_yellow');
+            exit 1;
         }
 
         undef;  # ensure $zilla = undef
     };
 
-    return if not $zilla;
+    exit 2 if not $zilla;
 
     my $error;
     my @stale_modules = Try::Tiny::try {
@@ -175,6 +176,14 @@ of the modules in one quick go.
 When a L<[PromptIfStale]|Dist::Zilla::Plugin::PromptIfStale> configuration is
 present in F<dist.ini>, its configuration is honoured (unless C<--all> is
 used); if there is no such configuration, behaviour is as for C<--all>.
+
+=for stopwords thusly
+
+If not everything can be installed in one pass (typically, if a plugin used by
+F<dist.ini> is missing), a message will be printed to C<STDERR> and the exit
+code will be 1.  This allows you to chain commands thusly:
+
+    dzil stale --all | cpanm && dzil build && dzil test --release
 
 =head1 OPTIONS
 

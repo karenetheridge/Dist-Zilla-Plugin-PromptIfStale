@@ -9,6 +9,7 @@ use Path::Tiny;
 use File::pushd 'pushd';
 use Term::ANSIColor 2.01 'colorstrip';
 use Dist::Zilla::App::Command::stale;   # load this now, before we change directories
+use App::Cmd::Tester 0.328;
 
 use lib 't/lib';
 use NoNetworkHits;
@@ -35,8 +36,7 @@ use CaptureDiagnostics;
 
     my $result = test_dzil('.', [ 'stale' ]);
 
-    is($result->exit_code, 0, 'dzil would have exited 0');
-    is($result->error, undef, 'no errors');
+    is($result->exit_code, 1, 'dzil would have exited 1');
     is($result->stdout, "Dist::Zilla::Plugin::OldPlugin\n", 'dzil authordeps ran to get updated plugins');
     like(
         colorstrip($result->stderr),
