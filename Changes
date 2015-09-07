@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
 {{$NEXT}}
+          - experimentally, use cpanmetadb for all index queries, rather than
+            downloading 02packages.details.txt and parsing it locally
 
 0.047     2015-09-07 01:02:36Z
           - 'dzil stale' now returns a non-zero exit status if a full prereq

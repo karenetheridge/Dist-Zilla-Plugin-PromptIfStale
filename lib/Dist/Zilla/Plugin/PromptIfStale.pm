@@ -390,9 +390,9 @@ sub _init_query_index
     my $query_index = $self->_query_index;
     return $query_index if $query_index;
 
-    # download and use 02packages.details.txt if we are checking for several
-    # modules at once
-    $query_index = (@modules > 5 or $packages or $self->index_base_url)
+    # XXX temporary? for now, we will "always" ping cpanmetadb instead of
+    # downloading 02packages.details.txt
+    $query_index = ($packages or $self->index_base_url)
         ? \&_indexed_version_via_02packages
         : \&_indexed_version_via_query;
 

@@ -23,6 +23,7 @@ my @checked_via_02packages;
     no warnings 'redefine';
     sub _indexed_version_via_query {
         my ($self, $module) = @_;
+        push(@checked_via_02packages, $module), return undef if $module =~ /^Unindexed[0-6]$/;
         die 'should not be checking for ' . $module;
     }
     sub _indexed_version_via_02packages {
@@ -61,6 +62,7 @@ my $http_url;
     use HTTP::Tiny;
     package HTTP::Tiny;
     no warnings 'redefine';
+    sub get { $http_url = $_[1]; +{ success => 1 } }
     sub mirror { $http_url = $_[1]; +{ success => 1 } }
 }
 {
