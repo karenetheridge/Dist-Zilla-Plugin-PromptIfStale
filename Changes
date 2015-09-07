@@ -1,6 +1,6 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
-{{$NEXT}}
+0.047     2015-09-07 01:02:36Z
           - 'dzil stale' now returns a non-zero exit status if a full prereq
             check cannot be done (i.e. there is still more work to be done).
 

@@ -8,7 +8,7 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are 
 
 =head1 VERSION
 
-version 0.046
+version 0.047
 
 =head1 SYNOPSIS
 
@@ -108,14 +108,6 @@ a list reference of error messages describing the issues found
 
 =back
 
-=head1 SUPPORT
-
-=for stopwords irc
-
-Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-PromptIfStale>
-(or L<bug-Dist-Zilla-Plugin-PromptIfStale@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-PromptIfStale@rt.cpan.org>).
-I am also usually active on irc, as 'ether' at C<irc.perl.org>.
-
 =head1 SEE ALSO
 
 =over 4
@@ -133,6 +125,19 @@ the L<dzil stale|Dist::Zilla::App::Command::stale> command in this distribution
 L<Dist::Zilla::Plugin::Prereqs::MatchInstalled>, L<Dist::Zilla::Plugin::Prereqs::MatchInstalled::All>
 
 =back
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-PromptIfStale>
+(or L<bug-Dist-Zilla-Plugin-PromptIfStale@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-PromptIfStale@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+http://dzil.org/#mailing-list.
+
+There is also an irc channel available for users of this distribution, at
+irc://irc.perl.org/#distzilla.
+
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
 
 =head1 AUTHOR
 
