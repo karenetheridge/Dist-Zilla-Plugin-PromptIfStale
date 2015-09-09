@@ -17,13 +17,14 @@ use EnsureStdinTty;
 use DiagFilehandles;
 
 my @checked_via_02packages;
+my @checked_via_query;
 {
     use Dist::Zilla::Plugin::PromptIfStale;
     package Dist::Zilla::Plugin::PromptIfStale;
     no warnings 'redefine';
     sub _indexed_version_via_query {
         my ($self, $module) = @_;
-        push(@checked_via_02packages, $module), return undef if $module =~ /^Unindexed[0-6]$/;
+        push(@checked_via_query, $module), return undef if $module =~ /^Unindexed[0-6]$/;
         die 'should not be checking for ' . $module;
     }
     sub _indexed_version_via_02packages {
