@@ -21,6 +21,16 @@ I wish Dist::Zilla::App::Command::stale could understand this string and not rea
 
 -----
 
-add an API for querying metacpan, so I can support updating to -TRIAL
-releases?
+add an API for querying metacpan, so I can support updating to -TRIAL releases?
 is there a CPAN::Common::Index interface for this?
+- nope, CCI would need to get one.
+- and we also need to work out the query structure used by cpanmetadb to get this data.
+
+
+-----
+
+CPAN::Common::Index needs a cpanidx interface, before I can move to CCI in my
+code (and support all of cpanidx, cpanmetadb, local 02packages file)
+We also should have support for ad-hoc stash fields in ~/.dzil/config.ini so
+we can point to the location of our minicpan, local 02packages file, etc.
+
