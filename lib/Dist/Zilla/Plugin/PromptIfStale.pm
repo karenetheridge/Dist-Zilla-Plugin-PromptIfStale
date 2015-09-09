@@ -157,6 +157,10 @@ sub stale_modules
     my $cwd = getcwd();
     my $cwd_volume = path($cwd)->volume;
 
+    # sets up, and caches in the object, a coderef used for querying the index
+    # for a module name.
+    $self->_init_query_index(@modules);
+
     my (@stale_modules, @errors);
     foreach my $module (sort(_uniq(@modules)))
     {
@@ -195,7 +199,7 @@ sub stale_modules
             }
         }
 
-        my $indexed_version = $self->_indexed_version($module, !!(@modules > 5));
+        my $indexed_version = $self->_indexed_version($module);
         my $local_version = Module::Metadata->new_from_file($module_to_filename{$module})->version;
 
         $self->log_debug([ 'comparing indexed vs. local version for %s: indexed=%s; local version=%s',
@@ -371,17 +375,28 @@ sub _is_duallifed
     return CPAN::DistnameInfo->new($payload->[0]{distfile})->dist ne 'perl';
 }
 
-my $packages;
-sub _indexed_version
-{
-    my ($self, $module, $combined) = @_;
+has _query_index => (
+    is => 'rw', isa => 'CodeRef',
+    traits => ['Code', 'SetOnce'],
+    handles => { _indexed_version => 'execute_method' },
+);
 
-    # we download 02packages if we have several modules to query at once, or
-    # if we were given a different URL to use -- otherwise, we perform an API
-    # hit for just this one module's data
-    return $combined || $packages || $self->index_base_url
-        ? $self->_indexed_version_via_02packages($module)
-        : $self->_indexed_version_via_query($module);
+my $packages;
+
+sub _init_query_index
+{
+    my ($self, @modules) = @_;
+
+    my $query_index = $self->_query_index;
+    return $query_index if $query_index;
+
+    # download and use 02packages.details.txt if we are checking for several
+    # modules at once
+    $query_index = (@modules > 5 or $packages or $self->index_base_url)
+        ? \&_indexed_version_via_02packages
+        : \&_indexed_version_via_query;
+
+    return $self->_query_index($query_index);
 }
 
 # I bet this is available somewhere as a module?
