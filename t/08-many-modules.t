@@ -83,7 +83,7 @@ done_testing;
 
 sub do_tests
 {
-    @checked_via_02packages = @prompts = ();
+    @checked_via_query = @checked_via_02packages = @prompts = ();
     Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
 
     my $checked_app;
@@ -106,6 +106,11 @@ sub do_tests
             also_copy => { 't/corpus' => 't/lib' },
         },
     );
+
+    # this is a hack. should the user have the ability to select which lookup
+    # mechanism is used? perhaps by storing the 02packages location in a stash
+    # variable...
+    $tzil->plugin_named('PromptIfStale')->_get_packages;
 
     # no need to test all combinations - we sort the module list
     my $prompt0 = "Issues found:\n"
