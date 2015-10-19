@@ -13,7 +13,7 @@ perl:
   - "5.10"
 install:
   - cpanm JSON::PP Dist::Zilla Dist::Zilla::Plugin::BlockRelease
-  - dzil authordeps --missing | cpanm || { cat ~/.cpanm/build.log ; false ; }
-  - dzil listdeps --author --missing | cpanm || { cat ~/.cpanm/build.log ; false ; }
+  - dzil authordeps --missing | cpanm || ( cat ~/.cpanm/build.log ; false ; )
+  - dzil listdeps --author --missing | cpanm || ( cat ~/.cpanm/build.log ; false ; )
 script:
   - HARNESS_OPTIONS=j9:c DZIL_AIRPLANE=1 PERL5OPT=Ilib dzil test --author
