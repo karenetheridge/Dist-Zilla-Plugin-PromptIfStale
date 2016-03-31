@@ -23,7 +23,6 @@ use HTTP::Tiny;
 use YAML::Tiny;
 use Module::Path 0.18 'module_path';
 use Module::Metadata 1.000023;
-use Module::CoreList 5.20150214;
 use Encode ();
 use namespace::autoclean -also => ['_uniq'];
 
@@ -153,6 +152,9 @@ my %module_to_filename;
 sub stale_modules
 {
     my ($self, @modules) = @_;
+
+    require Module::CoreList;
+    Module::CoreList->VERSION('5.20150214');
 
     my $cwd = getcwd();
     my $cwd_volume = path($cwd)->volume;
