@@ -154,7 +154,7 @@ sub stale_modules
     my ($self, @modules) = @_;
 
     require Module::CoreList;
-    Module::CoreList->VERSION('5.20150214');
+    Module::CoreList->VERSION('5.20151213');
 
     my $cwd = getcwd();
     my $cwd_volume = path($cwd)->volume;
