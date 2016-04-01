@@ -3,6 +3,7 @@ Revision history for Dist-Zilla-Plugin-PromptIfStale
 {{$NEXT}}
           - avoid loading Module::CoreList until it is needed, for a faster
             runtime (Olivier Mengué)
+          - now using List::Util::uniq
 
 0.047     2015-09-07 01:02:36Z
           - 'dzil stale' now returns a non-zero exit status if a full prereq

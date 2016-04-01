@@ -13,7 +13,7 @@ with 'Dist::Zilla::Role::BeforeBuild',
     'Dist::Zilla::Role::BeforeRelease';
 
 use Moose::Util::TypeConstraints 'enum';
-use List::Util 1.33 qw(none any);
+use List::Util 1.45 qw(none any uniq);
 use version;
 use Moose::Util 'find_meta';
 use Path::Tiny;
@@ -24,7 +24,7 @@ use YAML::Tiny;
 use Module::Path 0.18 'module_path';
 use Module::Metadata 1.000023;
 use Encode ();
-use namespace::autoclean -also => ['_uniq'];
+use namespace::autoclean;
 
 sub mvp_multivalue_args { qw(modules skip) }
 sub mvp_aliases { {
@@ -94,9 +94,6 @@ around dump_config => sub
     return $config;
 };
 
-# until List::Util::uniq exists...
-sub _uniq { keys %{ +{ map { $_ => undef } @_ } } }
-
 sub before_build
 {
     my $self = shift;
@@ -109,7 +106,7 @@ sub before_build
             ( $self->check_all_plugins ? $self->_modules_plugin : () ),
         );
 
-        $self->_check_modules(sort(_uniq(@modules))) if @modules;
+        $self->_check_modules(sort(uniq(@modules))) if @modules;
     }
 }
 
@@ -120,7 +117,7 @@ sub after_build
     if ($self->phase eq 'build' and $self->check_all_prereqs)
     {
         my @modules = $self->_modules_prereq;
-        $self->_check_modules(sort(_uniq(@modules))) if @modules;
+        $self->_check_modules(sort(uniq(@modules))) if @modules;
     }
 }
 
@@ -136,7 +133,7 @@ sub before_release
         );
         push @modules, $self->_modules_prereq if $self->check_all_prereqs;
 
-        $self->_check_modules(sort(_uniq(@modules))) if @modules;
+        $self->_check_modules(sort(uniq(@modules))) if @modules;
     }
 }
 
@@ -160,7 +157,7 @@ sub stale_modules
     my $cwd_volume = path($cwd)->volume;
 
     my (@stale_modules, @errors);
-    foreach my $module (sort(_uniq(@modules)))
+    foreach my $module (sort(uniq(@modules)))
     {
         $already_checked{$module}++ if $module eq 'perl';
         next if $already_checked{$module};
@@ -286,7 +283,7 @@ has _authordeps => (
         my @skip = $self->skip;
         [
             grep { my $module = $_; none { $module eq $_ } @skip }
-            _uniq(
+            uniq(
                 map { (%$_)[0] }
                     @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps('.') }
             )
@@ -304,7 +301,7 @@ has _modules_plugin => (
         my @skip = $self->skip;
         [
             grep { my $module = $_; none { $module eq $_ } @skip }
-            _uniq(
+            uniq(
                 map { find_meta($_)->name } @{ $self->zilla->plugins }
             )
         ];

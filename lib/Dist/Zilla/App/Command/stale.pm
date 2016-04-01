@@ -59,7 +59,8 @@ sub stale_modules
 
     return if not @modules;
 
-    my ($stale_modules, undef) = $plugins[0]->stale_modules(_uniq(@modules));
+    require List::Util; List::Util->VERSION(1.45);
+    my ($stale_modules, undef) = $plugins[0]->stale_modules(List::Util::uniq(@modules));
     return @$stale_modules;
 }
 
@@ -105,7 +106,7 @@ sub execute
         push @authordeps, $self->_missing_authordeps;
 
         $self->app->chrome->logger->unmute;
-        $self->log(join("\n", sort(_uniq(@authordeps))));
+        $self->log(join("\n", sort(List::Util::uniq(@authordeps))));
 
         if (@authordeps)
         {
@@ -150,9 +151,6 @@ sub _missing_authordeps
           )
         };
 }
-
-# until List::Util::uniq exists...
-sub _uniq { keys %{ +{ map { $_ => undef } @_ } } }
 
 1;
 
