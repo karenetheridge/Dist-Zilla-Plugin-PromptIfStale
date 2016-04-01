@@ -1,4 +1,12 @@
 
+in _indexed_version,
+are we properly differentiating between something that is not indexed,
+and something that is indexed but at an undef version?
+write some tests!
+
+
+-------
+
 new failure in 0.041, in perl-in-space:
 http://www.cpantesters.org/cpan/report/e99ea815-6ecb-1014-a7d4-cd6baff55ff3
 
