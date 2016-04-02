@@ -4,6 +4,10 @@ are we properly differentiating between something that is not indexed,
 and something that is indexed but at an undef version?
 write some tests!
 
+-------
+
+should be using CPAN::Common::Index for querying the index, instead of
+doing it all here.
 
 -------
 
