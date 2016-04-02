@@ -102,8 +102,8 @@ sub before_build
     {
         my @modules = (
             $self->_modules_extra,
-            ( $self->check_authordeps ? $self->_authordeps : () ),
-            ( $self->check_all_plugins ? $self->_modules_plugin : () ),
+            $self->check_authordeps ? $self->_authordeps : (),
+            $self->check_all_plugins ? $self->_modules_plugin : (),
         );
 
         $self->_check_modules(sort(uniq(@modules))) if @modules;
@@ -128,10 +128,10 @@ sub before_release
     {
         my @modules = (
             $self->_modules_extra,
-            ( $self->check_authordeps ? $self->_authordeps : () ),
-            ( $self->check_all_plugins ? $self->_modules_plugin : () ),
+            $self->check_authordeps ? $self->_authordeps : (),
+            $self->check_all_plugins ? $self->_modules_plugin : (),
+            $self->check_all_prereqs ? $self->_modules_prereq : (),
         );
-        push @modules, $self->_modules_prereq if $self->check_all_prereqs;
 
         $self->_check_modules(sort(uniq(@modules))) if @modules;
     }
