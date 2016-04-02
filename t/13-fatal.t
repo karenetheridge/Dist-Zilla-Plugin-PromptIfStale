@@ -76,6 +76,7 @@ is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@promp
 cmp_deeply(
     $tzil->log_messages,
     superbagof(
+        '[PromptIfStale] checking for stale modules...',
         '[PromptIfStale] Indexed::But::Not::Installed is not installed.',
         "[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Indexed::But::Not::Installed",
     ),

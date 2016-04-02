@@ -97,6 +97,15 @@ cmp_deeply(
     'we were indeed prompted, for exactly all the right phases and types, and not twice for the duplicates',
 );
 
+cmp_deeply(
+    $tzil->log_messages,
+    superbagof(
+        '[PromptIfStale] checking for stale modules...',
+        '[PromptIfStale] checking for stale prerequisites...',
+    ),
+    'build completed successfully',
+);
+
 diag 'got log messages: ', explain $tzil->log_messages
     if not Test::Builder->new->is_passing;
 

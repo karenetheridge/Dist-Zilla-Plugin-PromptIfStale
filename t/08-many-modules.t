@@ -155,7 +155,11 @@ sub do_tests
 
     cmp_deeply(
         $tzil->log_messages,
-        superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Unindexed6"),
+        superbagof(
+            '[PromptIfStale] checking for stale modules...',
+            '[PromptIfStale] checking for stale prerequisites...',
+            "[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Unindexed6",
+        ),
         'build was aborted, with remedy instructions',
     );
 

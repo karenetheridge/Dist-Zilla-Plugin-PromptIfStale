@@ -84,6 +84,7 @@ is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@promp
 cmp_deeply(
     $tzil->log_messages,
     superbagof(
+        '[PromptIfStale] checking for stale modules...',
         '[PromptIfStale] comparing indexed vs. local version for StaleModule: indexed=200.0; local version=1.0',
         "[PromptIfStale] StaleModule is indexed at version 200.0 but you only have 1.0 installed.\n[PromptIfStale] To remedy, do: cpanm StaleModule",
         re(qr/^\Q[DZ] writing DZT-Sample in /),

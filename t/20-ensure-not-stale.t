@@ -75,7 +75,10 @@ is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@promp
 
 cmp_deeply(
     $tzil->log_messages,
-    superbagof("[EnsureNotStale] Aborting build\n[EnsureNotStale] To remedy, do: cpanm Indexed::But::Not::Installed"),
+    superbagof(
+        '[EnsureNotStale] checking for stale modules...',
+        "[EnsureNotStale] Aborting build\n[EnsureNotStale] To remedy, do: cpanm Indexed::But::Not::Installed",
+    ),
     'build was aborted, with remedy instructions',
 );
 

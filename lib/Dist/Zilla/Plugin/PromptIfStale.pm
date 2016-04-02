@@ -100,12 +100,18 @@ sub before_build
 
     if ($self->phase eq 'build')
     {
+        my @extra_modules = $self->_modules_extra;
         my @modules = (
-            $self->_modules_extra,
+            @extra_modules,
             $self->check_authordeps ? $self->_authordeps : (),
             $self->check_all_plugins ? $self->_modules_plugin : (),
         );
 
+        $self->log([ 'checking for stale %s...', join(', ',
+            @extra_modules ? 'modules' : (),
+            $self->check_authordeps ? 'authordeps' : (),
+            $self->check_all_plugins ? 'plugins' : ())
+        ]);
         $self->_check_modules(sort(uniq(@modules))) if @modules;
     }
 }
@@ -116,8 +122,10 @@ sub after_build
 
     if ($self->phase eq 'build' and $self->check_all_prereqs)
     {
-        my @modules = $self->_modules_prereq;
-        $self->_check_modules(sort(uniq(@modules))) if @modules;
+        if (my @modules = $self->_modules_prereq) {
+            $self->log('checking for stale prerequisites...');
+            $self->_check_modules(sort(uniq(@modules)));
+        }
     }
 }
 
@@ -126,12 +134,20 @@ sub before_release
     my $self = shift;
     if ($self->phase eq 'release')
     {
+        my @extra_modules = $self->_modules_extra;
         my @modules = (
-            $self->_modules_extra,
+            @extra_modules,
             $self->check_authordeps ? $self->_authordeps : (),
             $self->check_all_plugins ? $self->_modules_plugin : (),
             $self->check_all_prereqs ? $self->_modules_prereq : (),
         );
+
+        $self->log([ 'checking for stale %s...', join(', ',
+            @extra_modules ? 'modules' : (),
+            $self->check_authordeps ? 'authordeps' : (),
+            $self->check_all_plugins ? 'plugins' : (),
+            $self->check_all_prereqs ? 'prerequisites' : ())
+        ]);
 
         $self->_check_modules(sort(uniq(@modules))) if @modules;
     }
@@ -237,7 +253,6 @@ sub _check_modules
 {
     my ($self, @modules) = @_;
 
-    $self->log('checking for stale modules...');
     my ($stale_modules, $errors) = $self->stale_modules(@modules);
 
     return if not @$errors;

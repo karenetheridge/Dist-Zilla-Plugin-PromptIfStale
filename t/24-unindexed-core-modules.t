@@ -60,6 +60,7 @@ is(
 cmp_deeply(
     $tzil->log_messages,
     superbagof(
+        '[PromptIfStale] checking for stale modules...',
         '[PromptIfStale] skipping core module: Config',
         '[PromptIfStale] skipping core module: Errno',
         re(qr/^\Q[DZ] writing DZT-Sample in /),

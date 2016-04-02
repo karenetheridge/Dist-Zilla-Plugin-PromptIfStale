@@ -102,6 +102,7 @@ version: 200.0
     cmp_deeply(
         $tzil->log_messages,
         superbagof(
+            '[PromptIfStale] checking for stale modules...',
             '[PromptIfStale] comparing indexed vs. local version for strict: indexed=200.0; local version=' . $STRICT_VERSION,
             re(qr/^\Q[DZ] writing DZT-Sample in /),
         ),

@@ -101,6 +101,7 @@ my $STRICT_VERSION = Module::Metadata->new_from_module('strict')->version;
 cmp_deeply(
     $tzil->log_messages,
     superbagof(
+        '[PromptIfStale] checking for stale modules...',
         '[PromptIfStale] core module strict is indexed at version 200.0 but you only have ' . $STRICT_VERSION . ' installed. You need to update your perl to get the latest version.',
         re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),

@@ -102,7 +102,10 @@ my @prompts;
 
     cmp_deeply(
         $tzil->log_messages,
-        superbagof("[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Carp Dist::Zilla::Plugin::GatherDir I::Am::Not::Installed"),
+        superbagof(
+            '[PromptIfStale] checking for stale authordeps...',
+            "[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Carp Dist::Zilla::Plugin::GatherDir I::Am::Not::Installed",
+        ),
         'build was aborted, with remedy instructions',
     ) or diag 'saw log messages: ', explain $tzil->log_messages;
 }

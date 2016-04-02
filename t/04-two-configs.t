@@ -76,6 +76,7 @@ is(scalar @prompts, 0, 'there were no prompts') or diag 'got: ', explain \@promp
 cmp_deeply(
     $tzil->log_messages,
     superbagof(
+        '[PromptIfStale] checking for stale modules, plugins...',
         (map { re(qr/^\Q[PromptIfStale] comparing indexed vs. local version for Dist::Zilla::Plugin::$_: indexed=0; local version=\E/) } qw(GatherDir PromptIfStale)),
         re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),

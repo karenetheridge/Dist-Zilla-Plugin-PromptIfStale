@@ -27,9 +27,9 @@ my @prompts;
     });
 }
 
-for my $case ( 0, 1 ) {
+for my $check_prereqs ( 0, 1 ) {
 
-    subtest "check_all_prereqs => $case" => sub {
+    subtest "check_all_prereqs => $check_prereqs" => sub {
 
         my $checked_app;
         BUILD:
@@ -50,7 +50,7 @@ for my $case ( 0, 1 ) {
                         },
                         [ 'PromptIfStale' => {
                                 phase => 'release',
-                                check_all_prereqs => $case,
+                                check_all_prereqs => $check_prereqs,
                                 # some of these are duplicated with prereqs
                                 module => [ 'Bar', map { 'Foo' . $_ } 0 .. 2 ]
                             },
@@ -65,7 +65,7 @@ for my $case ( 0, 1 ) {
         # if check_all_prereqs is true, then we should see errors on Foo 0 to 8, otherwise, just
         # specifically requested 0 to 2
 
-        my $last = $case ? '8' : '2';
+        my $last = $check_prereqs ? '8' : '2';
 
         if (not $checked_app++)
         {
@@ -99,11 +99,19 @@ for my $case ( 0, 1 ) {
         cmp_deeply(
             \@prompts,
             \@expected_prompts,
-            "check_all_prereqs = $case: we were indeed prompted, for exactly all the right phases and types, and not twice for the duplicates",
+            "check_all_prereqs = $check_prereqs: we were indeed prompted, for exactly all the right phases and types, and not twice for the duplicates",
         ) or diag 'got: ', explain \@prompts;
 
         Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
         @prompts = ();
+
+        cmp_deeply(
+            $tzil->log_messages,
+            superbagof(
+                '[PromptIfStale] checking for stale modules' . ($check_prereqs ? ', prerequisites' : '') . '...',
+            ),
+            'log messages indicate what is checked',
+        );
 
         diag 'got log messages: ', explain $tzil->log_messages
             if not Test::Builder->new->is_passing;

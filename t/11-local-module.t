@@ -65,6 +65,7 @@ is(
 cmp_deeply(
     $tzil->log_messages,
     superbagof(
+        '[PromptIfStale] checking for stale modules...',
         '[PromptIfStale] Unindexed provided locally (at t/lib/Unindexed.pm); skipping version check',
         re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),

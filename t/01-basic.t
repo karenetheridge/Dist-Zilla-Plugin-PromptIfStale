@@ -101,6 +101,7 @@ cmp_deeply(\@prompts, [ $prompt ], 'we were indeed prompted');
 cmp_deeply(
     $tzil->log_messages,
     superbagof(
+        '[PromptIfStale] checking for stale modules...',
         '[PromptIfStale] comparing indexed vs. local version for StaleModule: indexed=200.0; local version=1.0',
         re(qr/^\Q[DZ] writing DZT-Sample in /),
     ),

@@ -105,6 +105,7 @@ my $http_url;
     cmp_deeply(
         $tzil->log_messages,
         superbagof(
+            '[PromptIfStale] checking for stale modules...',
             "[PromptIfStale] Issues found:\n" . join("\n", map { '[PromptIfStale]     Unindexed' . $_ . ' is not indexed.' } 0..5),
             "[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm " . join(' ', map { 'Unindexed' . $_ } 0..5)
         ),
