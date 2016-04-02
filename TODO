@@ -19,14 +19,6 @@ http://www.cpantesters.org/cpan/report/b3269062-6bf5-1014-b257-88339fec631c
 http://www.cpantesters.org/cpan/report/053f5ef8-6c04-1014-b564-d929e8dd8576
 
 
-------
-
-I wish Dist::Zilla::App::Command::stale could understand this string and not react to it:
-
-    Can't locate object method "section_name" via package "Moose::Meta::Class::__ANON__::SERIAL::18" at .../lib/Dist/Zilla/Dist/Builder.pm
-
-
-
 -----
 
 add an API for querying metacpan, so I can support updating to -TRIAL
