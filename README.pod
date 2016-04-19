@@ -8,7 +8,7 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are 
 
 =head1 VERSION
 
-version 0.048
+version 0.049
 
 =head1 SYNOPSIS
 
