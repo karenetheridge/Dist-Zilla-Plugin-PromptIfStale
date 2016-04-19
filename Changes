@@ -1,5 +1,7 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
+{{$NEXT}}
+
 0.049     2016-04-19 05:34:06Z
           - now using distinctive log messages for each phase
           - now using Module::Metadata rather than Module::Path to look for
