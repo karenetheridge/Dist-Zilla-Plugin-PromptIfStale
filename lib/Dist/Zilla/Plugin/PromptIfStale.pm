@@ -21,7 +21,6 @@ use Cwd;
 use CPAN::DistnameInfo;
 use HTTP::Tiny;
 use YAML::Tiny;
-use Module::Path 0.18 'module_path';
 use Module::Metadata 1.000023;
 use Encode ();
 use namespace::autoclean;
@@ -186,7 +185,7 @@ sub stale_modules
             next;
         }
 
-        my $path = module_path($module);
+        my $path = Module::Metadata->find_module_by_name($module);
         if (not $path)
         {
             $already_checked{$module}++;

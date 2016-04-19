@@ -2,6 +2,8 @@ Revision history for Dist-Zilla-Plugin-PromptIfStale
 
 {{$NEXT}}
           - now using distinctive log messages for each phase
+          - now using Module::Metadata rather than Module::Path to look for
+            installed modules in @INC
 
 0.048     2016-04-01 05:25:37Z
           - avoid loading Module::CoreList until it is needed, for a faster
