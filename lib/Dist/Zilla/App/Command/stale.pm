@@ -34,7 +34,7 @@ sub stale_modules
 
     # ugh, we need to do nearly a full build to get the prereqs
     # (this really should be abstracted better in Dist::Zilla::Dist::Builder)
-    if ($all or do { require List::Util; List::Util->VERSION('1.33'); List::Util::any { $_->check_all_prereqs } @plugins})
+    if ($all or do { require List::Util; List::Util->VERSION('1.33'); List::Util::any(sub { $_->check_all_prereqs }, @plugins) })
     {
         $_->before_build for grep { not $_->isa('Dist::Zilla::Plugin::PromptIfStale') }
             @{ $zilla->plugins_with(-BeforeBuild) };
