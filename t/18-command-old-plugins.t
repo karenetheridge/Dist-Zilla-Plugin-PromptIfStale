@@ -38,14 +38,11 @@ use CaptureDiagnostics;
 
     is($result->exit_code, 1, 'dzil would have exited 1');
     is($result->stdout, "Dist::Zilla::Plugin::OldPlugin\n", 'dzil authordeps ran to get updated plugins');
-    like(
+    is(
         colorstrip($result->stderr),
-        qr/^Some authordeps were missing. Run the stale command again to check for regular dependencies.\n/m,
+        "Some authordeps were missing. Run the stale command again to check for regular dependencies.\n",
         'user given a warning to run the command again',
-    );
-
-    diag 'got stderr output: ' . $result->stderr
-        if colorstrip($result->stderr) ne "Some authordeps were missing. Run the stale command again to check for regular dependencies.\n";
+    ) or diag 'got stderr output: ' . $result->stderr;
 
     if (not Test::Builder->new->is_passing)
     {
