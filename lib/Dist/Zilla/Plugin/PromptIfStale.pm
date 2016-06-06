@@ -77,13 +77,18 @@ has index_base_url => (
     is => 'ro', isa => 'Str',
 );
 
+has run_under_travis => (
+    is => 'ro', isa => 'Bool',
+    default => 0,
+);
+
 around dump_config => sub
 {
     my ($orig, $self) = @_;
     my $config = $self->$orig;
 
     $config->{+__PACKAGE__} = {
-        (map { $_ => $self->$_ ? 1 : 0 } qw(check_all_plugins check_all_prereqs)),
+        (map { $_ => $self->$_ ? 1 : 0 } qw(check_all_plugins check_all_prereqs run_under_travis)),
         phase => $self->phase,
         skip => [ sort $self->skip ],
         modules => [ sort $self->_raw_modules ],
@@ -96,6 +101,12 @@ around dump_config => sub
 sub before_build
 {
     my $self = shift;
+
+    if ($ENV{CONTINUOUS_INTEGRATION} and not $self->run_under_travis)
+    {
+        $self->log_debug('travis detected: skipping checks...');
+        return;
+    }
 
     if ($self->phase eq 'build')
     {
@@ -118,6 +129,8 @@ sub before_build
 sub after_build
 {
     my $self = shift;
+
+    return if $ENV{CONTINUOUS_INTEGRATION} and not $self->run_under_travis;
 
     if ($self->phase eq 'build' and $self->check_all_prereqs)
     {
@@ -543,6 +556,15 @@ an immediate abort of the build/release process, without prompting.
 When provided, uses this base URL to fetch F<02packages.details.txt.gz>
 instead of the default C<http://www.cpan.org>.  Use this when your
 distribution uses prerequisites found only in your darkpan-like server.
+
+=head2 C<run_under_travis>
+
+It is possible to detect when a build is being run via L<Travis Continuous Integration|https://travis-ci.org/>.
+Since version 0.035, Travis builds act like other non-interactive builds, where missing modules result in a warning
+instead of a prompt. As of version 0.050, stale checks are only performed for the build phase on Travis builds when
+C<run_under_travis> is set to a true value.
+
+The default value is false.
 
 =for Pod::Coverage mvp_multivalue_args mvp_aliases before_build after_build before_release
 
