@@ -138,6 +138,7 @@ sub execute
     $self->log([ 'got error from stale_modules check: %s', $error ]) if $error and not @stale_modules;
 }
 
+# as in Dist::Zilla::App::Command::alldeps
 sub _missing_authordeps
 {
     my $self = shift;
