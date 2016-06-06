@@ -1,9 +1,9 @@
 use strict;
 use warnings;
 package Dist::Zilla::Plugin::PromptIfStale;
+# vim: set ts=8 sts=4 sw=4 tw=115 et :
 # ABSTRACT: Check at build/release time if modules are out of date
 # KEYWORDS: prerequisites upstream dependencies modules metadata update stale
-# vim: set ts=8 sts=4 sw=4 tw=115 et :
 
 our $VERSION = '0.050';
 

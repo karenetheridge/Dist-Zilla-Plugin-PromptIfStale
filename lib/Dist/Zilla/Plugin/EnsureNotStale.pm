@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 package Dist::Zilla::Plugin::EnsureNotStale;
-# ABSTRACT: Abort at build/release time if modules are out of date
 # vim: set ts=8 sts=4 sw=4 tw=115 et :
+# ABSTRACT: Abort at build/release time if modules are out of date
 
 our $VERSION = '0.050';
 
