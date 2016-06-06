@@ -1,5 +1,7 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
+{{$NEXT}}
+
 0.050     2016-06-06 03:29:58Z
           - by default, build checks are no longer performed under Travis
             Continuous Integration (see 'run_under_travis' config)
