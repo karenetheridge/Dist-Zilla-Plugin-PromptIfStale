@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
 {{$NEXT}}
+          - allow setting the index_base_url via a new env var,
+            CPAN_INDEX_BASE_URL. Patch by Dave Rolsky. GitHub #5.
 
 0.050     2016-06-06 03:29:58Z
           - by default, build checks are no longer performed under Travis

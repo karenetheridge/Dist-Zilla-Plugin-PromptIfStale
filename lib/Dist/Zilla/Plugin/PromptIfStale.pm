@@ -405,7 +405,7 @@ sub _indexed_version
     # we download 02packages if we have several modules to query at once, or
     # if we were given a different URL to use -- otherwise, we perform an API
     # hit for just this one module's data
-    return $combined || $packages || $self->index_base_url
+    return $combined || $packages || $self->_has_index_base_url
         ? $self->_indexed_version_via_02packages($module)
         : $self->_indexed_version_via_query($module);
 }
@@ -415,7 +415,7 @@ sub _indexed_version_via_query
 {
     my ($self, $module) = @_;
 
-    die 'should not be here - get 02packages instead' if $self->index_base_url;
+    die 'should not be here - get 02packages instead' if $self->_has_index_base_url;
     die 'no module?' if not $module;
 
     my $url = 'http://cpanmetadb.plackperl.org/v1.0/package/' . $module;
@@ -451,7 +451,9 @@ sub _get_packages
     my $filename = '02packages.details.txt.gz';
     my $path = $tempdir->child($filename);
 
-    my $base = $self->index_base_url || 'http://www.cpan.org';
+    # We don't set this via an attribute default because we want to
+    # distinguish the case where this was not set at all.
+    my $base = $self->index_base_url || $ENV{CPAN_INDEX_BASE_URL} || 'http://www.cpan.org';
 
     my $url = $base . '/modules/' . $filename;
     $self->log_debug([ 'fetching %s', $url ]);
@@ -460,6 +462,11 @@ sub _get_packages
 
     require Parse::CPAN::Packages::Fast;
     $packages = Parse::CPAN::Packages::Fast->new($path->stringify);
+}
+
+sub _has_index_base_url {
+    my $self = shift;
+    return $self->index_base_url || $ENV{CPAN_INDEX_BASE_URL};
 }
 
 sub _indexed_version_via_02packages
@@ -556,6 +563,9 @@ an immediate abort of the build/release process, without prompting.
 When provided, uses this base URL to fetch F<02packages.details.txt.gz>
 instead of the default C<http://www.cpan.org>.  Use this when your
 distribution uses prerequisites found only in your darkpan-like server.
+
+You can also set this temporary from the command line by setting the
+C<CPAN_INDEX_BASE_URL> environment variable.
 
 =head2 C<run_under_travis>
 
