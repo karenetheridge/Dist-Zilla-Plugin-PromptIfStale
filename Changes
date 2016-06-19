@@ -1,6 +1,6 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
-{{$NEXT}}
+0.051     2016-06-19 04:03:22Z
           - allow setting the index_base_url via a new env var,
             CPAN_INDEX_BASE_URL. Patch by Dave Rolsky. GitHub #5.
 

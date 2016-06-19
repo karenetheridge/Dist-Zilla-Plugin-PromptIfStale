@@ -8,7 +8,7 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are 
 
 =head1 VERSION
 
-version 0.050
+version 0.051
 
 =head1 SYNOPSIS
 
@@ -88,6 +88,9 @@ When provided, uses this base URL to fetch F<02packages.details.txt.gz>
 instead of the default C<http://www.cpan.org>.  Use this when your
 distribution uses prerequisites found only in your darkpan-like server.
 
+You can also set this temporary from the command line by setting the
+C<CPAN_INDEX_BASE_URL> environment variable.
+
 =head2 C<run_under_travis>
 
 It is possible to detect when a build is being run via L<Travis Continuous Integration|https://travis-ci.org/>.
@@ -154,13 +157,17 @@ Karen Etheridge <ether@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords David Golden Olivier Mengué
+=for stopwords David Golden Dave Rolsky Olivier Mengué
 
 =over 4
 
 =item *
 
 David Golden <dagolden@cpan.org>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
 
 =item *
 
