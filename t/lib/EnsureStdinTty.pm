@@ -20,7 +20,7 @@ if (not -t STDIN)
         STDIN->fdopen($pty->slave, '<')
             or die "could not connect stdin to a pty: $!";
 
-        if ($] < 5.016)
+        if ("$]" < '5.016')
         {
             $TODO = 'on perls <5.16, IO::Pty may not work on all platforms';
 
