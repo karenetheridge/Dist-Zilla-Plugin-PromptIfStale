@@ -1,5 +1,7 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
+{{$NEXT}}
+
 0.052     2017-02-13 23:50:54Z
           - work around a problematic Log::Dispatch version that does not like
             us trying to log blank lines (RT#120218)
