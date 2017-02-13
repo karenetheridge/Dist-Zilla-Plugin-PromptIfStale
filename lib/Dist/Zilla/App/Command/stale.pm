@@ -134,7 +134,7 @@ sub execute
     };
 
     $self->app->chrome->logger->unmute;
-    $self->log(join("\n", @stale_modules));
+    $self->log(join("\n", @stale_modules)); # this might be just a blank line
     $self->log([ 'got error from stale_modules check: %s', $error ]) if $error and not @stale_modules;
 }
 

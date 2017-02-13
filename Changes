@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
 {{$NEXT}}
+          - work around a problematic Log::Dispatch version that does not like
+            us trying to log blank lines (RT#120218)
 
 0.051     2016-06-19 04:03:22Z
           - allow setting the index_base_url via a new env var,
