@@ -191,7 +191,7 @@ sub stale_modules
         next if $already_checked{$module};
 
         # these core modules should be indexed, but aren't
-        if (any { $module eq $_ } qw(Config DB Errno NEXT Pod::Functions))
+        if (any { $module eq $_ } qw(Config DB Errno Pod::Functions))
         {
             $self->log_debug([ 'skipping core module: %s', $module ]);
             $already_checked{$module}++;

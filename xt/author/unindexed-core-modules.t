@@ -33,7 +33,6 @@ foreach my $module (qw(
     Config
     DB
     Errno
-    NEXT
     Pod::Functions
 )) {
     is(
