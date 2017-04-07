@@ -7,7 +7,7 @@ use warnings;
 # unleashing the hounds. This simulates installing the module with stdin not
 # using a tty, as in 'cpan-outdated | cpanm' or 'dzil listdeps | cpanm'.
 
-use Test::More;
+use Test::More 0.96;
 use Test::Warnings;
 use File::Spec;
 use IO::Handle;
