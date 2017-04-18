@@ -21,27 +21,11 @@ foreach my $test (glob('t/*'))
 {
     next if not -f $test;
     next if $test =~ /\b00-/;
-next if $test !~ /21/;
     subtest $test => sub {
-
-#        open my $stdout, '>', File::Spec->devnull or die "can't open devnull: $!";
-#        my $stderr = IO::Handle->new;
-#        # this *should* pick up our PERL5LIB and DTRT...
-#        diag "running $^X $inc_switch $test";
-#        my $pid = open3($stdin, $stdout, $stderr, $^X, $inc_switch, $test);
-#        binmode $stderr, ':crlf' if $^O eq 'MSWin32';
-#        my @stderr = <$stderr>;
-#        waitpid($pid, 0);
-#
-#        is($?, 0, "$test ran ok");
-
-    do $test;
-    note 'ran tests successfully' if not $@;
-    fail($@) if $@;
-
-
-#print STDERR "####### got a warning from running $test....\n", @stderr, "\n##########\n" if @stderr;
-#        warn @stderr if @stderr;
+        diag "running $test";
+        do $test;
+        note 'ran tests successfully' if not $@;
+        fail($@) if $@;
     };
 }
 
