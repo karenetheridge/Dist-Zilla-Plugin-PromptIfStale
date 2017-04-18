@@ -1,6 +1,9 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
 {{$NEXT}}
+          - all tests are skipped when installing this distribution under
+            travis (unless it is this distribution testing ourselves), to
+            avoid failing tests due to many layers of various detection logic
 
 0.052     2017-02-13 23:50:54Z
           - work around a problematic Log::Dispatch version that does not like

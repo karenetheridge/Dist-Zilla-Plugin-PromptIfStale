@@ -20,6 +20,7 @@ env:
     - AUTOMATED_TESTING=1
     - RELEASE_TESTING=0
       # skip the run_under_travis short circuiting to allow our tests to pass
+      # also avoids the Makefile.PL 'test' argument alteration.
     - CONTINUOUS_INTEGRATION=0
 
 before_install:
