@@ -19,6 +19,7 @@ env:
     - TEST_PARTITIONS=4
     - AUTOMATED_TESTING=1
     - RELEASE_TESTING=0
+    - CONTINUOUS_INTEGRATION=0
 
 before_install:
   - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
