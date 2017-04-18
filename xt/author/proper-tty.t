@@ -33,6 +33,7 @@ foreach my $test (glob('t/*'))
         waitpid($pid, 0);
 
         is($?, 0, "$test ran ok");
+print STDERR "####### got a warning from running $test....\n", @stderr, "\n##########\n" if @stderr;
         warn @stderr if @stderr;
     };
 }
