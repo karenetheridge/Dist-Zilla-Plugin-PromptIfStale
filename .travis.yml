@@ -27,6 +27,8 @@ before_install:
   - perl -V
   - build-dist
   - cd $BUILD_DIR
+install:
+  - cpan-install --deps
 script:
   - perl Makefile.PL
   - make
