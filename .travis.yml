@@ -13,6 +13,12 @@ perl:
   - "5.14"
   - "5.12"
   - "5.10"
+
+env:
+  global:
+      # skip the run_under_travis short circuiting to allow our tests to pass
+    - CONTINUOUS_INTEGRATION=0
+
 install:
   - cpanm JSON::PP Dist::Zilla Dist::Zilla::Plugin::BlockRelease
   - dzil authordeps --missing | cpanm || { cat ~/.cpanm/build.log ; false ; }
