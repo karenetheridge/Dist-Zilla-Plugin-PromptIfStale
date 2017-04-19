@@ -13,6 +13,11 @@ use File::Spec;
 use IO::Handle;
 use IPC::Open3;
 
+use lib 't/lib';
+use NoNetworkHits;
+use EnsureStdinTty;
+use DiagFilehandles;
+
 # make it look like we are running non-interactively
 open my $stdin, '<', File::Spec->devnull or die "can't open devnull: $!";
 my $inc_switch = -d 'blib' ? '-Mblib' : '-Ilib';

@@ -281,6 +281,7 @@ sub _check_modules
         : $errors->[0];
 
 use Data::Dumper;
+local $Data::Dumper::Sortkeys = 1;
 print STDERR "### environment: ", Dumper({
     CONTINUOUS_INTEGRATION => !!$ENV{CONTINUOUS_INTEGRATION},
     HARNESS_ACTIVE => !!$ENV{HARNESS_ACTIVE},
