@@ -45,6 +45,8 @@ my @prompts;
     }
 }
 
+use Dist::Zilla 5.036;  # experimental!!! to bump prereq.
+
 {
     my $tzil = Builder->from_config(
         { dist_root => 'does-not-exist' },
