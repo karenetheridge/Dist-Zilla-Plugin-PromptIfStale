@@ -102,7 +102,7 @@ sub before_build
 {
     my $self = shift;
 
-print STDERR "### starting before_build\n";
+print STDERR "### in code, starting before_build\n";
     if ($ENV{CONTINUOUS_INTEGRATION} and not $self->run_under_travis)
     {
         $self->log_debug('travis detected: skipping checks...');
@@ -126,7 +126,8 @@ print STDERR "### in before_build check...\n";
         ]);
         $self->_check_modules(sort(uniq(@modules))) if @modules;
     }
-print STDERR "### done before_build\n";
+use Data::Dumper;
+print STDERR "### in code, done before_build; log_messages is ", Dumper($self->zilla->log_messages);
 }
 
 sub after_build

@@ -33,6 +33,7 @@ my @prompts;
     no warnings 'redefine';
     sub _indexed_version {
         my ($self, $module) = @_;
+print STDERR "### in hacked _indexed_version for $module\n";
         return version->parse('200.0') if $module eq 'Carp';
         return version->parse('100.0') if $module eq 'Dist::Zilla::Plugin::GatherDir';
         return version->parse('0') if $module =~ /^Software::License::/;
