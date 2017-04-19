@@ -1,6 +1,6 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
-{{$NEXT}}
+0.053     2017-04-19 02:19:30Z
           - all tests are skipped when installing this distribution under
             travis (unless it is this distribution testing ourselves), to
             avoid failing tests due to many layers of various detection logic
