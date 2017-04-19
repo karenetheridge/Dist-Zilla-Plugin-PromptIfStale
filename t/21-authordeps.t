@@ -43,6 +43,14 @@ my @prompts;
         return 1 if $module eq 'Carp';
         die 'should not be checking for ' . $module;
     }
+
+use Moose;
+__PACKAGE__->meta->make_mutable;
+before before_build => sub { print STDERR "### starting before_build\n"; };
+after before_build => sub { print STDERR "### ending before_build\n"; };
+before after_build => sub { print STDERR "### starting after_build\n"; };
+after after_build => sub { print STDERR "### ending after_build\n"; };
+
 }
 
 use Dist::Zilla 5.036;  # experimental!!! to bump prereq.
@@ -113,6 +121,8 @@ use Dist::Zilla 5.036;  # experimental!!! to bump prereq.
 }
 
 #fail 'this is a failure.. what happens?';
+
+__END__
 
 @prompts = ();
 Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
