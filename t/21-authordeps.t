@@ -103,6 +103,7 @@ use Dist::Zilla 5.036;  # experimental!!! to bump prereq.
         qr/\Q[PromptIfStale] Aborting build\E/,
         'build aborted',
     );
+diag '### ... after the build aborted, saw log messages: ', explain $tzil->log_messages;
 
     cmp_deeply(
         \@prompts,
