@@ -102,7 +102,8 @@ sub before_build
 {
     my $self = shift;
 
-    if ($ENV{CONTINUOUS_INTEGRATION} and not $self->run_under_travis)
+    if (not $ENV{PROMPTIFSTALE_REALLY_RUN_TESTS}
+        and $ENV{CONTINUOUS_INTEGRATION} and not $self->run_under_travis)
     {
         $self->log_debug('travis detected: skipping checks...');
         return;
@@ -130,7 +131,8 @@ sub after_build
 {
     my $self = shift;
 
-    return if $ENV{CONTINUOUS_INTEGRATION} and not $self->run_under_travis;
+    return if not $ENV{PROMPTIFSTALE_REALLY_RUN_TESTS}
+        and $ENV{CONTINUOUS_INTEGRATION} and not $self->run_under_travis;
 
     if ($self->phase eq 'build' and $self->check_all_prereqs)
     {
