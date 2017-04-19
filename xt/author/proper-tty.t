@@ -13,10 +13,28 @@ use File::Spec;
 use IO::Handle;
 use IPC::Open3;
 
+BEGIN {
+    ::diag '1... status of filehandles: ', ::explain +{
+        '-t STDIN' => -t STDIN,
+        '-t STDOUT' => -t STDOUT,
+        '-f STDOUT' => -f STDOUT,
+        '-c STDOUT' => -c STDOUT,
+    };
+}
+
 use lib 't/lib';
 use NoNetworkHits;
 use EnsureStdinTty;
 use DiagFilehandles;
+
+BEGIN {
+    ::diag '2... status of filehandles: ', ::explain +{
+        '-t STDIN' => -t STDIN,
+        '-t STDOUT' => -t STDOUT,
+        '-f STDOUT' => -f STDOUT,
+        '-c STDOUT' => -c STDOUT,
+    };
+}
 
 # make it look like we are running non-interactively
 open my $stdin, '<', File::Spec->devnull or die "can't open devnull: $!";
