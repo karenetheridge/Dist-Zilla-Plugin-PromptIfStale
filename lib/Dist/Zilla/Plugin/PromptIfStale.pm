@@ -282,7 +282,7 @@ sub _check_modules
 
 use Data::Dumper;
 print STDERR "### environment: ", Dumper({
-    CONTINUOUS_INTEGRATION => !!$ENV{CONTINUOUS_INTEGRATION}
+    CONTINUOUS_INTEGRATION => !!$ENV{CONTINUOUS_INTEGRATION},
     HARNESS_ACTIVE => !!$ENV{HARNESS_ACTIVE},
     t_STDIN => !!(-t STDIN),
     t_STDOUT => !!(-t STDOUT),
