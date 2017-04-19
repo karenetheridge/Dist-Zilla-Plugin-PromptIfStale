@@ -109,8 +109,10 @@ use Dist::Zilla 5.036;  # experimental!!! to bump prereq.
             "[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Carp Dist::Zilla::Plugin::GatherDir I::Am::Not::Installed",
         ),
         'build was aborted, with remedy instructions',
-    ) or diag 'saw log messages: ', explain $tzil->log_messages;
+    ) or diag 'first test... saw log messages: ', explain $tzil->log_messages;
 }
+
+#fail 'this is a failure.. what happens?';
 
 @prompts = ();
 Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
