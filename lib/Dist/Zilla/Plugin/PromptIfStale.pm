@@ -284,6 +284,7 @@ sub _check_modules
     my $continue;
     if ($self->fatal)
     {
+print STDERR "### fatal is true.\n";
         $self->log($message);
     }
     else
@@ -292,8 +293,10 @@ sub _check_modules
             $message . (@$errors > 1 ? "\n" : ' ') . 'Continue anyway?',
             { default => 0 },
         );
+print STDERR "### fatal is false; continue is ", ($continue ? 1 : 0), ".\n";
     }
 
+print STDERR "### .... aborting ", $self->phase, " -- got @$stale_modules\n";
     $self->log_fatal('Aborting ' . $self->phase . "\n"
         . 'To remedy, do: cpanm ' . join(' ', @$stale_modules)) if not $continue;
 }
