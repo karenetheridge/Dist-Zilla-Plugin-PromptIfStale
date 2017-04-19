@@ -54,12 +54,11 @@ foreach my $test (glob('t/*'))
         my @stderr = <$stderr>;
         waitpid($pid, 0);
 
+        local $TODO = 'on perls <5.16, IO::Pty may not work on all platforms' if "$]" < '5.016';
+
         is($?, 0, "$test ran ok");
         warn @stderr if @stderr;
     };
 }
-
-print STDERR "### TODO is $TODO\n";
-warn "oh hai...\n";
 
 done_testing;
