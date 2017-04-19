@@ -23,9 +23,29 @@ foreach my $test (glob('t/*'))
     next if $test =~ /\b00-/;
     subtest $test => sub {
         diag "running $test";
-        do $test;
-        note 'ran tests successfully' if not $@;
-        fail($@) if $@;
+
+# XXX can't just use a do $filename... there were sub overrides that did not work out:
+
+        open my $stdout, '>', File::Spec->devnull or die "can't open devnull: $!";
+        my $stderr = IO::Handle->new;
+        # this *should* pick up our PERL5LIB and DTRT...
+        diag "running $^X $inc_switch $test";
+        my $pid = open3($stdin, $stdout, $stderr, $^X, $inc_switch, $test);
+        binmode $stderr, ':crlf' if $^O eq 'MSWin32';
+        my @stderr = <$stderr>;
+        waitpid($pid, 0);
+
+        is($?, 0, "$test ran ok");
+print STDERR "####### got a warning from running $test....\n", @stderr, "\n##########\n" if @stderr;
+        warn @stderr if @stderr;
+
+#-
+#-    do $test;
+#-    note 'ran tests successfully' if not $@;
+#-    fail($@) if $@;
+#-
+#-
+
     };
 }
 
