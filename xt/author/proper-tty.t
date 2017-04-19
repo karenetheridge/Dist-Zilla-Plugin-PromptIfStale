@@ -27,7 +27,6 @@ foreach my $test (glob('t/*'))
     next if not -f $test;
     next if $test =~ /\b00-/;
     subtest $test => sub {
-# XXX can't just use a do $filename... there were sub overrides that did not work out:
         open my $stdout, '>', File::Spec->devnull or die "can't open devnull: $!";
         my $stderr = IO::Handle->new;
         # this *should* pick up our PERL5LIB and DTRT...
@@ -38,16 +37,7 @@ foreach my $test (glob('t/*'))
         waitpid($pid, 0);
 
         is($?, 0, "$test ran ok");
-print STDERR "####### got a warning from running $test....\n", @stderr, "\n##########\n" if @stderr;
         warn @stderr if @stderr;
-
-#-
-#-    do $test;
-#-    note 'ran tests successfully' if not $@;
-#-    fail($@) if $@;
-#-
-#-
-
     };
 }
 

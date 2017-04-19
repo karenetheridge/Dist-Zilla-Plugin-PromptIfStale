@@ -23,7 +23,6 @@ my @prompts;
     $meta->make_mutable;
     $meta->add_before_method_modifier(prompt_str => sub {
         my ($self, $prompt, $arg) = @_;
-print STDERR "### attempted to prompt with message: $prompt\n";
         push @prompts, $prompt;
     });
 }
@@ -34,7 +33,6 @@ print STDERR "### attempted to prompt with message: $prompt\n";
     no warnings 'redefine';
     sub _indexed_version {
         my ($self, $module) = @_;
-print STDERR "### in hacked _indexed_version for $module\n";
         return version->parse('200.0') if $module eq 'Carp';
         return version->parse('100.0') if $module eq 'Dist::Zilla::Plugin::GatherDir';
         return version->parse('0') if $module =~ /^Software::License::/;
@@ -45,17 +43,7 @@ print STDERR "### in hacked _indexed_version for $module\n";
         return 1 if $module eq 'Carp';
         die 'should not be checking for ' . $module;
     }
-
-use Moose;
-__PACKAGE__->meta->make_mutable;
-before before_build => sub { print STDERR "### starting before_build\n"; };
-after before_build => sub { print STDERR "### ending before_build\n"; };
-before after_build => sub { print STDERR "### starting after_build\n"; };
-after after_build => sub { print STDERR "### ending after_build\n"; };
-
 }
-
-use Dist::Zilla 5.036;  # experimental!!! to bump prereq.
 
 {
     my $tzil = Builder->from_config(
@@ -105,7 +93,6 @@ use Dist::Zilla 5.036;  # experimental!!! to bump prereq.
         qr/\Q[PromptIfStale] Aborting build\E/,
         'build aborted',
     );
-diag '### ... after the build aborted, saw log messages: ', explain $tzil->log_messages;
 
     cmp_deeply(
         \@prompts,
@@ -120,13 +107,8 @@ diag '### ... after the build aborted, saw log messages: ', explain $tzil->log_m
             "[PromptIfStale] Aborting build\n[PromptIfStale] To remedy, do: cpanm Carp Dist::Zilla::Plugin::GatherDir I::Am::Not::Installed",
         ),
         'build was aborted, with remedy instructions',
-    ) or diag 'first test... saw log messages: ', explain $tzil->log_messages;
+    ) or diag 'saw log messages: ', explain $tzil->log_messages;
 }
-
-#fail 'this is a failure.. what happens?';
-
-done_testing;
-__END__
 
 @prompts = ();
 Dist::Zilla::Plugin::PromptIfStale::__clear_already_checked();
