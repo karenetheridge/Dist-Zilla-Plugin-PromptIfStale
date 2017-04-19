@@ -122,6 +122,7 @@ use Dist::Zilla 5.036;  # experimental!!! to bump prereq.
 
 #fail 'this is a failure.. what happens?';
 
+done_testing;
 __END__
 
 @prompts = ();
