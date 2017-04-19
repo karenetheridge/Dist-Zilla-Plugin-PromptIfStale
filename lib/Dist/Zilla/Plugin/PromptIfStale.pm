@@ -102,6 +102,7 @@ sub before_build
 {
     my $self = shift;
 
+print STDERR "### starting before_build\n";
     if ($ENV{CONTINUOUS_INTEGRATION} and not $self->run_under_travis)
     {
         $self->log_debug('travis detected: skipping checks...');
@@ -110,6 +111,7 @@ sub before_build
 
     if ($self->phase eq 'build')
     {
+print STDERR "### in before_build check...\n";
         my @extra_modules = $self->_modules_extra;
         my @modules = (
             @extra_modules,
@@ -124,6 +126,7 @@ sub before_build
         ]);
         $self->_check_modules(sort(uniq(@modules))) if @modules;
     }
+print STDERR "### done before_build\n";
 }
 
 sub after_build
@@ -132,13 +135,16 @@ sub after_build
 
     return if $ENV{CONTINUOUS_INTEGRATION} and not $self->run_under_travis;
 
+print STDERR "### starting after_build\n";
     if ($self->phase eq 'build' and $self->check_all_prereqs)
     {
+print STDERR "### in after_build check...\n";
         if (my @modules = $self->_modules_prereq) {
             $self->log('checking for stale prerequisites...');
             $self->_check_modules(sort(uniq(@modules)));
         }
     }
+print STDERR "### done after_build\n";
 }
 
 sub before_release
