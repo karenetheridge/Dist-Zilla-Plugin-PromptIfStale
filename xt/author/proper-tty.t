@@ -40,6 +40,8 @@ BEGIN {
 open my $stdin, '<', File::Spec->devnull or die "can't open devnull: $!";
 my $inc_switch = -d 'blib' ? '-Mblib' : '-Ilib';
 
+local $TODO = 'on perls <5.16, IO::Pty may not work on all platforms' if "$]" < '5.016';
+
 foreach my $test (glob('t/*'))
 {
     next if not -f $test;
@@ -53,8 +55,6 @@ foreach my $test (glob('t/*'))
         binmode $stderr, ':crlf' if $^O eq 'MSWin32';
         my @stderr = <$stderr>;
         waitpid($pid, 0);
-
-        local $TODO = 'on perls <5.16, IO::Pty may not work on all platforms' if "$]" < '5.016';
 
         is($?, 0, "$test ran ok");
         warn @stderr if @stderr;
