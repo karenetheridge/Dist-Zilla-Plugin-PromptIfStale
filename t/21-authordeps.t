@@ -11,28 +11,10 @@ use File::pushd 'pushd';
 use Moose::Util 'find_meta';
 use Dist::Zilla::App::Command::stale;
 
-BEGIN {
-    ::diag '1... status of filehandles: ', ::explain +{
-        '-t STDIN' => -t STDIN,
-        '-t STDOUT' => -t STDOUT,
-        '-f STDOUT' => -f STDOUT,
-        '-c STDOUT' => -c STDOUT,
-    };
-}
-
 use lib 't/lib';
 use NoNetworkHits;
 use EnsureStdinTty;
 use DiagFilehandles;
-
-BEGIN {
-    ::diag '2... status of filehandles: ', ::explain +{
-        '-t STDIN' => -t STDIN,
-        '-t STDOUT' => -t STDOUT,
-        '-f STDOUT' => -f STDOUT,
-        '-c STDOUT' => -c STDOUT,
-    };
-}
 
 my @prompts;
 {
