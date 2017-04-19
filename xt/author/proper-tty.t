@@ -22,10 +22,7 @@ foreach my $test (glob('t/*'))
     next if not -f $test;
     next if $test =~ /\b00-/;
     subtest $test => sub {
-        diag "running $test";
-
 # XXX can't just use a do $filename... there were sub overrides that did not work out:
-
         open my $stdout, '>', File::Spec->devnull or die "can't open devnull: $!";
         my $stderr = IO::Handle->new;
         # this *should* pick up our PERL5LIB and DTRT...
