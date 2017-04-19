@@ -280,11 +280,21 @@ sub _check_modules
         ? join("\n    ", 'Issues found:', @$errors)
         : $errors->[0];
 
+use Data::Dumper;
+print STDERR "### environment: ", Dumper({
+    CONTINUOUS_INTEGRATION => !!$ENV{CONTINUOUS_INTEGRATION}
+    HARNESS_ACTIVE => !!$ENV{HARNESS_ACTIVE},
+    t_STDIN => !!(-t STDIN),
+    t_STDOUT => !!(-t STDOUT),
+    f_STDOUT => !!(-f STDOUT),
+    c_STDOUT => !!(-c STDOUT),
+});
     # just issue a warning if not being run interactively (e.g. |cpanm, travis)
     if (($ENV{CONTINUOUS_INTEGRATION} and not $ENV{HARNESS_ACTIVE})
         or not (-t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT))))
     {
         $self->log($message . "\n" . 'To remedy, do: cpanm ' . join(' ', @$stale_modules));
+print STDERR "### bailing out early, before even considering to prompt...\n";
         return;
     }
 
