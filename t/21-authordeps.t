@@ -23,6 +23,7 @@ my @prompts;
     $meta->make_mutable;
     $meta->add_before_method_modifier(prompt_str => sub {
         my ($self, $prompt, $arg) = @_;
+print STDERR "### attempted to prompt with message: $prompt\n";
         push @prompts, $prompt;
     });
 }

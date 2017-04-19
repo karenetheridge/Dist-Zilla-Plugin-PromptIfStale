@@ -296,6 +296,7 @@ print STDERR "### fatal is true.\n";
     }
     else
     {
+print STDERR "### fatal is false... preparing to prompt\n";
         $continue = $self->zilla->chrome->prompt_yn(
             $message . (@$errors > 1 ? "\n" : ' ') . 'Continue anyway?',
             { default => 0 },
