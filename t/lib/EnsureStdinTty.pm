@@ -4,7 +4,6 @@ use warnings;
 # do not release before global destruction
 my $pty;
 
-if (not -t STDIN)
 {
     if ($^O ne 'MSWin32')
     {
@@ -34,7 +33,8 @@ if (not -t STDIN)
             }
         }
     }
-    else {
+    elsif (not -t STDIN)
+    {
         ::plan skip_all => 'cannot run these tests on MSWin32 when stdin is not a tty';
     }
 }
