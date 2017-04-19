@@ -41,4 +41,7 @@ foreach my $test (glob('t/*'))
     };
 }
 
+print STDERR "### TODO is $TODO\n";
+warn "oh hai...\n";
+
 done_testing;
