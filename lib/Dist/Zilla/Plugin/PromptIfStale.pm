@@ -17,7 +17,6 @@ use List::Util 1.45 qw(none any uniq);
 use version;
 use Moose::Util 'find_meta';
 use Path::Tiny;
-use Cwd;
 use CPAN::DistnameInfo;
 use HTTP::Tiny;
 use YAML::Tiny;
@@ -183,8 +182,8 @@ sub stale_modules
     require Module::CoreList;
     Module::CoreList->VERSION('5.20151213');
 
-    my $cwd = getcwd();
-    my $cwd_volume = path($cwd)->volume;
+    my $root = $self->zilla->root;
+    my $root_volume = path($root)->volume;
 
     my (@stale_modules, @errors);
     foreach my $module (sort(uniq(@modules)))
@@ -212,9 +211,9 @@ sub stale_modules
         $module_to_filename{$module} = $path;
 
         # ignore modules in the distribution currently being built
-        if (path($path)->volume eq $cwd_volume)
+        if (path($path)->volume eq $root_volume)
         {
-            my $relative_path = path($path)->relative($cwd);
+            my $relative_path = path($path)->relative($root);
             if ($relative_path !~ m/^\.\./)
             {
                 $already_checked{$module}++;
