@@ -5,6 +5,8 @@ addons:
       - aspell
 language: perl
 perl:
+  - blead       # builds perl from git
+  - dev         # latest point release
   - "5.26"
   - "5.24"
   - "5.22"
@@ -14,16 +16,14 @@ perl:
   - "5.14"
   - "5.12"
   - "5.10"
-
 env:
   global:
-    - TEST_PARTITIONS=1
+    - AUTHOR_TESTING=1
     - AUTOMATED_TESTING=1
     - RELEASE_TESTING=0
       # skip the run_under_travis short circuiting to allow our tests to pass
       # also avoids the Makefile.PL 'test' argument alteration.
     - PROMPTIFSTALE_REALLY_RUN_TESTS=1
-
 before_install:
   - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
   - source ~/travis-perl-helpers/init
@@ -32,8 +32,9 @@ before_install:
   - build-dist
   - cd $BUILD_DIR
 install:
+  - perl -M5.014 -e1 2>/dev/null || cpan-install Dist::Zilla@5.048
   - cpan-install --deps
 script:
   - perl Makefile.PL
   - make
-  - prove -b -r -s -j1 $(test-files)
+  - prove -b -r -s -j$(test-jobs) $(test-files)
