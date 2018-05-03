@@ -211,7 +211,7 @@ sub stale_modules
 
         $module_to_filename{$module} = $path;
 
-        # ignore modules in the dist currently being built
+        # ignore modules in the distribution currently being built
         if (path($path)->volume eq $cwd_volume)
         {
             my $relative_path = path($path)->relative($cwd);
@@ -374,8 +374,8 @@ sub _is_duallifed
     # Module::CoreList doesn't tell us this information at all right now - for
     # blead-upstream dual-lifed modules, and non-dual-lifed modules, it
     # returns all the same data points. :(  Right now all we can do is query
-    # the index and see what dist it belongs to -- luckily, it still lists the
-    # cpan dist for dual-lifed modules that are more recent in core than on
+    # the index and see what distribution it belongs to -- luckily, it still lists the
+    # cpan distribution for dual-lifed modules that are more recent in core than on
     # CPAN (e.g. Carp in June 2014 is 1.34 in 5.20.0 but 1.3301 on cpan).
 
     my $url = 'http://cpanmetadb.plackperl.org/v1.0/package/' . $module;
@@ -508,7 +508,7 @@ C<[PromptIfStale]> is a C<BeforeBuild> or C<BeforeRelease> plugin that compares 
 locally-installed version of a module(s) with the latest indexed version,
 prompting to abort the build process if a discrepancy is found.
 
-Note that there is no effect on the built dist -- all actions are taken at
+Note that there is no effect on the built distribution -- all actions are taken at
 build time.
 
 =head1 CONFIGURATION OPTIONS
