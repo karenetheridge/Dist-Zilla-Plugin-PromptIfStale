@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
 {{$NEXT}}
+          - fix for Dist::Zilla 7: ensure that the proper directory is used
+            for determining authordeps
 
 0.054     2017-08-17 00:47:23Z
           - switch to a different environment variable to control

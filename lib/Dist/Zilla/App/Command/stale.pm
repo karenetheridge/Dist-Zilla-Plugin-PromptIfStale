@@ -12,6 +12,7 @@ sub abstract { "print your distribution's stale prerequisites and plugins" }
 
 sub opt_spec
 {
+    [ 'root=s' => 'the root of the distribution; defaults to .' ],
     [ 'all'   , 'check all plugins and prerequisites, regardless of plugin configuration' ]
     # TODO?
     # [ 'plugins', 'check all plugins' ],
@@ -103,7 +104,7 @@ sub execute
                 or m/ version \(.+\) (does )?not match required version: /m;
         }
 
-        push @authordeps, $self->_missing_authordeps;
+        push @authordeps, $self->_missing_authordeps($opt->root // '.');
 
         $self->app->chrome->logger->unmute;
         $self->log(join("\n", sort(List::Util::uniq(@authordeps))));
@@ -130,7 +131,7 @@ sub execute
 
         # if there was an error during the build, fall back to fetching
         # authordeps, in the hopes that we can report something helpful
-        $self->_missing_authordeps;
+        $self->_missing_authordeps($opt->root // '.');
     };
 
     $self->app->chrome->logger->unmute;
@@ -141,13 +142,13 @@ sub execute
 # as in Dist::Zilla::App::Command::alldeps
 sub _missing_authordeps
 {
-    my $self = shift;
+    my ($self, $root) = @_;
 
     require Dist::Zilla::Util::AuthorDeps;
     Dist::Zilla::Util::AuthorDeps->VERSION(5.021);
     my @authordeps = map { (%$_)[0] }
         @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps(
-            '.',            # repository root
+            $root,          # repository root
             1,              # --missing
           )
         };

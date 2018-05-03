@@ -314,7 +314,7 @@ has _authordeps => (
             grep { my $module = $_; none { $module eq $_ } @skip }
             uniq(
                 map { (%$_)[0] }
-                    @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps('.') }
+                    @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps($self->zilla->root) }
             )
         ];
     },
