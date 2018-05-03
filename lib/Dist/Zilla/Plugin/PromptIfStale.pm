@@ -330,9 +330,9 @@ has _modules_plugin => (
         my @skip = $self->skip;
         [
             grep { my $module = $_; none { $module eq $_ } @skip }
-            uniq(
-                map { find_meta($_)->name } @{ $self->zilla->plugins }
-            )
+            uniq
+            map { find_meta($_)->name }
+            @{ $self->zilla->plugins }
         ];
     },
 );

@@ -49,7 +49,8 @@ subtest "run_under_travis = $_" => sub {
                 ),
                 path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
             },
-            also_copy => { 't/lib' => 't/lib' },        },
+            also_copy => { 't/lib' => 't/lib' },
+        },
     );
 
     my $prompt = 'StaleModule is not installed. Continue anyway?';
