@@ -8,7 +8,7 @@ Dist::Zilla::Plugin::PromptIfStale - Check at build/release time if modules are 
 
 =head1 VERSION
 
-version 0.054
+version 0.055
 
 =head1 SYNOPSIS
 
@@ -30,7 +30,7 @@ C<[PromptIfStale]> is a C<BeforeBuild> or C<BeforeRelease> plugin that compares 
 locally-installed version of a module(s) with the latest indexed version,
 prompting to abort the build process if a discrepancy is found.
 
-Note that there is no effect on the built dist -- all actions are taken at
+Note that there is no effect on the built distribution -- all actions are taken at
 build time.
 
 =head1 CONFIGURATION OPTIONS
