@@ -23,7 +23,11 @@ sub stale_modules
 {
     my ($self, $zilla, $all) = @_;
 
-    my @plugins = grep { $_->isa('Dist::Zilla::Plugin::PromptIfStale') } @{ $zilla->plugins };
+    my $dzil7 = eval { Dist::Zilla::App->VERSION('7.000') };
+
+    my @plugins = grep { $_->isa('Dist::Zilla::Plugin::PromptIfStale') }
+        $dzil7 ? $zilla->plugins : @{ $zilla->plugins };
+
     if (not @plugins)
     {
         require Dist::Zilla::Plugin::PromptIfStale;
@@ -38,12 +42,12 @@ sub stale_modules
     if ($all or do { require List::Util; List::Util->VERSION('1.33'); List::Util::any(sub { $_->check_all_prereqs }, @plugins) })
     {
         $_->before_build for grep { not $_->isa('Dist::Zilla::Plugin::PromptIfStale') }
-            @{ $zilla->plugins_with(-BeforeBuild) };
-        $_->gather_files for @{ $zilla->plugins_with(-FileGatherer) };
-        $_->set_file_encodings for @{ $zilla->plugins_with(-EncodingProvider) };
-        $_->prune_files  for @{ $zilla->plugins_with(-FilePruner) };
-        $_->munge_files  for @{ $zilla->plugins_with(-FileMunger) };
-        $_->register_prereqs for @{ $zilla->plugins_with(-PrereqSource) };
+            $dzil7 ? $zilla->plugins_with(-BeforeBuild) : @{ $zilla->plugins_with(-BeforeBuild) };
+        $_->gather_files for $dzil7 ? $zilla->plugins_with(-FileGatherer) : @{ $zilla->plugins_with(-FileGatherer) };
+        $_->set_file_encodings for $dzil7 ? $zilla->plugins_with(-EncodingProvider) : @{ $zilla->plugins_with(-EncodingProvider) };
+        $_->prune_files  for $dzil7 ? $zilla->plugins_with(-FilePruner) : @{ $zilla->plugins_with(-FilePruner) };
+        $_->munge_files  for $dzil7 ? $zilla->plugins_with(-FileMunger) : @{ $zilla->plugins_with(-FileMunger) };
+        $_->register_prereqs for $dzil7 ? $zilla->plugins_with(-PrereqSource) : @{ $zilla->plugins_with(-PrereqSource) };
 
         push @modules, map {
             ( $all || $_->check_all_prereqs ? $_->_modules_prereq : () ),

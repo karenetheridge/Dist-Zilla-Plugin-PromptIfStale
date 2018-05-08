@@ -331,7 +331,7 @@ has _modules_plugin => (
             grep { my $module = $_; none { $module eq $_ } @skip }
             uniq
             map { find_meta($_)->name }
-            @{ $self->zilla->plugins }
+            eval { Dist::Zilla->VERSION('7.000') } ? $self->zilla->plugins : @{ $self->zilla->plugins }
         ];
     },
 );
