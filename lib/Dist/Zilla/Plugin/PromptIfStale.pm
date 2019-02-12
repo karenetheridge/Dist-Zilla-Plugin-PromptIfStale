@@ -87,7 +87,7 @@ around dump_config => sub
     my $config = $self->$orig;
 
     $config->{+__PACKAGE__} = {
-        (map { $_ => $self->$_ ? 1 : 0 } qw(check_all_plugins check_all_prereqs run_under_travis)),
+        (map +($_ => $self->$_ ? 1 : 0), qw(check_all_plugins check_all_prereqs run_under_travis)),
         phase => $self->phase,
         skip => [ sort $self->skip ],
         modules => [ sort $self->_raw_modules ],
@@ -312,7 +312,7 @@ has _authordeps => (
         [
             grep { my $module = $_; none { $module eq $_ } @skip }
             uniq(
-                map { (%$_)[0] }
+                map +(%$_)[0],
                     @{ Dist::Zilla::Util::AuthorDeps::extract_author_deps($self->zilla->root) }
             )
         ];
@@ -330,7 +330,7 @@ has _modules_plugin => (
         [
             grep { my $module = $_; none { $module eq $_ } @skip }
             uniq
-            map { find_meta($_)->name }
+            map find_meta($_)->name,
             eval { Dist::Zilla->VERSION('7.000') } ? $self->zilla->plugins : @{ $self->zilla->plugins }
         ];
     },
@@ -347,10 +347,10 @@ has _modules_prereq => (
         my @skip = $self->skip;
         [
             grep { my $module = $_; none { $module eq $_ } @skip }
-            map { keys %$_ }
-            grep { defined }
-            map { @{$_}{qw(requires recommends suggests)} }
-            grep { defined }
+            map keys %$_,
+            grep defined,
+            map @{$_}{qw(requires recommends suggests)},
+            grep defined,
             values %$prereqs
         ];
     },
