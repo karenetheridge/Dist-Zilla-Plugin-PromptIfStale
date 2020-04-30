@@ -328,6 +328,9 @@ has _modules_plugin => (
         my $self = shift;
         my @skip = $self->skip;
         [
+            # we look on disk since it is too early to check $zilla->files
+            # TODO: do this properly by moving the caller to after_build
+            grep { (my $filename = $_) =~ s{::}{/}g; !-f "${filename}.pm" }
             grep { my $module = $_; none { $module eq $_ } @skip }
             uniq
             map find_meta($_)->name,

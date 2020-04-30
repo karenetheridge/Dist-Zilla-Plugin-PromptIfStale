@@ -1,6 +1,7 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
 {{$NEXT}}
+          - filter out plugins in the local repository from being checked for
 
 0.055     2018-05-08 03:09:35Z
           - fix for Dist::Zilla 7: ensure that the proper directory is used
