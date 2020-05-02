@@ -26,6 +26,12 @@ my @prompts;
     });
 }
 
+{
+    package inc::Foo;
+    use Moose;
+    extends 'Dist::Zilla::Plugin::MakeMaker';
+}
+
 my $tzil = Builder->from_config(
     { dist_root => 'does-not-exist' },
     {
