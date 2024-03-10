@@ -193,7 +193,11 @@ sub stale_modules ($self, @modules) {
             next;
         }
 
-        my $path = Module::Metadata->find_module_by_name($module);
+        my $path = do {
+            local @INC = @INC; push @INC, "$root";
+            Module::Metadata->find_module_by_name($module);
+        };
+
         if (not $path)
         {
             $already_checked{$module}++;

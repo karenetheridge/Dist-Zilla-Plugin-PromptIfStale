@@ -2,6 +2,8 @@ Revision history for Dist-Zilla-Plugin-PromptIfStale
 
 {{$NEXT}}
           - minimum perl version bumped to 5.020
+          - when checking for authordeps in the 'stale' command, skip over
+            locally-defined plugins (e.g. =inc::Foo)
 
 0.058     2023-04-30 10:00:42Z
           - add special handling for DynaLoader, which is no longer indexed
