@@ -4,3 +4,4 @@
 /.latest
 /Dist-Zilla-Plugin-PromptIfStale-*/
 /Dist-Zilla-Plugin-PromptIfStale-*.tar.gz
+/tmp/
