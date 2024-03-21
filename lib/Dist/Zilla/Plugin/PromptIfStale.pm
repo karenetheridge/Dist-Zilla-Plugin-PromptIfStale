@@ -12,6 +12,7 @@ with 'Dist::Zilla::Role::BeforeBuild',
     'Dist::Zilla::Role::AfterBuild',
     'Dist::Zilla::Role::BeforeRelease';
 
+use Moose::Util::TypeConstraints 'enum';
 use strictures 2;
 use stable 0.031 'postderef';
 use experimental 'signatures';
@@ -19,7 +20,6 @@ use if "$]" >= 5.022, experimental => 're_strict';
 no if "$]" >= 5.031009, feature => 'indirect';
 no if "$]" >= 5.033001, feature => 'multidimensional';
 no if "$]" >= 5.033006, feature => 'bareword_filehandles';
-use Moose::Util::TypeConstraints 'enum';
 use List::Util 1.45 qw(none any uniq);
 use version;
 use Moose::Util 'find_meta';
