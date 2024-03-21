@@ -1,5 +1,7 @@
 Revision history for Dist-Zilla-Plugin-PromptIfStale
 
+{{$NEXT}}
+
 0.060     2024-03-21 17:39:03Z
           - fix experimental warnings on earlier perls
 

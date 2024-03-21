@@ -5,7 +5,7 @@ package Dist::Zilla::Plugin::PromptIfStale;
 # ABSTRACT: Check at build/release time if modules are out of date
 # KEYWORDS: prerequisites upstream dependencies modules metadata update stale
 
-our $VERSION = '0.060';
+our $VERSION = '0.061';
 
 use Moose;
 with 'Dist::Zilla::Role::BeforeBuild',
